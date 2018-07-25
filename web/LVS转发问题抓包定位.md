@@ -180,17 +180,17 @@ tcpdump -v -n -i eth0 -w /opt/tmp.cap -s 0  #-i为网络接口名称，-w为输�
 
 通过分析broker报文发现，在broker发送了PSH[^1]推送报文后，就一直在重传， **没有得到manager的响应** ，此为 **疑问点3** 。
 
-￼
+![](~/11-33-06.jpg)
 
 分析LVS报文，发现LVS向manager发送了RST[^1]报文。
 
-￼
+![](~/14-43-57.jpg)
 
 查阅资料得知，这是keepalived的健康检查机制，LVS会定期（默认6秒，可以修改keepalived.conf中字段`delay_loop 6`）向manager发送一个TCP连接来检测http是否正常，为了减少TCP连接带来的资源浪费，所以检测（TCP三次握手[^2]）完毕后会发送一个RST报文来断开这个连接，释放资源。因此该报文为正常报文，且未接收到LVS发送的请求报文。
 
 尝试不使用LVS，broker直连manager，订购成功。
 
-￼
+![](~/14-52-41.jpg)
 
 在broker向manager发送了PSH报文后，manager向broker返回PSH应答报文。
 
@@ -199,7 +199,7 @@ tcpdump -v -n -i eth0 -w /opt/tmp.cap -s 0  #-i为网络接口名称，-w为输�
 # 8. 查看keepalived配置
 
 ```bash
-[root@szvphicpra57487 ~]# cat /etc/keepalived/keepalived.conf
+cat /etc/keepalived/keepalived.conf
 global_defs {
    router_id DDM_LVS_205
 }
@@ -289,6 +289,18 @@ virtual_server 10.186.86.79 8443 {
 问题明确，手动修改keepalived.conf，将IP修改正确，重启keepalived服务，问题解决。
 
 问题原因比较简单，但以此文来说明LVS问题定位思路。
+
+END
+
+# （续）主备倒换后，网络又不通
+
+查看`ipvsadm -ln --stats`，发现发送和接收包全零。
+
+查看`iptables -t raw -L -nv`，发现是因为误执行了`iptables -t raw -I PREROUTING -d $lvs_floating_ip -j DROP`，增加了一条备节点的防火墙规则，而在主备倒换的时候未删除导致。
+
+执行`iptables -t raw -L -nv --line-numbers`，查看规则行号，如1。
+
+执行`iptables -t raw -D PREROUTING 1`，删除该规则，问题解决。
 
 END
 
