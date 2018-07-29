@@ -1,3 +1,10 @@
+---
+title: 使用HttpClient发送HTTPS请求
+date: 2018-07-29 10:04:01
+categories: java
+tags:
+---
+
 # 一、背景知识
 
 ## TLS协商过程
