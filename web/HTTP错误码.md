@@ -1,3 +1,10 @@
+---
+title: HTTP错误码
+date: 2018-08-05 16:12:44
+categories: web
+tags:
+---
+
 # 错误码分类
 
 + 1xx：信息提示
