@@ -26,6 +26,23 @@ sudo apt-get install xxx
 apt update
 ```
 
+
+# Ubuntu下安装deb包命令
+
+```bash
+dpkg -l | grep xxx  #查看已安装的软件
+dpkg -L | grep xxx  #查看已安装的软件路径
+dpkg -i package.deb  #安装
+dpkg -c package.deb  #查看deb包中的内容
+dpkg -L package  #列出deb包安装的所有文件清单
+dpkg -I package.deb  #从deb包中提取信息
+dpkg -s package  #显示已安装包的信息
+dpkg -r package  #移除已安装的deb包
+dpkg -P package  #彻底删除已安装的deb包和配置文件
+dpkg-reconfigure package  #重新配置已安装的包
+```
+
+
 # 压缩解压文件
 
 ## 1. tar
