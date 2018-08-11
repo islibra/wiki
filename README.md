@@ -1,9 +1,19 @@
 ---
 title: README
-date: 2018-08-05 17:04:53
+date: 2018-08-11 11:57:53
 categories:
 tags:
 ---
+
+
+# container:
+
++ [docker常用命令](https://islibra.github.io/hello-islibra/2018/08/11/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/)
+
+
+# db:
+
++ [Ubuntu16.04安装mysql5.7.23](https://islibra.github.io/hello-islibra/2018/08/11/Ubuntu16-04%E5%AE%89%E8%A3%85mysql5-7-23/)
 
 
 # dts:
@@ -45,6 +55,7 @@ tags:
 + [sudoers文件](https://islibra.github.io/hello-islibra/2018/07/15/sudoers%E6%96%87%E4%BB%B6/)
 + [vim](https://islibra.github.io/hello-islibra/2018/07/15/vim/)
 + [设置ssh连接不超时](https://islibra.github.io/hello-islibra/2018/08/05/%E8%AE%BE%E7%BD%AEssh%E8%BF%9E%E6%8E%A5%E4%B8%8D%E8%B6%85%E6%97%B6/)
++ [Linux网络管理](https://islibra.github.io/hello-islibra/2018/08/11/Linux%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86/)
 
 
 # web:
