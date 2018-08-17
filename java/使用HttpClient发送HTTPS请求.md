@@ -123,7 +123,7 @@ httpclient = HttpClients.custom()
                 if (status >= 200 && status < 300) {
                     //返回实体
                     HttpEntity entity = response.getEntity();
-                    return entity != null ? EntityUtils.toString(entity) : null;
+                    return entity != null ? EntityUtils.toString(entity, "UTF-8") : null;  //避免中文乱码
                 } else {
                     throw new ClientProtocolException("Unexpected response status: " + status);
                 }
