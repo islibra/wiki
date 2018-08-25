@@ -1,6 +1,6 @@
 ---
 title: README
-date: 2018-08-11 11:57:53
+date: 2018-08-25 20:41:53
 categories:
 tags:
 ---
@@ -26,6 +26,7 @@ tags:
 + [Git常用命令](https://islibra.github.io/hello-islibra/2018/07/15/Git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/)
 + [创建VPN](https://islibra.github.io/hello-islibra/2018/07/14/%E5%88%9B%E5%BB%BAVPN/)
 + [将TAB转换为4个空格](https://islibra.github.io/hello-islibra/2018/07/15/%E5%B0%86TAB%E8%BD%AC%E6%8D%A2%E4%B8%BA4%E4%B8%AA%E7%A9%BA%E6%A0%BC/)
++ [快捷键](https://islibra.github.io/hello-islibra/2018/08/25/%E5%BF%AB%E6%8D%B7%E9%94%AE/)
 
 
 # java:
@@ -33,6 +34,9 @@ tags:
 + [Linux设置Java环境变量](https://islibra.github.io/hello-islibra/2018/07/14/Linux%E8%AE%BE%E7%BD%AEJava%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/)
 + [使用HttpClient发送HTTPS请求](https://islibra.github.io/hello-islibra/2018/07/29/%E4%BD%BF%E7%94%A8HttpClient%E5%8F%91%E9%80%81HTTPS%E8%AF%B7%E6%B1%82/)
 + [Java基本数据类型](https://islibra.github.io/hello-islibra/2018/08/05/Java%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/)
++ [Linux后台运行jar](https://islibra.github.io/hello-islibra/2018/08/25/Linux%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8Cjar/)
++ [Java8 Stream](https://islibra.github.io/hello-islibra/2018/08/25/Java8-Stream/)
++ [Annotation](https://islibra.github.io/hello-islibra/2018/08/25/Annotation/)
 
 
 # net:
@@ -56,6 +60,7 @@ tags:
 + [vim](https://islibra.github.io/hello-islibra/2018/07/15/vim/)
 + [设置ssh连接不超时](https://islibra.github.io/hello-islibra/2018/08/05/%E8%AE%BE%E7%BD%AEssh%E8%BF%9E%E6%8E%A5%E4%B8%8D%E8%B6%85%E6%97%B6/)
 + [Linux网络管理](https://islibra.github.io/hello-islibra/2018/08/11/Linux%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86/)
++ [Tips](https://islibra.github.io/hello-islibra/2018/08/25/Tips/)
 
 
 # web:

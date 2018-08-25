@@ -1,3 +1,10 @@
+---
+title: Tips
+date: 2018-08-25 20:22:57
+categories: os
+tags:
+---
+
 # 查看文件正在被谁占用
 
 ```bash
