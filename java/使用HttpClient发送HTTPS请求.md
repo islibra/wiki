@@ -132,7 +132,7 @@ httpclient = HttpClients.custom()
             System.out.println("--------------------GET END--------------------");
 ```
 
-> **注意：**如果使用Vertx发送请求，写body时方法参数指定的编码非目的编码（UTF-8），而是当前编码（ISO-8859-1）。
+> **注意：**如果使用Vertx发送请求，且body中携带中文，使用write方法会无法解析。
 
 ```java
 HttpClient httpClient = VertxUtils.getHttpClient(XXX);
@@ -140,8 +140,11 @@ HttpClient httpClient = VertxUtils.getHttpClient(XXX);
 HttpClientRequest request = httpClient.request(method, port, host, uri);
 
 request.putHeader(HttpHeaders.CONTENT_TYPE, "application/json;charset=utf8");
-request.putHeader(HttpHeaders.CONTENT_LENGTH, requestBody.length() + "");
-request.write(requestBody, "ISO-8859-1");  //当前编码
+
+//request.putHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(requestBody.length()));
+//request.write(requestBody, "UTF-8");  //此处写入body会出现中文无法解码
+
+request.end(requestBody, "UTF-8");  //写入body，并自动填充Content_Length
 ```
 
 ## 9. POST请求
