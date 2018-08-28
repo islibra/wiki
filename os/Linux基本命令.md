@@ -13,3 +13,12 @@ tags:
 echo 'hello' | tr 'a-z' 'A-Z'
 echo 'HELLO' | tr 'A-Z' 'a-z'
 ```
+
+
+# 二、文件处理
+
+## 1. 远程拷贝
+
+```bash
+scp file.xxx user@hostip:/home/user
+```
