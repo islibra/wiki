@@ -94,7 +94,20 @@ sslcontext.init(null, tmf.getTrustManagers(), null);  //使用加载的KeyStore
 ## 6. 创建SSLSocketFactory
 
 ```java
+import javax.net.ssl.HostnameVerifier;
+
 SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslcontext);
+
+//屏蔽host校验
+SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslcontext, new HostnameVerifier(){
+    @Override
+    public boolean verify(String hostname, SSLSession session) {
+        hostname = "drds.hwclouds.com";
+        return SSLConnectionSocketFactory.getDefaultHostnameVerifier().verify(hostname, session);
+    }
+});
+//或使用Lambda表达式
+SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslcontext, (hostname, session) -> true);
 ```
 
 ## 7. 创建请求客户端
