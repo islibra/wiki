@@ -78,4 +78,5 @@ npm install xxx -g
 
 ```cmd
 npm list -g
+npm list xxx
 ```
