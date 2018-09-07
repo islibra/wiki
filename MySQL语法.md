@@ -1,3 +1,23 @@
+# 术语
+
+schema：数据库，例如查询所有数据库名称和默认编码：
+
+```sql
+mysql> select schema_name, default_character_set_name from information_schema.schemata;
+
++--------------------+----------------------------+
+| schema_name        | default_character_set_name |
++--------------------+----------------------------+
+| information_schema | utf8                       |
+| db_6922_0000       | latin1                     |
+| mysql              | latin1                     |
+| performance_schema | utf8                       |
+| sys                | utf8                       |
++--------------------+----------------------------+
+12 rows in set (0.02 sec)
+```
+
+
 # 注释
 
 ```sql
