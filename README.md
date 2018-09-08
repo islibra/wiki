@@ -43,7 +43,7 @@ tags:
 + [Linux设置Java环境变量](https://islibra.github.io/hello-islibra/2018/07/14/Linux%E8%AE%BE%E7%BD%AEJava%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/)
 + [使用HttpClient发送HTTPS请求](https://islibra.github.io/hello-islibra/2018/07/29/%E4%BD%BF%E7%94%A8HttpClient%E5%8F%91%E9%80%81HTTPS%E8%AF%B7%E6%B1%82/)
 + [Java基本数据类型](https://islibra.github.io/hello-islibra/2018/08/05/Java%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/)
-+ [Linux后台运行jar](https://islibra.github.io/hello-islibra/2018/08/25/Linux%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8Cjar/)
++ [jar](https://islibra.github.io/hello-islibra/2018/08/25/jar/)
 + [Java8 Stream](https://islibra.github.io/hello-islibra/2018/08/25/Java8-Stream/)
 + [Annotation](https://islibra.github.io/hello-islibra/2018/08/25/Annotation/)
 + [Java数据类型转换](https://islibra.github.io/hello-islibra/2018/09/08/Java%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/)
