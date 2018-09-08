@@ -1,3 +1,10 @@
+---
+title: Java读取properties配置文件
+date: 2018-09-08 11:43:31
+categories: java
+tags:
+---
+
 # 读取类路径下的配置文件
 
 配置文件路径：`src\main\resources\config\application.properties`

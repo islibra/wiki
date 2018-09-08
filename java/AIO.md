@@ -1,3 +1,10 @@
+---
+title: AIO
+date: 2018-09-08 11:54:02
+categories: java
+tags:
+---
+
 AIO需要操作系统支持.
 
 

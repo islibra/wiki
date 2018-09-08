@@ -1,3 +1,10 @@
+---
+title: grep
+date: 2018-09-08 11:48:21
+categories: os
+tags:
+---
+
 在每个FILE或标准输入中查找PATTERN.
 
 

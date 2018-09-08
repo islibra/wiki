@@ -1,3 +1,10 @@
+---
+title: MySQL
+date: 2018-09-08 11:58:45
+categories: db
+tags:
+---
+
 # 术语
 
 schema：数据库，例如查询所有数据库名称和默认编码：

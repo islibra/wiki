@@ -1,3 +1,10 @@
+---
+title: MongoDB
+date: 2018-09-08 11:46:28
+categories: db
+tags:
+---
+
 # NoSQL数据库分类
 
 | 类型 | 部分代表 | 特点 |

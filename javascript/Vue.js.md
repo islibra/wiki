@@ -1,3 +1,10 @@
+---
+title: Vue.js
+date: 2018-09-08 11:33:44
+categories: javascript
+tags:
+---
+
 # 下载地址
 
 [开发版本](https://vuejs.org/js/vue.js)

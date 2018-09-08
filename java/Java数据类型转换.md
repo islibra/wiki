@@ -1,3 +1,10 @@
+---
+title: Java数据类型转换
+date: 2018-09-08 11:26:54
+categories: java
+tags:
+---
+
 # String与Date
 
 ## 时间格式

@@ -1,6 +1,6 @@
 ---
 title: README
-date: 2018-08-25 20:41:53
+date: 2018-09-08 12:05:53
 categories:
 tags:
 ---
@@ -14,6 +14,13 @@ tags:
 # db:
 
 + [Ubuntu16.04安装mysql5.7.23](https://islibra.github.io/hello-islibra/2018/08/11/Ubuntu16-04%E5%AE%89%E8%A3%85mysql5-7-23/)
++ [MongoDB](https://islibra.github.io/hello-islibra/2018/09/08/MongoDB/)
++ [MySQL](https://islibra.github.io/hello-islibra/2018/09/08/MySQL/)
+
+
+# design:
+
++ [UML](https://islibra.github.io/hello-islibra/2018/09/08/UML/)
 
 
 # dts:
@@ -27,6 +34,8 @@ tags:
 + [创建VPN](https://islibra.github.io/hello-islibra/2018/07/14/%E5%88%9B%E5%BB%BAVPN/)
 + [将TAB转换为4个空格](https://islibra.github.io/hello-islibra/2018/07/15/%E5%B0%86TAB%E8%BD%AC%E6%8D%A2%E4%B8%BA4%E4%B8%AA%E7%A9%BA%E6%A0%BC/)
 + [快捷键](https://islibra.github.io/hello-islibra/2018/08/25/%E5%BF%AB%E6%8D%B7%E9%94%AE/)
++ [工具](https://islibra.github.io/hello-islibra/2018/09/08/%E5%B7%A5%E5%85%B7/)
++ [Notepad++](https://islibra.github.io/hello-islibra/2018/09/08/Notepad/)
 
 
 # java:
@@ -37,6 +46,17 @@ tags:
 + [Linux后台运行jar](https://islibra.github.io/hello-islibra/2018/08/25/Linux%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8Cjar/)
 + [Java8 Stream](https://islibra.github.io/hello-islibra/2018/08/25/Java8-Stream/)
 + [Annotation](https://islibra.github.io/hello-islibra/2018/08/25/Annotation/)
++ [Java数据类型转换](https://islibra.github.io/hello-islibra/2018/09/08/Java%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/)
++ [Lambda表达式](https://islibra.github.io/hello-islibra/2018/09/08/Lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/)
++ [Java读取properties配置文件](https://islibra.github.io/hello-islibra/2018/09/08/Java%E8%AF%BB%E5%8F%96properties%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/)
++ [Java单元测试](https://islibra.github.io/hello-islibra/2018/09/08/Java%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/)
++ [AIO](https://islibra.github.io/hello-islibra/2018/09/08/AIO/)
+
+
+# javascript:
+
++ [Vue.js](https://islibra.github.io/hello-islibra/2018/09/08/Vue-js/)
++ [Node.js](https://islibra.github.io/hello-islibra/2018/09/08/Node-js/)
 
 
 # net:
@@ -61,12 +81,15 @@ tags:
 + [设置ssh连接不超时](https://islibra.github.io/hello-islibra/2018/08/05/%E8%AE%BE%E7%BD%AEssh%E8%BF%9E%E6%8E%A5%E4%B8%8D%E8%B6%85%E6%97%B6/)
 + [Linux网络管理](https://islibra.github.io/hello-islibra/2018/08/11/Linux%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86/)
 + [Tips](https://islibra.github.io/hello-islibra/2018/08/25/Tips/)
++ [Linux中sh和bash的区别](https://islibra.github.io/hello-islibra/2018/09/08/Linux%E4%B8%ADsh%E5%92%8Cbash%E7%9A%84%E5%8C%BA%E5%88%AB/)
++ [grep](https://islibra.github.io/hello-islibra/2018/09/08/grep/)
 
 
 # web:
 
 + [LVS转发问题抓包定位](https://islibra.github.io/hello-islibra/2018/07/14/LVS%E8%BD%AC%E5%8F%91%E9%97%AE%E9%A2%98%E6%8A%93%E5%8C%85%E5%AE%9A%E4%BD%8D/)
 + [HTTP错误码](https://islibra.github.io/hello-islibra/2018/08/05/HTTP%E9%94%99%E8%AF%AF%E7%A0%81/)
++ [curl](https://islibra.github.io/hello-islibra/2018/09/08/curl/)
 
 
 # writing:

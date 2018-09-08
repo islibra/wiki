@@ -1,3 +1,10 @@
+---
+title: Lambda表达式
+date: 2018-09-08 11:31:47
+categories: java
+tags:
+---
+
 Lambda表达式表示函数接口的实例，可以作为参数传递进方法中。
 
 

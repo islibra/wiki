@@ -1,3 +1,10 @@
+---
+title: Node.js
+date: 2018-09-08 11:35:35
+categories: javascript
+tags:
+---
+
 Node.js是javascript的运行时，基于Chrome的V8引擎，可直接运行javascript代码。
 
 [官方下载地址](http://nodejs.org/)
