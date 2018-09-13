@@ -47,3 +47,6 @@ var app = new Vue({
     鼠标悬停几秒钟查看此处动态绑定的提示信息！
   </span>
 ```
+
+
+> 基于Vue.js的UI库：[iView](http://v2.iviewui.com/docs/guide/start)
