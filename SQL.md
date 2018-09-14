@@ -49,8 +49,12 @@ SELECT 列名称 FROM 表名称 **ORDER BY 列1 [ASC/DESC], 列2 [ASC/DESC]**
 + SQL Server: `SELECT TOP number|percent column_name(s) FROM table_name WHERE condition;`，例：
     + SELECT TOP 2 * FROM Persons
     + SELECT TOP 50 PERCENT * FROM Persons
-+ MySQL: `SELECT column_name(s) FROM table_name LIMIT number;`
++ MySQL: `SELECT column_name(s) FROM table_name LIMIT number;`，例：
+    + SELECT User from user limit 2;  /* 只查询2条数据 */
+    + SELECT User from user limit 2,3;  /* 从偏移量2开始查询3条数据，偏移量从0开始 */
 + Oracle: `SELECT column_name(s) FROM table_name WHERE ROWNUM <= number;`
+
+> **Tips:** 如果只查询一条记录，可以加上LIMIT 1，避免全表扫描。在偏移量大的时候limit执行效率降低，应优先使用where子句，配合limit使用。
 
 ## 函数
 
