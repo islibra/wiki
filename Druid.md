@@ -1,11 +1,31 @@
 # SQL Parser
 
+
 ## Parser
 
-### Parser语法分析
+
 ### Lexer词法分析
 
+Lexer中拥有词汇表，即Keywords。
+
+```java
+protected Keywords keywods = Keywords.DEFAULT_KEYWORDS;
+```
+
+`DEFAULT_KEYWORDS`是一个Map<String, Token>，`Token`是词汇的枚举类，包含`SELECT\INSERT\FROM\WHERE`等。
+
+`nextToken()`从SQL语句解析出下一个单词。
+`token()`返回上一次解析的单词的Token类型。
+`stringVal()`获取标识符(Identifier)类型的值。
+
+
+### Parser语法分析
+
+在`SQLStatementParser`的`parseStatement`方法中通过调用`token()`方法，解析`SQLStatement`。如果Token类型为`SELECT`，则调用`parseSelect()`方法解析`SQLSelectStatement`。
+
+
 ## AST抽象语法树
+
 
 ### 节点类型
 
@@ -49,6 +69,7 @@ List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, dbType);  //生成SQ
 SQLExpr expr = SQLUtils.toSQLExpr("id=3", dbType);  //生成表达式
 ```
 
+
 ## Visitor
 
 + OutputVisitor用来把AST输出为字符串
@@ -58,6 +79,7 @@ SQLExpr expr = SQLUtils.toSQLExpr("id=3", dbType);  //生成表达式
 + ExportParameterVisitor用来提取SQL中的变量参数
 + SchemaStatVisitor用来统计SQL中使用的表、字段、过滤条件、排序表达式、分组表达式
 + SQL格式化 Druid内置了基于语义的SQL格式化功能
+
 
 ## 典型操作
 
@@ -74,6 +96,12 @@ SQLStatement statement = parser.parseStatement();
 MySqlSchemaStatVisitor visitor = new MySqlSchemaStatVisitor();
 statement.accept(visitor);
 
-System.out.println(visitor.getColumns());
-System.out.println(visitor.getOrderByColumns());
+System.out.println("getColumns:" + visitor.getColumns());
+System.out.println("getTables:" + visitor.getTables());
+System.out.println("getParameters:" + visitor.getParameters());
+System.out.println("getOrderByColumns:" + visitor.getOrderByColumns());
+System.out.println("getGroupByColumns:" + visitor.getGroupByColumns());
 ```
+
+
+[官方文档](https://github.com/alibaba/druid/wiki/SQL-Parser)
