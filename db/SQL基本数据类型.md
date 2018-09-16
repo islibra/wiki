@@ -1,3 +1,10 @@
+---
+title: SQL基本数据类型
+date: 2018-09-16 14:10:44
+categories: db
+tags:
+---
+
 # MySQL
 
 

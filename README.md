@@ -1,6 +1,6 @@
 ---
 title: README
-date: 2018-09-08 12:05:53
+date: 2018-09-16 14:24:53
 categories:
 tags:
 ---
@@ -16,6 +16,9 @@ tags:
 + [Ubuntu16.04安装mysql5.7.23](https://islibra.github.io/hello-islibra/2018/08/11/Ubuntu16-04%E5%AE%89%E8%A3%85mysql5-7-23/)
 + [MongoDB](https://islibra.github.io/hello-islibra/2018/09/08/MongoDB/)
 + [MySQL](https://islibra.github.io/hello-islibra/2018/09/08/MySQL/)
++ [Druid](https://islibra.github.io/hello-islibra/2018/09/16/Druid/)
++ [SQL](https://islibra.github.io/hello-islibra/2018/09/16/SQL/)
++ [SQL基本数据类型](https://islibra.github.io/hello-islibra/2018/09/16/SQL%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/)
 
 
 # design:
@@ -36,6 +39,7 @@ tags:
 + [快捷键](https://islibra.github.io/hello-islibra/2018/08/25/%E5%BF%AB%E6%8D%B7%E9%94%AE/)
 + [工具](https://islibra.github.io/hello-islibra/2018/09/08/%E5%B7%A5%E5%85%B7/)
 + [Notepad++](https://islibra.github.io/hello-islibra/2018/09/08/Notepad/)
++ [搜狗输入法自定义短语](https://islibra.github.io/hello-islibra/2018/09/16/%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9F%AD%E8%AF%AD/)
 
 
 # java:
