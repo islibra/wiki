@@ -11,6 +11,7 @@ tags:
 > `Ctrl + f`  向下翻一屏
 > `:set number`  显示行号
 > `:set nonumber`  取消显示行号
+> `:set encoding=utf-8`  设置编码
 > `:行号`  跳转到指定行
 > `:$`  跳转到最后一行
 > `/xxx`  向下搜索xxx
