@@ -55,6 +55,8 @@ tags:
 + [Java读取properties配置文件](https://islibra.github.io/hello-islibra/2018/09/08/Java%E8%AF%BB%E5%8F%96properties%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/)
 + [Java单元测试](https://islibra.github.io/hello-islibra/2018/09/08/Java%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/)
 + [AIO](https://islibra.github.io/hello-islibra/2018/09/08/AIO/)
++ [字符编码](https://islibra.github.io/hello-islibra/2018/10/12/%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81/)
++ [NIO](https://islibra.github.io/hello-islibra/2018/10/12/NIO/)
 
 
 # javascript:
@@ -87,6 +89,8 @@ tags:
 + [Tips](https://islibra.github.io/hello-islibra/2018/08/25/Tips/)
 + [Linux中sh和bash的区别](https://islibra.github.io/hello-islibra/2018/09/08/Linux%E4%B8%ADsh%E5%92%8Cbash%E7%9A%84%E5%8C%BA%E5%88%AB/)
 + [grep](https://islibra.github.io/hello-islibra/2018/09/08/grep/)
++ [Linux磁盘管理](https://islibra.github.io/hello-islibra/2018/10/12/Linux%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/)
++ [查看操作系统版本](https://islibra.github.io/hello-islibra/2018/10/12/%E6%9F%A5%E7%9C%8B%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC/)
 
 
 # web:

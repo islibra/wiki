@@ -1,3 +1,10 @@
+---
+title: Linux磁盘管理
+date: 2018-10-12 21:19:38
+categories: os
+tags:
+---
+
 # 添加磁盘并开机自动挂载
 
 ```bash
