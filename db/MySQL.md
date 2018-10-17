@@ -80,3 +80,86 @@ show Grants for 'kaka'@'10.155.123.55';
 
 > + COLUMNS 表字段
 > + SCHEMATA 所有数据库及默认字符集
+
+
+# MySQL协议
+
+## 基本数据类型
+
+### Integers
+
+
+#### Fixed-length integers
+
+定长，例 int<3> 
+`01 00 00`
+
+
+#### Length-encoded integers
+
+用第一个字节代表存储长度。例：
+
+`fa`       -- 250
+`fc fb 00` -- 251
+
++ <0xfb 1字节
++ 0xfc 2字节
++ 0xfd 3字节
++ 0xfe 8字节
+
+
+### Strings
+
+#### FixedLengthString
+
+定长，例 `string<fix>`
+
+
+#### NulTerminatedString
+
+`string<NUL>` ，以 `00` 结尾。
+
+
+#### VariableLengthString
+
+`string<var>`
+
+
+#### LengthEncodedString
+
+`string<lenenc>`
+
+
+#### RestOfPacketString
+
+`string<EOF>`
+
+
+## Packets
+
+MySQL协议包被切分为最多2^24-1字节，每个分片携带包头。
+
+### Payload
+
+| Type	| Name	| Description |
+| --- | --- | --- |
+| int<3>	| payload_length	| payload长度 |
+| int<1>	| sequence_id	| 报文序列号 |
+| string<var>	| payload	| payload |
+
+例，`COM_QUIT`：
+
+`01 00 00 00 01`
+
+* length: 0x01
+* sequence_id: 0x00
+* payload: 0x01
+
+`COM_QUERY`：
+
+`13 00 00 00 03 53 ...`
+
+* length: 0x13
+* sequence_id: 0x00
+* 命令类型：0x03
+* 命令：0x53 ...
