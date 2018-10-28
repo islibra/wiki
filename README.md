@@ -1,6 +1,6 @@
 ---
 title: README
-date: 2018-10-12 21:33:53
+date: 2018-10-28 12:33:53
 categories:
 tags:
 ---
@@ -24,6 +24,8 @@ tags:
 # design:
 
 + [UML](https://islibra.github.io/hello-islibra/2018/09/08/UML/)
++ [正则表达式](https://islibra.github.io/hello-islibra/2018/10/28/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/)
++ [优化](https://islibra.github.io/hello-islibra/2018/10/28/%E4%BC%98%E5%8C%96/)
 
 
 # dts:
@@ -42,6 +44,11 @@ tags:
 + [搜狗输入法自定义短语](https://islibra.github.io/hello-islibra/2018/09/16/%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9F%AD%E8%AF%AD/)
 
 
+# game:
+
++ [热血传奇手游](https://islibra.github.io/hello-islibra/2018/10/28/%E7%83%AD%E8%A1%80%E4%BC%A0%E5%A5%87%E6%89%8B%E6%B8%B8/)
+
+
 # java:
 
 + [Linux设置Java环境变量](https://islibra.github.io/hello-islibra/2018/07/14/Linux%E8%AE%BE%E7%BD%AEJava%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/)
@@ -57,12 +64,21 @@ tags:
 + [AIO](https://islibra.github.io/hello-islibra/2018/09/08/AIO/)
 + [字符编码](https://islibra.github.io/hello-islibra/2018/10/12/%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81/)
 + [NIO](https://islibra.github.io/hello-islibra/2018/10/12/NIO/)
++ [线程池](https://islibra.github.io/hello-islibra/2018/10/28/%E7%BA%BF%E7%A8%8B%E6%B1%A0/)
++ [Java运算符](https://islibra.github.io/hello-islibra/2018/10/28/Java%E8%BF%90%E7%AE%97%E7%AC%A6/)
++ [远程调试](https://islibra.github.io/hello-islibra/2018/10/28/%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95/)
++ [锁](https://islibra.github.io/hello-islibra/2018/10/28/%E9%94%81/)
 
 
 # javascript:
 
 + [Vue.js](https://islibra.github.io/hello-islibra/2018/09/08/Vue-js/)
 + [Node.js](https://islibra.github.io/hello-islibra/2018/09/08/Node-js/)
+
+
+# life:
+
++ [咖啡](https://islibra.github.io/hello-islibra/2018/10/28/%E5%92%96%E5%95%A1/)
 
 
 # net:
