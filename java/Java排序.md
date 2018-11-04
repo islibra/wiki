@@ -1,3 +1,10 @@
+---
+title: Java排序
+date: 2018-11-04 22:03:23
+categories: java
+tags:
+---
+
 # PriorityQueue
 
 带优先级的队列，使用poll方法按序获取元素。

@@ -1,3 +1,10 @@
+---
+title: 深入理解JVM
+date: 2018-11-04 22:02:07
+categories: java
+tags:
+---
+
 # 一、程序计数器
 
 当前线程所执行的字节码的行号指示器，每条线程独立的 **线程私有** 内存空间。 **无OutOfMemoryError。**
