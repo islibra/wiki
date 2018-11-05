@@ -108,6 +108,41 @@ System.out.println("getTables:" + visitor.getTables());
 System.out.println("getParameters:" + visitor.getParameters());
 System.out.println("getOrderByColumns:" + visitor.getOrderByColumns());
 System.out.println("getGroupByColumns:" + visitor.getGroupByColumns());
+
+// 创建表语句中查找主键和自增字段
+if(statement instanceof MySqlCreateTableStatement)
+{
+    MySqlCreateTableStatement createTableStatement = (MySqlCreateTableStatement)statement;
+    List<SQLTableElement> tableElementList = createTableStatement.getTableElementList();
+    // 找出主键
+    for (SQLTableElement element : tableElementList) {
+        // 单独定义的主键，PRIMARY KEY (name，id)
+        if (element instanceof MySqlPrimaryKey) {
+            List<SQLExpr> columns = ((MySqlPrimaryKey) element).getColumns();
+            System.out.println("PrimaryKey: " + columns.get(0).toString());
+        }
+
+        // 字段定义后面 id int primary key,
+        if (element instanceof SQLColumnDefinition) {
+            SQLColumnDefinition columnDefinition = (SQLColumnDefinition) element;
+            // 自增长列名称
+            String columnName = columnDefinition.getName().toString();
+            //判断id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY
+            List<SQLColumnConstraint> constraints = columnDefinition.getConstraints();
+            for (SQLColumnConstraint constraintTmp : constraints) {
+                if (constraintTmp instanceof SQLColumnPrimaryKey) {
+                    System.out.println("Constraint PrimaryKey: " + columnName);
+                }
+            }
+
+            // 自增字段
+            if (columnDefinition.isAutoIncrement())
+            {
+                System.out.println("AutoIncrement: " + columnName);
+            }
+        }
+    }
+}
 ```
 
 
