@@ -140,6 +140,12 @@ if(statement instanceof MySqlCreateTableStatement)
             {
                 System.out.println("AutoIncrement: " + columnName);
             }
+            
+            // 字段类型
+            SQLDataType sqlDataType = columnDefinition.getDataType();
+            if (sqlDataType != null) {
+                System.out.println("DataType: " + sqlDataType.getName());
+            }
         }
     }
 }
