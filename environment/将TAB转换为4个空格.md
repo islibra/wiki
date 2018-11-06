@@ -8,3 +8,8 @@ tags:
 # Notepad++
 
 设置-首选项-制表符设置-勾选转换为空格
+
+
+# IDEA
+
+菜单`File > Settings`，`Editor > Code Style > Java`，`Tabs and Indents`，去掉勾选`Use tab character`。
