@@ -390,6 +390,9 @@ ALTER TABLE Persons ALTER COLUMN City DROP DEFAULT
 
 ## 自增字段
 
+> **Tips:** 自增字段只能有一个，而且必须为键，可以为非主键。
+
+
 ### MySQL
 
 ```sql
