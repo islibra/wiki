@@ -109,6 +109,128 @@ System.out.println("getParameters:" + visitor.getParameters());
 System.out.println("getOrderByColumns:" + visitor.getOrderByColumns());
 System.out.println("getGroupByColumns:" + visitor.getGroupByColumns());
 
+if(statement instanceof SQLSelectStatement)
+{
+    SQLSelect select = ((SQLSelectStatement) statement).getSelect();
+    SQLSelectQuery query = select.getQuery();
+    if(query instanceof SQLSelectQueryBlock)
+    {
+        //解析Table
+        SQLTableSource table = ((SQLSelectQueryBlock) query).getFrom();
+        System.out.println("getFrom: " + table);
+        //关联查询
+        if(table instanceof SQLJoinTableSource)
+        {
+            SQLJoinTableSource joinTable=(SQLJoinTableSource)table;
+            String joinType=joinTable.getJoinType().toString();
+            System.out.println("joinType: " + joinType);  //关联类型：JOIN/COMMA
+            System.out.println("getLeft: " + joinTable.getLeft());  //左表
+            System.out.println("getRight: " + joinTable.getRight());  //右表
+            SQLExpr expr = joinTable.getCondition();  //关联条件
+            System.out.println("getCondition: " + expr);
+        }
+
+        System.out.println("");
+        //查询列
+        List<SQLSelectItem> mysqlSelectList = ((SQLSelectQueryBlock) query).getSelectList();
+        System.out.println("getSelectList: " + mysqlSelectList);
+        for(SQLSelectItem sqlSelectItem : mysqlSelectList)
+        {
+            //select *
+            if (sqlSelectItem.getExpr() instanceof SQLAllColumnExpr)
+            {
+                System.out.println("getExpr: " + sqlSelectItem.getExpr());
+            }
+            //聚合函数
+            else if(sqlSelectItem.getExpr() instanceof SQLAggregateExpr)
+            {
+                System.out.println("getMethodName: " + ((SQLAggregateExpr) sqlSelectItem.getExpr()).getMethodName());  //函数名称
+                System.out.println("getArguments: " + ((SQLAggregateExpr) sqlSelectItem.getExpr()).getArguments());  //参数列表
+            }
+            else if (sqlSelectItem.getExpr() instanceof SQLPropertyExpr)
+            {
+                System.out.println("getExpr: " + sqlSelectItem.getExpr());
+            }
+            else
+            {
+                System.out.println("item: " + sqlSelectItem);
+            }
+        }
+
+        System.out.println("");
+        //查询条件
+        SQLExpr expr = ((SQLSelectQueryBlock) query).getWhere();
+        System.out.println("getWhere: " + expr);
+        if (expr instanceof SQLBinaryOpExpr)
+        {
+            //表达式
+            SQLBinaryOpExpr bexpr = (SQLBinaryOpExpr)expr;
+            System.out.println("getLeft: " + bexpr.getLeft());
+            System.out.println("getRight: " + bexpr.getRight());
+            System.out.println("getOperator: " + bexpr.getOperator());  //BooleanAnd\BooleanOr
+            if (bexpr.getLeft() instanceof SQLBinaryOpExpr)
+            {
+                SQLBinaryOpExpr bexprL = (SQLBinaryOpExpr)bexpr.getLeft();
+                System.out.println("LgetLeft: " + bexprL.getLeft());
+                //字符串值
+                if (bexprL.getRight() instanceof SQLCharExpr)
+                {
+                    System.out.println("LgetRight: " + ((SQLCharExpr)bexprL.getRight()).toString());
+                }
+                //Equality
+                if (SQLBinaryOperator.Equality == bexprL.getOperator())
+                {
+                    System.out.println("LgetOperator: =");
+                }
+            }
+            if (bexpr.getRight() instanceof SQLBinaryOpExpr)
+            {
+                SQLBinaryOpExpr bexprR = (SQLBinaryOpExpr)bexpr.getRight();
+                System.out.println("RgetLeft: " + bexprR.getLeft());
+                //数字值
+                if (bexprR.getRight() instanceof SQLIntegerExpr)
+                {
+                    System.out.println("RgetRight: " + ((SQLIntegerExpr)bexprR.getRight()).getNumber().longValue());
+                }
+                System.out.println("RgetOperator: " + bexprR.getOperator());  //GreaterThan
+            }
+        }
+        else if(expr instanceof SQLInListExpr)
+        {
+            //IN子句
+            SQLInListExpr inexpr = (SQLInListExpr)expr;
+            SQLExpr exprL =  inexpr.getExpr();
+            System.out.println("in getExpr: " + exprL);
+            System.out.println("toMySqlString: " + SQLUtils.toMySqlString(inexpr));  //将IN转换成key in (values)
+        }
+
+        System.out.println("");
+        //排序
+        SQLOrderBy orderby = ((SQLSelectQueryBlock) query).getOrderBy();
+        if (orderby != null )
+        {
+            List<SQLSelectOrderByItem> orderbyItems = orderby.getItems();
+            for (SQLSelectOrderByItem orderitem : orderbyItems)
+            {
+                System.out.println("getExpr: " + orderitem.getExpr());
+                if (SQLOrderingSpecification.ASC==orderitem.getType() || SQLOrderingSpecification.DESC==orderitem.getType())
+                {
+                    System.out.println("getType: " + orderitem.getType());  //ASC\DESC
+                }
+            }
+        }
+
+        System.out.println("");
+        //分页
+        SQLLimit limit = ((SQLSelectQueryBlock) query).getLimit();
+        if (limit != null)
+        {
+            System.out.println("getOffset: " + limit.getOffset());
+            System.out.println("getRowCount: " + limit.getRowCount());
+        }
+    }
+}
+
 // 创建表语句中查找主键和自增字段
 if(statement instanceof MySqlCreateTableStatement)
 {
