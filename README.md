@@ -1,6 +1,6 @@
 ---
 title: README
-date: 2018-11-04 22:08:53
+date: 2018-11-18 13:36:53
 categories:
 tags:
 ---
@@ -42,6 +42,7 @@ tags:
 + [工具](https://islibra.github.io/hello-islibra/2018/09/08/%E5%B7%A5%E5%85%B7/)
 + [Notepad++](https://islibra.github.io/hello-islibra/2018/09/08/Notepad/)
 + [搜狗输入法自定义短语](https://islibra.github.io/hello-islibra/2018/09/16/%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9F%AD%E8%AF%AD/)
++ [开发环境初始化](https://islibra.github.io/hello-islibra/2018/11/18/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E5%88%9D%E5%A7%8B%E5%8C%96/)
 
 
 # food:
@@ -75,6 +76,7 @@ tags:
 + [锁](https://islibra.github.io/hello-islibra/2018/10/28/%E9%94%81/)
 + [深入理解JVM](https://islibra.github.io/hello-islibra/2018/11/04/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM/)
 + [Java排序](https://islibra.github.io/hello-islibra/2018/11/04/Java%E6%8E%92%E5%BA%8F/)
++ [那些年踩过的坑](https://islibra.github.io/hello-islibra/2018/11/18/%E9%82%A3%E4%BA%9B%E5%B9%B4%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/)
 
 
 # javascript:
