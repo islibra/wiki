@@ -13,3 +13,5 @@ tags:
 # IDEA
 
 菜单`File > Settings`，`Editor > Code Style > Java`，`Tabs and Indents`，去掉勾选`Use tab character`。
+
+> **Tips:** 显示空格和TAB符号：`File > Settings`，`Editor > General > Appearance`，勾选`Show whitespaces`。
