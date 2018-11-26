@@ -39,9 +39,112 @@ mysql> select schema_name, default_character_set_name from information_schema.sc
 
 ## 字符集
 
-> + CHARACTER_SETS 字符集
-> + COLLATIONS 字符集排序规则
-> + COLLATION_CHARACTER_SET_APPLICABILITY
++ CHARACTER_SETS: 字符集
+
+```sql
+/*查看支持的字符集*/
+SHOW CHARACTER SET;
+select * from information_schema.CHARACTER_SETS;
+SHOW CHARACTER SET where charset='utf8';
+SHOW CHARACTER SET like 'utf8%';
+```
+
++ COLLATIONS: 字符集排序规则
+
+```sql
+/*查看支持的字符序*/
+SHOW COLLATION;
+SHOW COLLATION where charset='utf8';
+select * from information_schema.COLLATIONS where CHARACTER_SET_NAME='utf8';
+```
+
+
+### 设置级别
+
+#### server
+
+创建数据库时未指定字符集，字符序，默认使用server字符集，字符序。
+
+```sql
+/*查看server字符集，字符序*/
+show variables like 'character_set_server';
+show variables like 'collation_server';
+```
+
+- 启动服务时指定：
+
+```bash
+mysqld --character-set-server=latin1 \
+       --collation-server=latin1_swedish_ci
+```
+
+- 配置文件指定，`/etc/my.cnf`：
+
+```properties
+[client]
+default-character-set=utf8
+
+[mysql]
+default-character-set=utf8
+
+[mysqld]
+character-set-server=utf8
+collation-server=utf8_unicode_ci
+#指定客户端连接使用的字符集，相当于运行时执行：SET NAMES 'utf8';
+#SET character_set_client = utf8; SET character_set_results = utf8; SET character_set_connection = utf8;
+init-connect='SET NAMES utf8'
+```
+
+- 运行时修改
+
+```sql
+set character_set_server=utf8;  /*重启后生效*/
+```
+
+#### database
+
+```sql
+/*查看数据库字符集，字符序*/
+select @@character_set_database, @@collation_database;
+select * from information_schema.SCHEMATA where SCHEMA_NAME='xxx';
+SHOW CREATE DATABASE xxx;
+/*创建数据库时设置字符集*/
+CREATE DATABASE test_schema CHARACTER SET utf8;
+/*修改数据库字符集*/
+ALTER DATABASE test_schema default character set=gb2312;
+```
+
+#### table
+
+```sql
+/*创建表时指定字符集*/
+CREATE TABLE Persons
+(
+PersonID int,
+PName varchar(255)
+) DEFAULT CHARACTER SET=utf8;
+/*修改表字符集*/
+ALTER TABLE Persons default character set=utf8;
+/*查看表字符集*/
+SHOW TABLE STATUS FROM test_schema;
+select * from information_schema.TABLES where TABLE_SCHEMA='test_schema' and TABLE_NAME='Persons';
+SHOW CREATE TABLE Persons;
+```
+
+#### column
+
+类型为CHAR, VARCHAR, TEXT的列，可以指定字符集，字符序。
+
+```sql
+/*新增列时指定字符集*/
+ALTER TABLE Persons ADD COLUMN Addr VARCHAR(25) CHARACTER SET utf8;
+/*查看列字符集*/
+select * from information_schema.COLUMNS where TABLE_SCHEMA='test_schema' and TABLE_NAME='Persons';
+```
+
+
+参考链接：[Character Sets, Collations, Unicode](https://dev.mysql.com/doc/refman/5.7/en/charset.html)
+
 
 ## 权限
 
