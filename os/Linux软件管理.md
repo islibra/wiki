@@ -136,7 +136,7 @@ $ tar Zcvf FileName.tar.Z DirName  #压缩
 $ tar zxvf FileName.tgz  #解压
 ```
 
-# 11. tar.tgz
+## 11. tar.tgz
 
 ```bash
 $ tar zxvf FileName.tar.tgz  #解压
