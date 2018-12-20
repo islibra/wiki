@@ -8,6 +8,94 @@
 > M2=%M2_HOME%\bin  **--添加到path中去**
 > MAVEN_OPTS=-Xms256m -Xmx512m
 
+# 生命周期
+
+- pre-clean -> clean -> post-clean
+- validate -> initialize -> compile -> test -> package -> install -> depoly
+- pre-site -> site -> post-site -> site-depoly
+
+# 配置文件
+
+配置文件路径：`/conf/setting.xml`
+
+```xml
+<!--本地仓路径-->
+<localRepository>D:\software\apache-maven-3.3.3\repo</localRepository>
+
+<!--从远程仓下载使用的镜像-->
+  <mirrors>
+    <mirror>
+      <id>planetmirror.com</id>
+      <name>PlanetMirror Australia</name>
+      <url>http://downloads.planetmirror.com/pub/maven2</url>
+      <!--需镜像的远程仓，如central代表https://repo.maven.apache.org/maven2/-->
+      <mirrorOf>central</mirrorOf>
+    </mirror>
+  </mirrors>
+
+<!--为Maven配置代理访问网络-->
+  <proxies>
+    <proxy>
+      <id>myproxy</id>
+      <active>true</active>
+      <protocol>http</protocol>
+      <host>proxy.somewhere.com</host>
+      <port>8080</port>
+      <username>proxyuser</username>
+      <password>somepassword</password>
+      <nonProxyHosts>*.google.com|ibiblio.org</nonProxyHosts>
+    </proxy>
+  </proxies>
+
+<!--定义配置，通过<activatedProfiles/>标签或环境变量/JDK版本激活-->
+  <profiles>
+    <profile>
+      <id>test</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+	<!--在JDK 1.8版本构建时被激活-->
+        <jdk>1.8</jdk>
+	<!--在环境变量mavenVersion的值为2.0.3时被激活-->
+        <property>
+          <name>mavenVersion</name>
+          <value>2.0.3</value>
+        </property>
+      </activation>
+      <!--当该profile被激活时，在POM中通过${user.install}访问该属性-->
+      <properties>
+        <user.install>${user.home}/our-project</user.install>
+      </properties>
+      <!--定义Maven下载依赖和插件的远端仓库地址-->
+      <repositories>
+        <repository>
+          <id>codehausSnapshots</id>
+          <name>Codehaus Snapshots</name>
+          <releases>
+            <enabled>false</enabled>
+            <updatePolicy>always</updatePolicy>
+            <checksumPolicy>warn</checksumPolicy>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+            <checksumPolicy>fail</checksumPolicy>
+          </snapshots>
+          <url>http://snapshots.maven.codehaus.org/maven2</url>
+          <layout>default</layout>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        ...
+      </pluginRepositories>
+    </profile>
+  </profiles>
+
+  <!--在所有构建都激活的profile-->
+  <activeProfiles>
+    <activeProfile>env-test</activeProfile>
+  </activeProfiles>
+```
+
 # maven工程典型目录结构
 
 > /src/main/java  **--源码**
@@ -151,20 +239,6 @@
   </pluginManagement>
 </build>
 ```
-
-# 生命周期
-
-- pre-clean -> clean -> post-clean
-- validate -> initialize -> compile -> test -> package -> install -> depoly
-- pre-site -> site -> post-site -> site-depoly
-
-# 仓库
-
-配置文件路径：`/conf/setting.xml`
-
-1. 本地：`<localRepository>D:\software\apache-maven-3.3.3\repo</localRepository>`
-1. 中央：网络访问，无需配置
-1. 远程
 
 
 参考：[Maven 中 dependencies 与 dependencyManagement 的区别](https://zhuanlan.zhihu.com/p/31020263)
