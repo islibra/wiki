@@ -1,3 +1,10 @@
+---
+title: Maven
+date: 2018-12-28 20:42:38
+categories: environment
+tags:
+---
+
 # 前置条件
 
 已安装JDK，并设置环境变量`JAVA_HOME`和`path`。

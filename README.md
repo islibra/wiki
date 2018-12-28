@@ -1,20 +1,23 @@
 ---
 title: README
-date: 2018-11-30 20:45:53
+date: 2018-12-28 20:55:53
 categories:
 tags:
 ---
 
+# ai:
+
++ [AI](https://islibra.github.io/hello-islibra/2018/12/28/AI/)
 
 # business:
 
 + [发票](https://islibra.github.io/hello-islibra/2018/11/25/%E5%8F%91%E7%A5%A8/)
-
++ [apple](https://islibra.github.io/hello-islibra/2018/12/28/apple/)
 
 # container:
 
 + [docker常用命令](https://islibra.github.io/hello-islibra/2018/08/11/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/)
-
++ [Kubenetes网络](https://islibra.github.io/hello-islibra/2018/12/28/Kubenetes%E7%BD%91%E7%BB%9C/)
 
 # db:
 
@@ -48,7 +51,7 @@ tags:
 + [Notepad++](https://islibra.github.io/hello-islibra/2018/09/08/Notepad/)
 + [搜狗输入法自定义短语](https://islibra.github.io/hello-islibra/2018/09/16/%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9F%AD%E8%AF%AD/)
 + [开发环境初始化](https://islibra.github.io/hello-islibra/2018/11/18/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E5%88%9D%E5%A7%8B%E5%8C%96/)
-
++ [Maven](https://islibra.github.io/hello-islibra/2018/12/28/Maven/)
 
 # food:
 
@@ -96,6 +99,7 @@ tags:
 + [国家行政级别](https://islibra.github.io/hello-islibra/2018/10/28/%E5%9B%BD%E5%AE%B6%E8%A1%8C%E6%94%BF%E7%BA%A7%E5%88%AB/)
 + [茶](https://islibra.github.io/hello-islibra/2018/11/04/%E8%8C%B6/)
 + [语言](https://islibra.github.io/hello-islibra/2018/11/30/%E8%AF%AD%E8%A8%80/)
++ [出入境-深圳市公安局民生警务平台](http://www.szga.gov.cn/)
 
 
 # net:
