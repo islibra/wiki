@@ -1,3 +1,10 @@
+---
+title: Kubenetes常用命令
+date: 2018-12-30 18:04:52
+categories: container
+tags:
+---
+
 ```bash
 kubectl get namespace/ns  #查看namespace
 kubectl get node -nmynamespace  #查看指定namespace节点状态

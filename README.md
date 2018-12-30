@@ -1,6 +1,6 @@
 ---
 title: README
-date: 2018-12-28 20:55:53
+date: 2018-12-30 19:48:53
 categories:
 tags:
 ---
@@ -9,15 +9,11 @@ tags:
 
 + [AI](https://islibra.github.io/hello-islibra/2018/12/28/AI/)
 
-# business:
-
-+ [发票](https://islibra.github.io/hello-islibra/2018/11/25/%E5%8F%91%E7%A5%A8/)
-+ [apple](https://islibra.github.io/hello-islibra/2018/12/28/apple/)
-
 # container:
 
 + [docker常用命令](https://islibra.github.io/hello-islibra/2018/08/11/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/)
 + [Kubenetes网络](https://islibra.github.io/hello-islibra/2018/12/28/Kubenetes%E7%BD%91%E7%BB%9C/)
++ [Kubenetes常用命令](https://islibra.github.io/hello-islibra/2018/12/30/Kubenetes%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/)
 
 # db:
 
@@ -53,16 +49,6 @@ tags:
 + [开发环境初始化](https://islibra.github.io/hello-islibra/2018/11/18/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E5%88%9D%E5%A7%8B%E5%8C%96/)
 + [Maven](https://islibra.github.io/hello-islibra/2018/12/28/Maven/)
 
-# food:
-
-+ [阿胶固元膏](https://islibra.github.io/hello-islibra/2018/11/04/%E9%98%BF%E8%83%B6%E5%9B%BA%E5%85%83%E8%86%8F/)
-
-
-# game:
-
-+ [热血传奇手游](https://islibra.github.io/hello-islibra/2018/10/28/%E7%83%AD%E8%A1%80%E4%BC%A0%E5%A5%87%E6%89%8B%E6%B8%B8/)
-
-
 # java:
 
 + [Linux设置Java环境变量](https://islibra.github.io/hello-islibra/2018/07/14/Linux%E8%AE%BE%E7%BD%AEJava%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/)
@@ -91,16 +77,6 @@ tags:
 
 + [Vue.js](https://islibra.github.io/hello-islibra/2018/09/08/Vue-js/)
 + [Node.js](https://islibra.github.io/hello-islibra/2018/09/08/Node-js/)
-
-
-# life:
-
-+ [咖啡](https://islibra.github.io/hello-islibra/2018/10/28/%E5%92%96%E5%95%A1/)
-+ [国家行政级别](https://islibra.github.io/hello-islibra/2018/10/28/%E5%9B%BD%E5%AE%B6%E8%A1%8C%E6%94%BF%E7%BA%A7%E5%88%AB/)
-+ [茶](https://islibra.github.io/hello-islibra/2018/11/04/%E8%8C%B6/)
-+ [语言](https://islibra.github.io/hello-islibra/2018/11/30/%E8%AF%AD%E8%A8%80/)
-+ [出入境-深圳市公安局民生警务平台](http://www.szga.gov.cn/)
-
 
 # net:
 
