@@ -120,5 +120,19 @@ PKCS #12，keystore存档文件格式，扩展名.p12或.pfx，在一个文件�
 
 增加truststore路径，如：`set JAVA_OPTS=-Xmx512m -Djavax.net.ssl.trustStore=C:\JavaCAPS\keystore\cacerts.jks`
 
+# TLS协商过程
+
+1. 客户端发出请求（ClientHello）：携带支持的协议版本如TLSv1.2，支持的加密算法如ECDHE&RSAwithAES128GCM&SHA256，随机数1，[请求域名]。  
+1. 服务器响应（ServerHello）：确认使用的加密通信协议版本如TLSv1.2，使用的加密算法如RSAwithAES128GCM&SHA256，服务器证书，随机数2，[客户端证书请求，如金融机构请求提供USB-KEY中的客户端证书]，[session ID/session ticket(encrypted session key)]。  
+1. 客户端响应：验证服务器证书（通过客户端保存的可信CA列表中证书公钥解密服务器证书中的签名，证书中的域名和实际域名是否一致，证书是否过期），取出服务器证书中的公钥加密随机数3(pre-master secret)，加密通信隧道通知，握手结束通知（所有内容HASH），[客户端证书]。之后使用三个随机数生成对称密钥R。  
+1. [校验客户端证书]，接收到加密随机数3，使用私钥解密，使用三个随机数生成对称密钥R。发出加密通信隧道通知，握手结束通知（所有内容的HASH）。
+
+# 证书校验过程
+
+1. 取上级证书的公钥，对下级证书的签名进行解密，得出下级证书的摘要digest1  
+1. 对下级证书进行信息摘要digest2  
+1. 判断digest1和digest2是否相等  
+1. 依次对各级相邻证书校验，直到root CA或可信锚点  
+
 
 参考：<https://docs.oracle.com/cd/E19509-01/820-3503/index.html>
