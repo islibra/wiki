@@ -1,8 +1,8 @@
 ---
 title: README
-date: 2018-12-30 19:48:53
+date: 2019-1-12 20:27:53
 categories:
-tags:
+tags: catalog
 ---
 
 # ai:
@@ -53,6 +53,7 @@ tags:
 
 + [Linux设置Java环境变量](https://islibra.github.io/hello-islibra/2018/07/14/Linux%E8%AE%BE%E7%BD%AEJava%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/)
 + [使用HttpClient发送HTTPS请求](https://islibra.github.io/hello-islibra/2018/07/29/%E4%BD%BF%E7%94%A8HttpClient%E5%8F%91%E9%80%81HTTPS%E8%AF%B7%E6%B1%82/)
++ [SSL](https://islibra.github.io/hello-islibra/2019/01/12/SSL/)
 + [Java基本数据类型](https://islibra.github.io/hello-islibra/2018/08/05/Java%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/)
 + [jar](https://islibra.github.io/hello-islibra/2018/08/25/jar/)
 + [Java8 Stream](https://islibra.github.io/hello-islibra/2018/08/25/Java8-Stream/)
@@ -101,7 +102,7 @@ tags:
 + [Linux网络管理](https://islibra.github.io/hello-islibra/2018/08/11/Linux%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86/)
 + [Tips](https://islibra.github.io/hello-islibra/2018/08/25/Tips/)
 + [Linux中sh和bash的区别](https://islibra.github.io/hello-islibra/2018/09/08/Linux%E4%B8%ADsh%E5%92%8Cbash%E7%9A%84%E5%8C%BA%E5%88%AB/)
-+ [grep](https://islibra.github.io/hello-islibra/2018/09/08/grep/)
++ [grep&awk](https://islibra.github.io/hello-islibra/2018/09/08/grep&awk/)
 + [Linux磁盘管理](https://islibra.github.io/hello-islibra/2018/10/12/Linux%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/)
 + [查看操作系统版本](https://islibra.github.io/hello-islibra/2018/10/12/%E6%9F%A5%E7%9C%8B%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC/)
 
@@ -117,3 +118,4 @@ tags:
 
 + [使用Hexo搭建个人博客](https://islibra.github.io/hello-islibra/2018/07/14/%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/)
 + [Markdown](https://islibra.github.io/hello-islibra/2018/11/30/Markdown/)
++ [atom](https://islibra.github.io/hello-islibra/2019/01/12/atom/)

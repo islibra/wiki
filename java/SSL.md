@@ -1,3 +1,10 @@
+---
+title: SSL
+date: 2019-01-12 19:44:27
+categories: java
+tags:
+---
+
 通过SSL协议保护client和server之间的通信，包含1. 服务端认证、2. 客户端认证和3. 通信数据加密，例：`https://www.onlinebooks.com/creditcardinfo.html`。  
 最新的协议版本：TLS。  
 认证过程通过公私钥对机制，owner对外发布公钥，并通过 **X.509证书** 来证明是该公钥的owner，保留私钥。  

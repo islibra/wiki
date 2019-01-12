@@ -1,3 +1,10 @@
+---
+title: atom
+date: 2019-01-12 19:47:22
+categories: writing
+tags:
+---
+
 官方网站：<https://atom.io/>  
 需提前下载并安装.NET Framework，下载地址：<https://dotnet.microsoft.com/download/dotnet-framework-runtime>，安装完成后重启。  
 
