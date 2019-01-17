@@ -10,6 +10,8 @@ tags:
 
 Atom通过新建project来进行文件夹操作。
 
+- 显示空格，TAB，换行符：`File - Settings - Editor`，勾选`Show Invisibles`。  
+
 # 快捷键
 
 - 预览：`Ctrl + Shift + M`  
