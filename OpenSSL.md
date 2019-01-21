@@ -30,6 +30,14 @@
   - -CAcreateserial生成证书序列号。
   - -extfile使用的模板文件。
   - -extensions根据模板中添加的X509V3 extensions。
+- ecparam，生成ec密钥参数，如`openssl ecparam -genkey -name prime256v1 -out ca.pem`。
+  - -genkey生成ec key。
+  - -name arg
+  - -out arg输出文件名称，默认stdout。
+- ec，生成ec密钥，如`openssl ec -in ca.pem -out ca.key -aes256`。
+  - -in arg输入文件。
+  - -out arg输出文件。
+  - -aes256使用AES256CBC加密输出的PEM格式的私钥。
 
 # 2. 哈希命令
 
