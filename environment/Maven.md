@@ -247,5 +247,11 @@ tags:
 </build>
 ```
 
+# 常用命令
+
+```bash
+mvn clean package/install -DskipTests
+```
+
 
 参考：[Maven 中 dependencies 与 dependencyManagement 的区别](https://zhuanlan.zhihu.com/p/31020263)
