@@ -38,6 +38,15 @@
   - -in arg输入文件。
   - -out arg输出文件。
   - -aes256使用AES256CBC加密输出的PEM格式的私钥。
+- cms
+  - -verify校验由证书签名的内容。
+  - -certfile file证书文件。
+  - -CAfile file信任的根证书文件。
+  - -inform arg输入格式，默认SMIME，可选PEM, DER。
+  - -nosmimecap
+  - -nodetach使用opaque签名。
+  - -nocerts签名时不包含签发者证书。
+  - -noattr不包含签名属性。
 
 # 2. 哈希命令
 
