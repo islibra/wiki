@@ -23,3 +23,12 @@ echo 'HELLO' | tr 'A-Z' 'a-z'
 ```bash
 scp file.xxx user@hostip:/home/user
 ```
+
+## 显示文件内容
+
+```bash
+cat file #查看全部内容
+more file, file | more #分页查看
+tail file, tail -f file #查看末尾几行
+less file #滚动查看
+```
