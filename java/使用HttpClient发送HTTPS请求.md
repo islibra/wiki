@@ -32,7 +32,7 @@ KeyManagerFactory/TrustManagerFactory -> KeyManager/TrustManager;SecureRandom ->
 
 ## 通过keytool查看KeyStore文件
 
-`keytool -list -keystore cacerts`
+`keytool -list -v -keystore D:\xxx.keystore -storepass 123456`
 
 ## 将证书导入文件
 
