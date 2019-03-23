@@ -194,13 +194,18 @@ public class MyClient {
 
 ### Buffer，缓冲区
 
+Buffer类型: Byte Char Int long short double float
+
 数据流向：`Client <-data-> Buffer <-data-> Channel <-data-> Channel <-data-> Buffer <-data-> Server`
 
 + 分配空间：`ByteBuffer byteBuffer = ByteBuffer.allocate(1024);`
 + 从Client向Buffer中写入数据：`byteBuffer.put(...);`
++ 获取Channel：`inputstream.getchanel();`
 + Buffer中的数据写入Channel：`channel.write(byteBuffer);`
++ 读写转换：`bytebuffer.flip();`
 + Buffer从Channel中读取数据：`channel.read(byteBuffer);`
 + Server从Buffer中读取数据：`byteBuffer.get(...);`
+
 
 > + capacity，缓冲区容量
 > + position，当前位置，下一次读取和写入的索引
@@ -211,10 +216,12 @@ public class MyClient {
 
 ### Channel，通道
 
+chanel相对于input/outputstream流来说是双向的。
+
 + FileChannel，文件IO
 + DatagramChannel，UDP协议
 + ServerSocketChannel/SocketChannel，TCP协议
-    
+
 > 打开一个ServerSocketChannel通道：`ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();`
 > 将通道设置为非阻塞：`serverSocketChannel.configureBlocking(false);`
 > 循环监听SocketChannel：
