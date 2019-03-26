@@ -62,11 +62,23 @@ while y < 100:
 
 ## 数据类型
 
-- 整数
-- 长整数
-- 浮点数
-- 复数
-- 字符串：单引号，双引号，三引号指定多行字符串，自然字符串r"this is a line with \n"
+- Numbers: int, float, bool, complex，使用内置函数type()查询变量指向的 **对象类型**，如：  
+```python
+a, b, c, d = 2, 5.5, True, 1+2j
+print(type(a), type(b), type(c), type(d))
+
+# 数值运算
+2/4  #结果浮点数
+2//4  #结果向下取整
+2*3  #乘法
+2**3  #乘方
+5+4.2  #混合计算时，总是转换成浮点数
+```
+- String: 字符串：单引号，双引号，三引号指定多行字符串，自然字符串r"this is a line with \n"
+- List
+- Tuple
+- Set
+- Dictionaries
 
 
-参考：<https://www.w3cschool.cn/python3/python3-step1.html>
+参考：<https://www.w3cschool.cn/python3/python3-data-type.html>
