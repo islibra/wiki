@@ -1,3 +1,29 @@
+# 文件读写
+
+```python
+with open('/tmp/sudoscript/subdir/status.json', 'r') as f:
+# print(f.read())  读取所有
+# print(f.readline())  读取一行
+  print(f.readlines())  # 读取所有行作为一个列表
+
+with open('/tmp/sudoscript/subdir/statuscp.json', 'w') as f2:
+  f2.write(str((2, 3)))
+```
+
+# 序列化
+
+```python
+import pickle,pprint
+
+namelist = ['alice', 'bob', 'cavin']
+with open('/tmp/sudoscript/subdir/statuscp.json', 'wb') as f:
+  pickle.dump(namelist, f)
+
+with open('/tmp/sudoscript/subdir/statuscp.json', 'rb') as rd:
+  rddata = pickle.load(rd)
+  pprint.pprint(rddata)
+```
+
 # 读写json
 
 import json模块
