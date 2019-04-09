@@ -12,6 +12,25 @@ a g cde
 
 字符串不能改变，如`word[0] = 'm'`会导致错误。
 
+## 字符串处理
+
+```python
+# 转换为字符串
+print('hello ' + str(99))
+print('hello2 ' + repr(50))
+print('1'.rjust(3))  # 右对齐
+print('2'.center(3))  # 居中
+print('3'.ljust(3))  # 左对齐
+print('12'.zfill(5))  # 0填充
+# 格式化字符串
+print('This is a {} length string, and its value is {}'.format(3, 'abc'))
+# 指定位置和关键字
+print('This is another {1} length string, and its value is {0}, also {str} is 3.'.format('abc', 3, str='def'))
+# 宽度和类型
+print('{0:10} ==> {1:10d}'.format('jack', 4097))
+```
+
+
 # 列表
 
 ```python
