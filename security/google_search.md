@@ -1,0 +1,7 @@
+- site:xxx
+  - site:xxx -site:www.xxx排除子域名
+- link:xxx
+- filetype:php
+- inurl:php?topic=
+- intitle:"xxx"
+- intext:"xxx"
