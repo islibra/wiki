@@ -1,3 +1,7 @@
+---
+title: http响应头
+---
+
 # Content-Security-Policy
 
 CSP，通过白名单进行资源加载限制，防止XSS攻击。
