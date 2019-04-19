@@ -65,6 +65,12 @@ theme:
 
 可使用相对路径和锚点指向header
 
+标题查找顺序：  
+1. nav配置
+2. meta-data
+3. level 1 Markdown header on the first line
+4. 文件名
+
 ## YAML Style Meta-Data
 
 ```
