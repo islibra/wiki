@@ -78,18 +78,18 @@ markdown_extensions:
     text
 ```
 
-- note, seealso: 注释，笔
 - abstract, summary, tldr: 摘要，段落
-- info, todo: 提示，叹号
 - tip, hint, important: 贴士，火种
-- success, check, done: 成功，对勾
-- question, help, faq: 问题，问号
-- warning, caution, attention: 警告，叹号
-- failure, fail, missing: 失败，叉叉
-- danger, error: 危险，闪电
-- bug: 虫虫
+- note, seealso: 注释，笔
 - example, snippet: 举例，列表
-- quote, cite: 应用，引号
+- quote, cite: 引用，引号
+- info, todo: 提示，叹号
+- warning, caution, attention: 警告，叹号
+- danger, error: 危险，闪电
+- question, help, faq: 问题，问号
+- success, check, done: 成功，对勾
+- failure, fail, missing: 失败，叉叉
+- bug: 虫虫
 
 
 # MD语法
