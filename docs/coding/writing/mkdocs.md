@@ -61,10 +61,36 @@ pip install mkdocs-material
 theme:
   name: 'material'
 
-# 代码高亮
 markdown_extensions:
-  - codehilite
+  - codehilite  # 代码高亮
+  - admonition  # 提示块
 ```
+
+## Admonition
+
+示例：  
+```
+!!! type ["custom title or blank"]
+    text
+
+# 可折叠
+??? type ["custom title or blank"] [+]
+    text
+```
+
+- note, seealso: 注释，笔
+- abstract, summary, tldr: 摘要，段落
+- info, todo: 提示，叹号
+- tip, hint, important: 贴士，火种
+- success, check, done: 成功，对勾
+- question, help, faq: 问题，问号
+- warning, caution, attention: 警告，叹号
+- failure, fail, missing: 失败，叉叉
+- danger, error: 危险，闪电
+- bug: 虫虫
+- example, snippet: 举例，列表
+- quote, cite: 应用，引号
+
 
 # MD语法
 
