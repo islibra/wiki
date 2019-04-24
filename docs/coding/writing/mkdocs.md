@@ -60,6 +60,10 @@ pip install mkdocs-material
 ```yaml
 theme:
   name: 'material'
+
+# 代码高亮
+markdown_extensions:
+  - codehilite
 ```
 
 # MD语法
