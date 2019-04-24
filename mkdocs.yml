@@ -1,3 +1,7 @@
 site_name: islibra
 theme:
   name: 'material'
+
+# 代码高亮
+markdown_extensions:
+  - codehilite
