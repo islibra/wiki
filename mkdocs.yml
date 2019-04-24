@@ -2,6 +2,6 @@ site_name: islibra
 theme:
   name: 'material'
 
-# 代码高亮
 markdown_extensions:
-  - codehilite
+  - codehilite  # 代码高亮
+  - admonition  # 提示块
