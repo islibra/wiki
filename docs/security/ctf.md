@@ -30,6 +30,9 @@ title: ctf
 
 # 推荐工具
 
+- 010 Editor：<https://www.sweetscape.com/010editor/>，16进制编辑器。
+- Binwalk：<https://github.com/ReFirmLabs/binwalk>，分析，逆向，查看图片源格式。
+- AZPR: zip密码爆破6位以内，aircrack-ng使用字典跑握手包密码，掩码，将明文文件压缩zip判断CRC32一致明文攻击。
 - <https://github.com/truongkma/ctf-tools>
 - <https://github.com/zardus/ctf-tools>
 - <https://github.com/TUCTF/Tools>
@@ -38,3 +41,19 @@ title: ctf
 
 - CTF TIME: <https://ctftime.org/>，国际比赛，有很多基础的。
 - XCTF社区：<https://www.xctf.org.cn/>，国内比赛，比较难。
+
+# 解题思路
+
+1. 观察是否16进制
+
+# 特征
+
+- zip：以PK开头，包含文件路径。
+- zip伪加密：标记位。
+- 已有zip中文件，明文攻击。
+- jpg：以FF D8开头，FF D9结尾，图片浏览器忽略FF D9以后的内容，后面可隐写。
+
+# 方法
+
+1. 分离图片和zip: linux foremost, 直接修改后缀为zip（隐写了多个文件会失败）。
+2. 解压伪加密zip：MAC或Kali直接打开，`java -jar ZipCenOp.jar r xxx.zip`, 16进制编辑标记位为`00`。
