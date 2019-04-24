@@ -1,7 +1,30 @@
-site_name: islibra
+site_name: 'islibra'
+site_author: '李晓龙'
+site_url: 'https://islibra.github.io/hello-islibra/'
+
+# 源码地址
+repo_name: 'islibra/wiki'
+repo_url: 'https://github.com/islibra/wiki'
+edit_uri: 'blob/master/docs/'
+
+# Copyright
+copyright: 'Copyright &copy; 2018 - 2019 李晓龙'
+
+#主题
 theme:
   name: 'material'
+  language: 'zh'  # 配置语言
+  palette:  # 颜色
+    primary: 'cyan'
+    accent: 'red'
+  logo:
+    icon: 'cloud'
+  feature:
+    tabs: true  # 横向导航
 
 markdown_extensions:
-  - codehilite  # 代码高亮
   - admonition  # 提示块
+  - codehilite:    # 代码高亮
+      guess_lang: false
+  - toc:  # 锚点
+      permalink: true
