@@ -22,32 +22,35 @@ theme:
   feature:
     tabs: true  # 横向导航
 
-extra:
-  disqus: 'islibra'  # 评论
+#extra:
+#  disqus: 'islibra'  # 评论
 
-google_analytics:
-  - 'UA-XXXXXXXX-X'
-  - 'auto'
+#google_analytics:
+#  - 'UA-XXXXXXXX-X'
+#  - 'auto'
 
 markdown_extensions:
   - admonition  # 提示块
-  - codehilite:    # 代码高亮
+  - footnotes  # 脚注
+  - meta  # 定义元数据，通过文章上下文控制，如disqus
+  - codehilite:    # 代码高亮，显示行号
       guess_lang: false
+      linenums: true
   - toc:  # 锚点
       permalink: true
-  - pymdownx.arithmatex
-  - pymdownx.betterem:
-      smart_enable: all
-  - pymdownx.caret
-  - pymdownx.critic
-  - pymdownx.details
-  - pymdownx.emoji:
-      emoji_generator: !!python/name:pymdownx.emoji.to_svg
-  - pymdownx.inlinehilite
-  - pymdownx.magiclink
-  - pymdownx.mark
-  - pymdownx.smartsymbols
-  - pymdownx.superfences
-  - pymdownx.tasklist:
-      custom_checkbox: true
-  - pymdownx.tilde
+#  - pymdownx.arithmatex
+#  - pymdownx.betterem:
+#      smart_enable: all
+#  - pymdownx.caret
+#  - pymdownx.critic
+#  - pymdownx.details
+#  - pymdownx.emoji:
+#      emoji_generator: !!python/name:pymdownx.emoji.to_svg
+#  - pymdownx.inlinehilite
+#  - pymdownx.magiclink
+#  - pymdownx.mark
+#  - pymdownx.smartsymbols
+#  - pymdownx.superfences
+#  - pymdownx.tasklist:
+#      custom_checkbox: true
+#  - pymdownx.tilde
