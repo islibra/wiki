@@ -1,10 +1,8 @@
----
-title: mkdocs
----
+# mkdocs
 
 内置开发服务器，实时预览。
 
-# 安装
+## 安装
 
 1. 安装Python和包管理器pip  
 ```bash
@@ -21,7 +19,7 @@ $ mkdocs --version
 mkdocs, version 0.15.3
 ```
 
-# 创建项目
+## 创建项目
 
 ```bash
 mkdocs new my-project
@@ -29,7 +27,7 @@ cd my-project
 $ mkdocs serve  #启动服务器
 ```
 
-# 目录组织方式
+## 目录组织方式
 
 ```yaml
 mkdocs.yml  #配置nav菜单，默认所有目录按字母排序
@@ -37,7 +35,7 @@ docs/
     index.md  #会被渲染为index.html，也可用README.md代替
 ```
 
-# 导航配置示例
+## 导航配置示例
 
 ```yaml
 nav:
@@ -50,13 +48,14 @@ nav:
     - 'Release Notes': 'release-notes.md'
 ```
 
-# 更换主题
+## 更换主题
 
 ```bash
 pip install mkdocs-material
 ```
 
-修改配置  
+### 修改配置
+
 ```yaml
 site_name: 'islibra'
 site_author: '李晓龙'
@@ -91,8 +90,11 @@ google_analytics:
 
 markdown_extensions:
   - admonition  # 提示块
-  - codehilite:    # 代码高亮
+  - footnotes  # 脚注
+  - meta  # 定义元数据，通过文章上下文控制，如disqus
+  - codehilite:    # 代码高亮，显示行号
       guess_lang: false
+      linenums: true
   - toc:  # 锚点
       permalink: true
 ```
@@ -123,7 +125,7 @@ markdown_extensions:
 - bug: 虫虫
 
 
-# MD语法
+## MD语法
 
 可使用相对路径和锚点指向header
 
@@ -133,7 +135,7 @@ markdown_extensions:
 3. level 1 Markdown header on the first line
 4. 文件名
 
-## YAML Style Meta-Data
+### YAML Style Meta-Data
 
 ```
 ---
@@ -148,7 +150,23 @@ some_url: https://example.com
 This is the first paragraph of the document.
 ```
 
-# 构建
+### 语法习惯
+
+1. 使用H1做title
+2. 子级列表缩进4个空格
+3. 代码块添加tab="xxx"分组，添加hl_lines="3 4"高亮行
+4. 脚注`[^1]`，脚注可定义在任意位置，单行`[^1]: xxx`，多行每行开头4个空格，链接形式`https://xxx/#fn:1`
+5. 元数据写在H1之前如：  
+```
+hero: xxx顶部超级提示
+path: tree/master/docs/extensions源代码相对路径
+source: metadata.md底部显示源码链接，需在mkdocs.yml repo_url中定义
+disqus:空disable
+
+# H1
+```
+
+## 构建
 
 ```bash
 mkdocs build  # 生成site目录
@@ -156,23 +174,29 @@ echo "site/" >> .gitignore  # 忽略site文件夹提交
 mkdocs build --clean  # 清理目录
 ```
 
-# 部署
+## 部署
 
-## 分支部署
+### 分支部署
 
 ```bash
 mkdocs gh-deploy  # 新建gh-pages分支
 ```
 
-## 单独仓部署
+### 单独仓部署
 
 ```bash
 cd ../orgname.github.io/  # 切换到仓目录
 mkdocs gh-deploy --config-file ../my-project/mkdocs.yml --remote-branch master
 ```
 
+## 扩展库
 
-# 参考链接：
+```bash
+pip install pymdown-extensions
+```
+
+
+## 参考链接：
 
 - CTF WIKI: <https://ctf-wiki.github.io/ctf-wiki/>
 - 官方网站：<https://www.mkdocs.org/>
