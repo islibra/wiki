@@ -10,6 +10,7 @@ Atom通过新建project来进行文件夹操作。
 ## 配置
 
 - 显示空格，TAB，换行符：`File - Settings - Editor`，勾选`Show Invisibles`。  
+- 更改Tab转换的空格数量：`File - Settings - Editor`，修改`Tab Length`为4。  
 
 ## 快捷键
 
