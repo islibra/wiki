@@ -54,6 +54,12 @@ nav:
 pip install mkdocs-material
 ```
 
+## 扩展库
+
+```bash
+pip install pymdown-extensions
+```
+
 ### 修改配置
 
 ```yaml
@@ -92,48 +98,40 @@ markdown_extensions:
   - admonition  # 提示块
   - footnotes  # 脚注
   - meta  # 定义元数据，通过文章上下文控制，如disqus
+  - pymdownx.caret  # 下划线上标
+  - pymdownx.tilde  # 删除线下标
+  - pymdownx.critic  # 增加删除修改高亮注释，可修饰行内或段落
+  - pymdownx.details  # 提示块可折叠
+  - pymdownx.inlinehilite  # 行内代码高亮
+  - pymdownx.mark  # 文本高亮
+  - pymdownx.smartsymbols  # 符号转换
+  - pymdownx.superfences  # 代码嵌套在列表里
   - codehilite:    # 代码高亮，显示行号
       guess_lang: false
       linenums: true
   - toc:  # 锚点
       permalink: true
+#  - pymdownx.arithmatex  # 数学公式
+  - pymdownx.betterem:  # 对加粗和斜体更好的检测
+      smart_enable: all
+#  - pymdownx.emoji:  # 表情
+#      emoji_generator: !!python/name:pymdownx.emoji.to_svg
+#  - pymdownx.magiclink  # 自动识别超链接
+  - pymdownx.tasklist:  # 复选框checklist
+      custom_checkbox: true
 ```
-
-## Admonition
-
-示例：  
-```
-!!! type ["custom title or blank"]
-    text
-
-# 可折叠
-??? type ["custom title or blank"] [+]
-    text
-```
-
-- abstract, summary, tldr: 摘要，段落
-- tip, hint, important: 贴士，火种
-- note, seealso: 注释，笔
-- example, snippet: 举例，列表
-- quote, cite: 引用，引号
-- info, todo: 提示，叹号
-- warning, caution, attention: 警告，叹号
-- danger, error: 危险，闪电
-- question, help, faq: 问题，问号
-- success, check, done: 成功，对勾
-- failure, fail, missing: 失败，叉叉
-- bug: 虫虫
-
 
 ## MD语法
 
-可使用相对路径和锚点指向header
+### MkDocs特色
 
-标题查找顺序：  
-1. nav配置
-2. meta-data
-3. level 1 Markdown header on the first line
-4. 文件名
+- 超链接可使用相对路径如：`Please see the [project license](../about/license.md) for further details.`
+- 超链接可使用锚点如：`Please see the [project license](about.md#license) for further details.`
+- 标题查找顺序：  
+    1. nav配置
+    2. meta-data
+    3. level 1 Markdown header on the first line
+    4. 文件名
 
 ### YAML Style Meta-Data
 
@@ -152,11 +150,7 @@ This is the first paragraph of the document.
 
 ### 语法习惯
 
-1. 使用H1做title
-2. 子级列表缩进4个空格
-3. 代码块添加tab="xxx"分组，添加hl_lines="3 4"高亮行
-4. 脚注`[^1]`，脚注可定义在任意位置，单行`[^1]: xxx`，多行每行开头4个空格，链接形式`https://xxx/#fn:1`
-5. 元数据写在H1之前如：  
+1. 元数据写在H1之前如：  
 ```
 hero: xxx顶部超级提示
 path: tree/master/docs/extensions源代码相对路径
@@ -165,6 +159,76 @@ disqus:空disable
 
 # H1
 ```
+1. 使用H1做title
+1. 符号参见[SmartSymbols](#smartsymbols)
+1. 文本修饰
+    - 高亮`==mark me==`, 下划线`^^Insert me^^`, 删除线`~~Delete me~~`
+    - 增加`{++add++}`, 删除`{--del--}`, 修改`{~~is~>are~~}`, 高亮`{==highlight==}`, 注释`{>>comment<<}`，可修饰行内或段落
+    - 上标`H^2^0`, `text^a\ superscript^`, 下标`CH~3~CH~2~OH`, `text~a\ subscript~`
+    - 行内代码高亮：`` `:::language mycode` `` or `` `#!language mycode` ``
+2. 一级列表使用`-`，二级列表使用`*`，三级列表使用`+`，子级列表缩进 **4** 个空格，使用复选框：`- [x] item`
+3. 代码块添加`tab="xxx"`分组，添加`hl_lines="3 4"`高亮行
+    - 嵌套在列表中
+    ```
+    - list1
+        - sublist1
+        ```
+        code
+        ```
+        - sublist2
+    - list2
+    ```
+1. 表格  
+```
+First Header | Second Header | Third Header
+:----------- |:-------------:| -----------:
+Left         | Center        | Right
+```
+1. 提示块参见[Admonition](#admonition)
+4. 脚注`[^1]`，脚注可定义在任意位置，单行`[^1]: xxx`，多行每行开头4个空格，链接形式`https://xxx/#fn:1`
+
+
+### Admonition
+
+示例：  
+```
+!!! type ["custom title or blank"]
+    text
+
+# 可折叠，+默认打开
+???[+] type ["custom title or blank"]
+    text
+```
+
+- abstract, summary, tldr: 摘要，段落
+- tip, hint, important: 贴士，火种
+- note, seealso: 注释，笔
+- example, snippet: 举例，列表
+- quote, cite: 引用，引号
+- info, todo: 提示，叹号
+- warning, caution, attention: 警告，叹号
+- danger, error: 危险，闪电
+- question, help, faq: 问题，问号
+- success, check, done: 成功，对勾
+- failure, fail, missing: 失败，叉叉
+- bug: 虫虫
+
+### SmartSymbols
+
+Markdown       | Result
+-------------- |--------
+`(tm)`         | (tm)
+`(c)`          | (c)
+`(r)`          | (r)
+`c/o`          | c/o
+`+/-`          | +/-
+`-->`          | -->
+`<--`          | <--
+`<-->`         | <-->
+`=/=`          | =/=
+`1/4, etc.`    | 1/4, etc.
+`1st 2nd etc.` | 1st 2nd etc.
+
 
 ## 构建
 
@@ -187,12 +251,6 @@ mkdocs gh-deploy  # 新建gh-pages分支
 ```bash
 cd ../orgname.github.io/  # 切换到仓目录
 mkdocs gh-deploy --config-file ../my-project/mkdocs.yml --remote-branch master
-```
-
-## 扩展库
-
-```bash
-pip install pymdown-extensions
 ```
 
 
