@@ -254,8 +254,7 @@ mkdocs gh-deploy --config-file ../my-project/mkdocs.yml --remote-branch master
 ```
 
 
-## 参考链接：
-
-- CTF WIKI: <https://ctf-wiki.github.io/ctf-wiki/>
-- 官方网站：<https://www.mkdocs.org/>
-- 主题：<https://squidfunk.github.io/mkdocs-material/>
+!!! quote "参考链接"
+    - CTF WIKI: <https://ctf-wiki.github.io/ctf-wiki/>
+    - 官方网站：<https://www.mkdocs.org/>
+    - 主题：<https://squidfunk.github.io/mkdocs-material/>

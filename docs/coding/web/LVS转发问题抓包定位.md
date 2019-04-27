@@ -161,15 +161,15 @@ Chain KUBE-SERVICES (1 references)
 # 7. 抓包查看报文转发情况
 
 ## 1. 安装tcpdump
-    
+
 安装包已分享至OneBox：[https://onebox.huawei.com/p/59c49f09d1cda4a34294dd23e08811da](https://onebox.huawei.com/p/59c49f09d1cda4a34294dd23e08811da)
-    
+
 * 使用工具如WinSCP将`libpcap0-0.9.8-50.10.1.x86_64.rpm`和`tcpdump-3.9.8-1.21.x86_64.rpm`两个安装包拷贝到需要抓包的VM上；
 * 修改文件执行权限`chmod 777 libpcap0-0.9.8-50.10.1.x86_64.rpm`和`chmod 777 tcpdump-3.9.8-1.21.x86_64.rpm`；
 * 执行安装`rpm -hvi libpcap0-0.9.8-50.10.1.x86_64.rpm`和`rpm -hvi tcpdump-3.9.8-1.21.x86_64.rpm`；
-    
+
 ## 2. 执行抓包程序
-    
+
 ```bash
 tcpdump -v -n -i eth0 -w /opt/tmp.cap -s 0  #-i为网络接口名称，-w为输出文件路径
 ```
@@ -180,17 +180,17 @@ tcpdump -v -n -i eth0 -w /opt/tmp.cap -s 0  #-i为网络接口名称，-w为输�
 
 通过分析broker报文发现，在broker发送了PSH[^1]推送报文后，就一直在重传， **没有得到manager的响应** ，此为 **疑问点3** 。
 
-![](~/11-33-06.jpg)
+![](../../img/11-33-06.jpg)
 
 分析LVS报文，发现LVS向manager发送了RST[^1]报文。
 
-![](~/14-43-57.jpg)
+![](../../img/14-43-57.jpg)
 
 查阅资料得知，这是keepalived的健康检查机制，LVS会定期（默认6秒，可以修改keepalived.conf中字段`delay_loop 6`）向manager发送一个TCP连接来检测http是否正常，为了减少TCP连接带来的资源浪费，所以检测（TCP三次握手[^2]）完毕后会发送一个RST报文来断开这个连接，释放资源。因此该报文为正常报文，且未接收到LVS发送的请求报文。
 
 尝试不使用LVS，broker直连manager，订购成功。
 
-![](~/14-52-41.jpg)
+![](../../img/14-52-41.jpg)
 
 在broker向manager发送了PSH报文后，manager向broker返回PSH应答报文。
 
