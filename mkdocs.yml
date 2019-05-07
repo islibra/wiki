@@ -20,7 +20,7 @@ theme:
   logo:
     icon: 'cloud'
   feature:
-    tabs: true  # 横向导航
+    tabs: false  # 横向导航
 
 #extra:
 #  disqus: 'islibra'  # 评论
