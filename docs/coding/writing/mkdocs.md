@@ -24,7 +24,8 @@ mkdocs, version 0.15.3
 ```bash
 mkdocs new my-project
 cd my-project
-$ mkdocs serve  #启动服务器
+$ mkdocs serve  # 启动服务器
+$ mkdocs serve -a 127.0.0.1:8001  # 启动第二个服务器，占用8001端口
 ```
 
 ## 目录组织方式
