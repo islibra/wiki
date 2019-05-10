@@ -164,7 +164,7 @@ disqus:空disable
 1. 符号参见[SmartSymbols](#smartsymbols)
 1. 文本修饰
     - 高亮`==mark me==`, 下划线`^^Insert me^^`, 删除线`~~Delete me~~`
-    - 增加`{++add++}`, 删除`{--del--}`, 修改`{~~is~>are~~}`, 高亮`{==highlight==}`, 注释`{>>comment<<}`，可修饰行内或段落
+    - 增加`{+` `+` `add` `+` `+}`, 删除`{-` `-` `del` `-` `-}`, 修改`{~` `~` `is` `~` `>` `are` `~` `~}`, 高亮`{=` `=` `highlight` `=` `=}`, 注释`{>` `>` `comment` `<` `<}`，可修饰行内或段落
     - 上标`H^2^0`, `text^a\ superscript^`, 下标`CH~3~CH~2~OH`, `text~a\ subscript~`
     - 行内代码高亮：`` `:::language mycode` `` or `` `#!language mycode` ``
 2. 一级列表使用`-`，二级列表使用`*`，三级列表使用`+`，子级列表缩进 **4** 个空格，使用复选框：`- [x] item`
