@@ -8,6 +8,9 @@
 
 设置环境变量：`GOPATH`，指向自定义workspace。
 
+!!! info
+	在GOPATH下创建src目录，将项目放在src下，GoLand才能找的到依赖。
+
 ## demo
 
 在workspace下建立目录：`src/hello`，新建`hello.go`。
