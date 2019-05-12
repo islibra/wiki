@@ -1,5 +1,13 @@
 # kali
 
+## 下载安装
+
+下载地址：<https://www.kali.org/downloads/.html>，选择`Kali Linux 64 bit Vbox`，跳转到[Offensive Security Download Page](https://www.offensive-security.com/kali-linux-vm-vmware-virtualbox-image-download/)，选择`Kali Linux VirtualBox Images`选项卡，选择`Kali Linux Vbox 64 Bit Ova - Torrent`，下载种子文件。
+
+下载torrent工具：[BitComet](http://www.bitcomet.com/en)
+
+在VirtualBox中导入kali-linux-2019.1-vbox-amd64.ova
+
 ## 渗透过程
 
 1. DNS解析域名子域名，看有哪些IP，了解服务器组网。

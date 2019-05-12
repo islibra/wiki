@@ -1,9 +1,9 @@
----
-title: Linux软件管理
-date: 2018-07-30 21:33:50
-categories: os
-tags:
----
+# Linux软件管理
+
+## Ubuntu
+
+- 查询软件有哪些版本可用：`sudo apt-cache madison <<packagename>>`, `sudo apt-cache policy <<packagename>>`
+- 安装指定版本：`sudo apt-get install xxx=version`
 
 ```bash
 #Redhat查询软件是否安装
