@@ -1,5 +1,21 @@
 # Docker基于runC逃逸漏洞
 
+## 触发条件
+
+容器中的进程以root权限运行。
+
+## proc
+
+系统自动将进程信息挂载到`/proc`。
+
+进程在访问`/proc/self`时，相当于访问`/proc/[pid]`，pid为自己。
+
+- `/proc/[pid]/exe`执行命令的实际路径，可通过该命令拷贝进程。
+- `/proc/[pid]/fd`包含该进程打开的每个文件的句柄。
+
+!!! quote
+    proc(5): <http://man7.org/linux/man-pages/man5/proc.5.html>
+
 ## exploit代码
 
 <https://github.com/feexd/pocs/tree/master/CVE-2019-5736>
@@ -122,3 +138,7 @@ int main (int argc, char **argv) {
   return 0;
 }
 ```
+
+## 消减措施
+
+- kubernetes: <https://kubernetes.io/blog/2019/02/11/runc-and-cve-2019-5736/>

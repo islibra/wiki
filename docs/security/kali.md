@@ -8,6 +8,8 @@
 
 在VirtualBox中导入kali-linux-2019.1-vbox-amd64.ova
 
+root默认密码：toor
+
 ## 渗透过程
 
 1. DNS解析域名子域名，看有哪些IP，了解服务器组网。
