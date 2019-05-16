@@ -2,6 +2,10 @@
 
 ## 触发条件
 
+通过`docker exec -it <CONTAINER ID> /bin/bash`进入容器执行`/bin/bash`文件，将其覆盖为`#!/proc/self/exe`。
+
+添加可执行权限。
+
 容器中的进程以root权限运行。
 
 ## proc
@@ -142,3 +146,10 @@ int main (int argc, char **argv) {
 ## 消减措施
 
 - kubernetes: <https://kubernetes.io/blog/2019/02/11/runc-and-cve-2019-5736/>
+
+
+!!! quote "参考链接"
+    - Go语言POC：<https://github.com/Frichetten/CVE-2019-5736-PoC>
+    - 容器镜像：<https://github.com/q3k/cve-2019-5736-poc>
+    - touch文件POC：<https://x3fwy.bitcron.com/post/runc-malicious-container-escape>
+    - 嘶吼：<https://www.4hou.com/vulnerable/16243.html>

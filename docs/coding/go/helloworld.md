@@ -31,6 +31,9 @@ func main() {
 
 执行`go run hello.go`直接运行程序。
 
+!!! tip "提示"
+	如果在同一个包中定义多个文件，需要执行`go run hello1.go hello2.go`，否则会报undefined。
+
 ## 包
 
 创建包路径如：`math/rand`，`rand`包内所有`.go`文件都以`package rand`开头。
@@ -44,6 +47,160 @@ import (
 
 调用时使用`rand.xxx()`
 
+## 变量
+
+```go
+//声明变量
+var a, b int
+//变量初始化
+var c, d int = 1, 2
+//简洁赋值语句，代替var和类型声明，只能用在函数内部
+e := 3
+fmt.Println(a, b, c, d, e)
+```
+
+## 数组
+
+```go
+//数组
+var str [2]string
+str[0] = "hello"
+str[1] = "world"
+fmt.Println(str[0], str[1])
+fmt.Println(str)
+primes := [6]int{2, 3, 5, 7, 11, 13}  //注意这里使用简洁赋值语句，但还是声明了数组类型
+fmt.Println(primes)
+//切片，大小可变的数组
+var s []int = primes[1:4]  //左开右闭区间，下标从0开始
+fmt.Println(s)
+//使用内建函数向切片追加元素
+s = append(s, 9, 8)  //append返回新的切片，大小动态增长，为2的次幂
+```
+
+## 结构体
+
+结构体是一组字段。
+
+```go
+//定义结构体
+type Vertex struct {
+    X int
+    Y int
+}
+
+//结构体，无需实例化
+fmt.Println(Vertex{1, 2})
+```
+
+## 结构体方法
+
+带接收者参数的函数，位于`func`和方法名之间。
+
+```go
+//定义结构体
+type Vertex struct {
+    X int
+    Y int
+}
+
+//定义结构体参数
+func (v Vertex) Abs() int {
+    return v.X*v.X + v.Y*v.Y  //在函数内引用结构体
+}
+
+//结构体，无需实例化
+v := Vertex{1, 2}
+fmt.Println(v.Abs())  //调用结构体方法
+```
+
+## 指针接收者
+
+可以修改结构体的值。
+
+```go
+//定义结构体
+type Vertex struct {
+    X int
+    Y int
+}
+
+//定义结构体参数
+func (v Vertex) Abs() int {
+    return v.X*v.X + v.Y*v.Y  //在函数内引用结构体
+}
+
+//指针接收者
+func (v *Vertex) Scale(i int) {
+    v.X = v.X*i
+    v.Y = v.Y*i  //修改指针接收者的值，注意这里还是用点号
+}
+
+//结构体，无需实例化
+v := Vertex{1, 2}
+v.Scale(10)  //修改指针接收者的值，注意这里还是用点号
+fmt.Println(v.Abs())  //调用结构体方法
+```
+
+## range
+
+```go
+//range
+for i, v := range primes {  //返回值第一个为下标，第二个为元素副本，可使用_忽略
+    fmt.Printf("the %d ele is %d\n", i, v)
+}
+```
+
 ## 库函数
 
 - time: time.Now()获取当前时间
+
+### xml
+
+```go
+package main
+
+import (
+	"encoding/xml"
+	"fmt"
+)
+
+type Result struct {
+	XMLName xml.Name `xml:"DockerNSAuthV2"`	 //xml根节点
+	NSID int `xml:"NSID"`
+	User_id string `xml:"user_id"`
+	User_name string `xml:"user_name"`
+	Auth int `xml:"auth"`
+	//Created 结构体中不存在，忽略
+	Updated string `xml:"updated"`
+	Domain_name string `xml:"domain_name"`
+	Namespace_name string `xml:"namespace_name"`
+	Other string  //xml中不存在，忽略
+}
+
+func ParseXml() {
+	data := `
+	<DockerNSAuthV2>
+		<NSID>0</NSID>
+		<user_id>828c7f051527455db66213e8ea9e6bc4</user_id>
+		<user_name>usrlee</user_name>
+		<auth>7</auth>
+		<created>0001-01-01T00:00:00Z</created>
+		<updated>2019-05-07T11:23:23.559672796Z</updated>
+		<domain_name>telee</domain_name>
+		<namespace_name>repospacelee</namespace_name>
+	</DockerNSAuthV2>
+	`
+
+	v := Result{}
+	err := xml.Unmarshal([]byte(data), &v)  //转换成byte数组，转换后赋值给v，返回错误信息
+	if err != nil {
+		fmt.Printf("error: %v", err)
+		return
+	}
+	fmt.Print(v)
+	fmt.Println()
+}
+```
+
+!!! quote "参考链接"
+	[Go语言xml格式](https://mp.weixin.qq.com/s?__biz=MzU0ODc4MjE0Nw==&mid=2247484081&idx=1&sn=7c305948a72471a605525cf0ece0df5c&chksm=fbb8ab9dcccf228b598fd6363fd58c8151aaae465d6cbcf85c7ba3b63b4cc554ebd10abce915&scene=7&ascene=0&devicetype=android-26&version=2700043a&nettype=WIFI&abtest_cookie=BQABAAgACgALABIAEwAGAJ6GHgAjlx4AxZkeANyZHgD1mR4AAJoeAAAA&lang=zh_CN&pass_ticket=WketPNhCwlbklAEEdO8wwYBYBsa2VlSHnRJ6qOJUhQ%2Bmd%2Bs0TlxtPDDi%2FfLAamwT&wx_header=1)
