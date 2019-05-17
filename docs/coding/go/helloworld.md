@@ -204,3 +204,28 @@ func ParseXml() {
 
 !!! quote "参考链接"
 	[Go语言xml格式](https://mp.weixin.qq.com/s?__biz=MzU0ODc4MjE0Nw==&mid=2247484081&idx=1&sn=7c305948a72471a605525cf0ece0df5c&chksm=fbb8ab9dcccf228b598fd6363fd58c8151aaae465d6cbcf85c7ba3b63b4cc554ebd10abce915&scene=7&ascene=0&devicetype=android-26&version=2700043a&nettype=WIFI&abtest_cookie=BQABAAgACgALABIAEwAGAJ6GHgAjlx4AxZkeANyZHgD1mR4AAJoeAAAA&lang=zh_CN&pass_ticket=WketPNhCwlbklAEEdO8wwYBYBsa2VlSHnRJ6qOJUhQ%2Bmd%2Bs0TlxtPDDi%2FfLAamwT&wx_header=1)
+
+### flag
+
+实现命令行参数解析。
+
+```go
+//参数标签
+var help bool  //不带参数值
+var version *bool
+var email string  //带参数值
+//指定变量存储标签的值，标签名称，默认值，标签描述
+flag.BoolVar(&help, "h", false, "display help info")
+//另一种方式赋值
+version = flag.Bool("v", false, "display version")
+flag.StringVar(&email, "e", "admin@xxx.com", "email address")
+flag.Parse()
+
+fmt.Println(help)
+fmt.Println(*version)
+fmt.Println(email)
+flag.PrintDefaults()  //打印参数选项
+```
+
+!!! quote "参考链接"
+	[golang flag包使用笔记](https://www.jianshu.com/p/f9cf46a4de0e)
