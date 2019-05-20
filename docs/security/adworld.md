@@ -32,3 +32,33 @@
 
 !!! success "工具"
     [扫目录脚本dirsearch](https://github.com/maurosoria/dirsearch)，执行命令：`python3 dirsearch.py -u http://111.198.29.45:52431 -e *`
+
+## 备份文件
+
+### 常用备份文件名称
+
+- index.php.save
+- index.php.bak
+- index.old
+- index.php.temp
+- .git .svn .swp .svn .~ .bak .bash_history
+
+### flag
+
+使用`index.php.bak`下载备份文件，查看源码，get the flag。
+
+## cookie
+
+查看cookie，根据提示访问cookie.php，查看响应头，get the flag。
+
+## 不能按的按钮
+
+编辑源码将input的disable属性删除，点击按钮get the flag。
+
+!!! info "提示"
+    手动使用hackbar post数据，提交表单。
+
+## js
+
+\x35\x35\x2c\x35\x36\x2c\x35\x34\x2c\x37\x39\x2c\x31\x31\x35\x2c\x36\x39\x2c\x31\x31\x34\x2c\x31\x31\x36\x2c\x31\x30\x37\x2c\x34\x39\x2c\x35\x30
+55,56,54,79,115,69,114,116,107,49,50
