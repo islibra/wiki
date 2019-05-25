@@ -52,3 +52,6 @@ apm install minimap  # 安装插件
 # npm config set https-proxy http://l0025xxxx:pass\@word@proxy.xxx.com:8080
 # npm install minimap -g  # 全局安装
 ```
+
+!!! tip "提示"
+    MAC中apm的位置为：`/Applications/Atom.app/Contents/Resources/app/apm/bin/apm`

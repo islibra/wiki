@@ -60,6 +60,13 @@
 
 ## 0x07 js
 
+F12查看源代码，找到页面中的javascript代码。
+
+!!! note "说明"
+    javascript中`String.fromCharCode`方法将指定的Unicode转换成字符串，如：`String.fromCharCode(70,65,85,88,32,80,65,83,83,87,79,82,68,32,72,65,72,65)`
+
+函数中默认的pass为70,65,85,88,32,80,65,83,83,87,79,82,68,32,72,65,72,65，转换后的值是FAUX PASSWORD HAHA
+
 ```python
 #!/usr/bin/python
 

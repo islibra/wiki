@@ -33,14 +33,3 @@
 
 !!! quote "参考链接"
     [Kindle 除了用数据线传书，还有这 5 个超好用的传书技巧 - 少数派](https://mp.weixin.qq.com/s/Sag8vLmmLbAs47aIVF3rnQ)
-
-
-
-pip install requests
-import requests
-r = request.get("https://xxx")
-r = request.post("https://xxx", data={'key':'value'})
-get请求参数
-payload = {'key1':'value1', 'key2':'value2'}
-r = request.get("https://xxx", params=payload)
-http://mp.weixin.qq.com/mp/homepage?__biz=MzU2ODYzNTkwMg==&hid=5&sn=1cc7e4fa055c64f12f4a071bb6585d41&scene=18#wechat_redirect
