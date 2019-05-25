@@ -11,8 +11,14 @@
 
 ## 链接
 
+### 算法
+
+- python实现的排序算法：<https://github.com/TheAlgorithms/Python>
+
 ### 教程
 
+- 肯定会：<https://wistbean.github.io>
+- Read the Docs: <https://readthedocs.org/>
 - W3Cschool: <https://www.w3cschool.cn/>
 
 ### 云
@@ -22,6 +28,10 @@
 ### 网络安全
 
 - 廖新喜：<http://xxlegend.com/>
+
+### 实用
+
+- kindle传书：<https://mp.weixin.qq.com/s/Sag8vLmmLbAs47aIVF3rnQ>
 
 
 ## 语录

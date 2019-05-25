@@ -1,4 +1,6 @@
-# 安装
+# 0x00_hellopython
+
+## 安装
 
 下载[源码包](https://www.python.org/ftp/python/3.7.2/Python-3.7.2.tgz)，解压，执行  
 ```bash
@@ -22,7 +24,7 @@ Python 3.7.2
 ```  
 Done!
 
-# Start
+## Start
 
 - 解释型语言
 - 面向对象
@@ -46,7 +48,7 @@ while y < 100:
 
 执行代码：`python hello.py`
 
-## 注释
+### 注释
 
 ```python
 # 这是单行注释
@@ -60,7 +62,7 @@ while y < 100:
 '''
 ```
 
-## 数据类型
+### 数据类型
 
 - Numbers: int, float, bool, complex，使用内置函数type()查询变量指向的 **对象类型**，如：  
 ```python

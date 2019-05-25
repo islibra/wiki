@@ -23,6 +23,7 @@ Atom通过新建project来进行文件夹操作。
 
 官方地址：<https://atom.io/packages>
 
+- [document-outline](https://atom.io/packages/document-outline): 标题列表
 - [minimap](https://atom.io/packages/minimap): 代码缩略图
 - [highlight-selected](https://atom.io/packages/highlight-selected)：选中高亮
 - [minimap-highlight-selected](https://atom.io/packages/minimap-highlight-selected): 选中缩略图高亮

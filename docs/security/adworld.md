@@ -1,10 +1,10 @@
 # adworld
 
-## 查看源代码
+## 0x01 查看源代码
 
 鼠标右键被禁止，通过F12开发者工具查看，flag写在html注释里。
 
-## GET_POST
+## 0x02 GET_POST
 
 ### HTTP协议的八种方法
 
@@ -25,7 +25,7 @@
 1. 使用GET方法提交参数：`http://111.198.29.45:59720/?a=1`
 1. 使用POST方法提交参数：勾选`Enable Post Data`，输入`b=2`，get the flag
 
-## robots
+## 0x03 robots
 
 1. 在URL后添加`robots.txt`访问robots文件
 1. 发现隐藏`flag_ls_h3re.php`，访问获取flag
@@ -33,7 +33,7 @@
 !!! success "工具"
     [扫目录脚本dirsearch](https://github.com/maurosoria/dirsearch)，执行命令：`python3 dirsearch.py -u http://111.198.29.45:52431 -e *`
 
-## 备份文件
+## 0x04 备份文件
 
 ### 常用备份文件名称
 
@@ -47,18 +47,30 @@
 
 使用`index.php.bak`下载备份文件，查看源码，get the flag。
 
-## cookie
+## 0x05 cookie
 
 查看cookie，根据提示访问cookie.php，查看响应头，get the flag。
 
-## 不能按的按钮
+## 0x06 不能按的按钮
 
 编辑源码将input的disable属性删除，点击按钮get the flag。
 
 !!! info "提示"
     手动使用hackbar post数据，提交表单。
 
-## js
+## 0x07 js
 
-\x35\x35\x2c\x35\x36\x2c\x35\x34\x2c\x37\x39\x2c\x31\x31\x35\x2c\x36\x39\x2c\x31\x31\x34\x2c\x31\x31\x36\x2c\x31\x30\x37\x2c\x34\x39\x2c\x35\x30
-55,56,54,79,115,69,114,116,107,49,50
+```python
+#!/usr/bin/python
+
+# 将16进制编码输出为ASCII字符
+s='\x35\x35\x2c\x35\x36\x2c\x35\x34\x2c\x37\x39\x2c\x31\x31\x35\x2c\x36\x39\x2c\x31\x31\x34\x2c\x31\x31\x36\x2c\x31\x30\x37\x2c\x34\x39\x2c\x35\x30'
+print(s)
+# 55,56,54,79,115,69,114,116,107,49,50
+
+# 构造成列表
+slist=[55,56,54,79,115,69,114,116,107,49,50]
+for i in slist:
+    print(chr(i), end='')  # 输出字符形式
+# 786OsErtk12
+```

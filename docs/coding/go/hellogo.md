@@ -1,15 +1,22 @@
-# helloworld
+# hellogo
 
 官方网站：<https://golang.org/>
 
 中文版：<https://go-zh.org/>
 
-提取安装包到指定目录：`tar -C /usr/local/ -zxf go-go1.12.5.tar.gz`
+二进制安装包下载地址：<https://golang.org/dl/>
 
-设置环境变量：`GOPATH`，指向自定义workspace。
+提取安装包到指定目录：`tar -C /usr/local/ -zxf go1.12.5.linux-amd64.tar.gz`
 
-!!! info
-	在GOPATH下创建src目录，将项目放在src下，GoLand才能找的到依赖。
+!!! info "linux添加环境变量"
+	1. 执行`vim /etc/profile`
+	1. 添加`export PATH=$PATH:/usr/local/go/bin`
+	1. 执行`source /etc/profile`
+	1. 查看go版本`go version`
+
+!!! info "windows设置环境变量"
+	1. 添加`GOPATH`，指向自定义workspace，在workspace下建立目录src，并创建main.go和package。使用`go get`也会将库默认下载到该目录下。
+	1. 使用GoLand导入工程 {>>一般是包含src的目录<<} 后，File - Settings - Go - GOPATH - Project GOPATH，添加工程目录 {>>包含src的目录<<}，在GoLand中才能找到依赖。
 
 ## demo
 
@@ -229,3 +236,62 @@ flag.PrintDefaults()  //打印参数选项
 
 !!! quote "参考链接"
 	[golang flag包使用笔记](https://www.jianshu.com/p/f9cf46a4de0e)
+
+### archive
+
+#### tar
+
+!!! example "文件类型"
+    - TypeReg           = '0'    // regular file // 普通文件
+    - TypeRegA          = '\x00' // regular file // 普通文件
+    - TypeLink          = '1'    // hard link // 硬链接
+    - TypeSymlink       = '2'    // symbolic link // 符号链接
+    - TypeChar          = '3'    // character device node // 字符设备节点
+    - TypeBlock         = '4'    // block device node // 块设备节点
+    - TypeDir           = '5'    // directory // 目录
+    - TypeFifo          = '6'    // fifo node // 先进先出队列节点
+    - TypeCont          = '7'    // reserved // 保留位
+    - TypeXHeader       = 'x'    // extended header // 扩展头
+    - TypeXGlobalHeader = 'g'    // global extended header // 全局扩展头
+    - TypeGNULongName   = 'L'    // Next file has a long name // 下一个文件记录有个长名字
+    - TypeGNULongLink   = 'K'    // Next file symlinks to a file w/ a long name // 下一个文件记录指向一个具有长名字的文件
+    - TypeGNUSparse     = 'S'    // sparse file // 稀疏文件
+
+### os
+
+#### FileInfo
+
+func Lstat: 返回文件或符号链接的FileInfo。
+
+```go
+type FileInfo interface {
+    Name() string       // base name of the file
+    Size() int64        // length in bytes for regular files; system-dependent for others
+    Mode() FileMode     // 返回FileMode, file mode bits
+    ModTime() time.Time // modification time
+    IsDir() bool        // abbreviation for Mode().IsDir()
+    Sys() interface{}   // underlying data source (can return nil)
+}
+```
+
+#### FileMode
+
+以bit形式表示文件类型和权限。
+
+```go
+type FileMode uint32
+```
+
+!!! example "文件类型"
+    - ModeDir        FileMode = 1 << (32 - 1 - iota) // d: is a directory
+    - ModeAppend                                     // a: append-only
+    - ModeExclusive                                  // l: exclusive use
+    - ModeTemporary                                  // T: temporary file (not backed up)
+    - ModeSymlink                                    // L: 符号链接，symbolic link
+    - ModeDevice                                     // D: device file
+    - ModeNamedPipe                                  // p: named pipe (FIFO)
+    - ModeSocket                                     // S: Unix domain socket
+    - ModeSetuid                                     // u: setuid
+    - ModeSetgid                                     // g: setgid
+    - ModeCharDevice                                 // c: Unix character device, when ModeDevice is set
+    - ModeSticky                                     // t: sticky

@@ -49,6 +49,9 @@
 
 - CTF TIME: <https://ctftime.org/>，国际比赛，有很多基础的。
 - XCTF社区：<https://www.xctf.org.cn/>，国内比赛，比较难。
+- DefCon拉斯维加斯举办的年度黑客盛会
+- NorthSec蒙特利尔举办的年度安全大会
+- NCL国家网络联盟面向高中生和大学生的解题模式CTF
 
 ## 解题思路
 
