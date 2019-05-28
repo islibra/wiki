@@ -24,9 +24,12 @@ mkdocs, version 0.15.3
 ```bash
 mkdocs new my-project
 cd my-project
-$ mkdocs serve  # 启动服务器
+$ mkdocs serve --dirtyreload  # 启动服务器
 $ mkdocs serve -a 127.0.0.1:8001  # 启动第二个服务器，占用8001端口
 ```
+
+!!! tip "serve缓存路径"
+    `C:\Users\xxx\AppData\Local\Temp\mkdocs_xxx`
 
 ## 目录组织方式
 
@@ -209,9 +212,9 @@ Left         | Center        | Right
 - info, todo: 提示，叹号
 - warning, caution, attention: 警告，叹号
 - danger, error: 危险，闪电
-- question, help, faq: 问题，问号
 - success, check, done: 成功，对勾
 - failure, fail, missing: 失败，叉叉
+- question, help, faq: 问题，问号
 - bug: 虫虫
 
 ### SmartSymbols
