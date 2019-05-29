@@ -1,5 +1,44 @@
 # go语言安全编程
 
+## 整数安全
+
+### 无符号反转
+
+!!! example "危险场景"
+    - 数组索引
+    - 对象长度
+    - 循环计数器
+
+```go tab="错误的做法"
+import (
+	"fmt"
+	"math"
+)
+
+func TestUnsigned() {
+	var a uint64 = math.MaxUint64  // 18446744073709551615
+	fmt.Println(a)
+	var b uint64 = 1
+	var c uint64 = a + b
+	fmt.Println(c)  // 0
+}
+```
+
+```go tab="推荐的做法"
+var c uint64
+
+// 在操作前校验
+if (math.MaxUint64 - a) < b {
+	fmt.Println("error: c is too big.")
+} else {
+	c = a + b
+	fmt.Println(c)
+}
+```
+
+使用make([]int, size)时，如果size是负值或>math.MaxInt32会导致程序退出
+
+
 ## IO安全
 
 ### 临时文件及时删除
@@ -82,6 +121,83 @@ f, err := os.OpenFile("/opt/limit.txt", os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0600
 
 参见[上传下载](../../../../paas/docs/icsl/%E5%B8%B8%E7%94%A8%E6%94%BB%E5%87%BB%E5%91%BD%E4%BB%A4/#_12)
 
+## 序列化和反序列化
 
+### 序列化敏感数据造成信息泄露
 
-使用make([]int, size)时，如果size是负值或>math.MaxInt32会导致程序退出
+```go tab="错误的做法"
+package main
+
+import (
+	"fmt"
+	"encoding/json"
+)
+
+type creditCard struct {
+	// 注意首字母大写，public的才能被序列化
+	ID int `json:"card_id"`
+	Name string `json:"username"`
+	Bank string `json:"bankname"`
+	Password string `json:"password"`  // 敏感信息
+}
+
+func Serialize() []byte {
+	var mycredit creditCard
+	mycredit.ID = 123456
+	mycredit.Name = "aaron"
+	mycredit.Bank = "zhaoshang"
+	mycredit.Password = "1qaz@WSX"
+
+	serializeStr, err := json.Marshal(mycredit)
+	if err != nil {
+		fmt.Println("serialize error")
+		return nil
+	}
+	// 敏感信息被序列化
+	// {"card_id":123456,"username":"aaron","bankname":"zhaoshang","password":"1qaz@WSX"}
+	fmt.Println(string(serializeStr))
+	return serializeStr
+}
+
+func Deserialize(serializeStr []byte) {
+	var decredit creditCard
+	err := json.Unmarshal(serializeStr, &decredit)
+	if err != nil {
+		fmt.Println("deserialize error")
+		return
+	}
+	fmt.Println(decredit.ID)
+	fmt.Println(decredit.Name)
+	fmt.Println(decredit.Bank)
+	fmt.Println(decredit.Password)
+}
+
+// 在main中调用
+se := Serialize()
+Deserialize(se)
+```
+
+```go tab="推荐的做法"
+Password string `json:"-"`  // 阻止敏感信息被序列化
+```
+
+!!! info "提示"
+    - 示例仅对json, xml有效
+    - 其他方法：首字母小写
+    - 如果敏感数据已加密，可以序列化
+
+### 反序列化恶意数据
+
+### 敏感数据序列化后1.传输或2.在硬盘上持久保存需先签名后加密
+
+```go tab="错误的做法"
+import (
+	"bytes"
+	"encoding/gob"
+)
+
+// 直接序列化
+cache := new(bytes.Buffer)
+encoder := gob.NewEncoder(cache)
+err := encoder.Encode(mycredit)
+```

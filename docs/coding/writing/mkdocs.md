@@ -13,7 +13,7 @@ pip 1.5.2
 ```
 2. 安装mkdocs  
 ```bash
-pip --proxy=http://l0025xxxx:pass\@word@proxy.xxx.com:8080 install mkdocs
+pip --proxy=http://l0025xxxx:pass%40word@proxy.xxx.com:8080 install mkdocs  # %40代表@
 
 $ mkdocs --version
 mkdocs, version 0.15.3
