@@ -36,6 +36,29 @@ if (math.MaxUint64 - a) < b {
 }
 ```
 
+## 有符号溢出
+
+```go tab="错误的做法"
+// 有符号整数溢出
+func Testsigned() {
+	var a int32 = math.MaxInt32  //2147483647
+	fmt.Println(a)
+	var b int32 = 1
+	var c int32 = a + b
+	fmt.Println(c)  // -2147483648
+}
+```
+
+```go tab="推荐的做法"
+// 在操作前校验
+if ((a > 0 && b > (math.MaxInt32 - a)) || (a < 0 && b < (math.MinInt32 - a))) {
+	fmt.Println("error: c is too big.")
+} else {
+	var c int32 = a + b
+	fmt.Println(c)
+}
+```
+
 使用make([]int, size)时，如果size是负值或>math.MaxInt32会导致程序退出
 
 
