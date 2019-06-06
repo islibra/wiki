@@ -27,6 +27,7 @@
 
 ### 网络安全
 
+- [Golang安全资源合集](https://github.com/re4lity/Hacking-With-Golang/blob/master/README.md)
 - 廖新喜：<http://xxlegend.com/>
 
 ### 实用
