@@ -1,18 +1,19 @@
 # beego
 
-go语言web框架，官方网站：<https://beego.me/>，github: <https://github.com/astaxie/beego>
+go语言web框架。
 
-!!! tip "go get"
-    下载并安装package。  
-
-    !!! example "选项"
-        - -t, 同时下载测试用例
+!!! quote "官方网站"
+    - <https://beego.me/>
+    - github: <https://github.com/astaxie/beego>
 
 ## 下载安装
 
 ```bash
 go get github.com/astaxie/beego
 ```
+
+!!! example "选项"
+    - -t, 同时下载测试用例
 
 ## 创建文件
 
@@ -106,3 +107,10 @@ beego.InsertFilter(pattern string, position int, filter FilterFunc, params ...bo
         - AfterExec 执行完 Controller 逻辑之后执行的过滤器
         - FinishRouter 执行完逻辑之后执行的过滤器
     - filter, 执行函数
+
+## 上下文context
+
+- Input: 封装request
+    - SetData: 设置Input中Data的值，方便用户在Filter中传递数据到Controller
+    - GetData
+- Output: 封装response
