@@ -14,6 +14,11 @@
 ### 算法
 
 - python实现的排序算法：<https://github.com/TheAlgorithms/Python>
+- python算法动画演示：<https://www.toptal.com/developers/sorting-algorithms/bubble-sort>
+- [Github标星2w+，热榜第一，如何用Python实现所有算法](https://mp.weixin.qq.com/s/OHoe6TTX--Ys5G-5yR6juA)
+- [Algorithm Visualizer](https://algorithm-visualizer.org/)
+- [Algorithm Visualizer - Github](https://github.com/algorithm-visualizer/algorithm-visualizer)
+- [python实现基于深度学习的网络欺凌检测模型](https://mp.weixin.qq.com/s?__biz=MjM5NjA0NjgyMA==&mid=2651075726&idx=1&sn=0279918927745ff6a8899ebe27592daa&chksm=bd1fa6058a682f130fb35265924858bbdec766a452c3d742be429a650b8393077524e115ba0b&xtrack=1&scene=0&subscene=92&sessionid=1559655937&clicktime=1559657542&ascene=7&devicetype=android-28&version=2700043b&nettype=3gnet&abtest_cookie=BgABAAgACgALABIAEwAVAAgAnoYeACOXHgBWmR4AxZkeANyZHgD1mR4AA5oeAA2aHgAAAA%3D%3D&lang=zh_CN&pass_ticket=aSykkTizzSN1ZCZ6bSrqfZt5Is9H%2F4Lgw4gEEVKAyiWlMIffXq7CPS6w1pwbAswD&wx_header=1)
 
 ### 教程
 

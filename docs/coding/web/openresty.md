@@ -66,7 +66,7 @@ brew install openresty
 
 ## 请求处理流程
 
-![](../assets/markdown-img-paste-20190604092041494.png)
+![](../../../img/nginx_lua.png)
 
 以下行为嵌入到nginx不同的处理阶段。
 

