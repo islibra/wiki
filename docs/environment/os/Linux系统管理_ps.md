@@ -12,6 +12,12 @@
 - -o {format}, 指定输出格式，如：`ps -o pid,args`
 - -w, 不限制输出宽度
 
+## 关机
+
+```bash
+shutdown -h now  # 将系统服务停掉后立刻关机
+```
+
 
 ## Ubuntu允许root通过ssh直接登录
 

@@ -104,6 +104,41 @@ for i, v := range primes {
 }
 ```
 
+## 导入包
+
+```python tab="python"
+# 0x00_导入文件名
+import filename
+
+filename.func()
+
+# 0x01_只导入文件中def定义的方法
+from filename import func
+
+func()
+
+# 0x02_包目录下需包含空的__init__.py
+import sound.effect
+sound.effect.area()
+```
+
+```go tab="go"
+// project/src下的main.go
+package main
+
+// 创建包路径如：math/rand，目录内所有文件都是
+package rand
+
+//////
+
+// 导入包
+import (
+    "math/rand"
+)
+
+rand.xxx()
+```
+
 ## 模板
 
 ```python

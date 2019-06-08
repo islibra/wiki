@@ -15,11 +15,48 @@ root默认密码：toor
 - 下载地址：<http://sourceforge.net/projects/owaspbwa/files/>
 - 解压7zip: <https://www.keka.io/en/>
 
+!!! warning "注意"
+    VirtualBox需要下载ova格式的文件。
+
 root默认密码：owaspbwa
+
+## 配置网络互通
+
+工具 - 网络 - 创建，启用DHCP。
+
+bwavm - 设置 - 网络 - Host-Only - vboxnet0
+
+kali设置相同。
+
+进入到kali/bwavm终端执行`ifconfig`查看网络配置。
+
+!!! tip "提示"
+    若系统默认配置不响应ping，可使用`arping -c 4 x.x.x.x`
+
+## 访问靶机
+
+在kali上打开浏览器访问bwavm地址：<http://192.168.56.4/>
 
 ## 渗透过程
 
 1. DNS解析域名子域名，看有哪些IP，了解服务器组网。
+
+!!! note "漏洞点"
+    允许公共DNS区域传输（未正确配置的DNS服务器）。
+
+    - 查询公共DNS注册信息：`whois xxx.com`获取组织名称地址联系方式。
+    - `dig ns xxx.com`获取组织DNS服务器信息。
+    - 利用区域传输攻击，获取DNS服务器解析的所有主机信息和子域名列表：`dig axfr @nsztm1.digi.ninja zonetransfer.me`
+    - `theharvester -b all -d zonetransfer.me`获取邮箱主机IP。
+    - 在线查询软件信息：<https://toolbar.netcraft.com/site_report>
+    - 查询历史页面：<https://archive.org/web/web.php>
+    - google高级搜索：`site:site_to_look_into"target_domain"`
+
+!!! quote "参考链接"
+    - openbugbounty.org：Open Bug Bounty是安全研究人员在面向公众的网站报告和公布漏洞(仅跨站点脚本和跨站点请求伪造)的一个独立站点。所以在谷歌中的搜索将返回所有提到的到“zonetransfe”这是openbugbounty.org所做的。
+    - pastebin.com ：是一种非常普遍的方法，用于让黑客匿名地去过滤和发布攻击期间所获得的信息。
+    - zone-h.org：Zone-H是一个恶意黑客经常去炫耀他们的成就的网站，主要是对网站的破坏。
+
 2. Nmap扫描开放了哪些port，对应端口运行哪些服务，服务版本，OS版本。
 3. 若存在Web服务器，查看https协议版本和使用的加密套件。
 4. F12查看页面元素是否存在隐藏域。
