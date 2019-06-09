@@ -39,7 +39,7 @@ kali设置相同。
 
 ## 渗透过程
 
-1. DNS解析域名子域名，看有哪些IP，了解服务器组网。
+### 0x00. DNS解析域名子域名，看有哪些IP，了解服务器组网。
 
 !!! note "漏洞点"
     允许公共DNS区域传输（未正确配置的DNS服务器）。
@@ -57,12 +57,62 @@ kali设置相同。
     - pastebin.com ：是一种非常普遍的方法，用于让黑客匿名地去过滤和发布攻击期间所获得的信息。
     - zone-h.org：Zone-H是一个恶意黑客经常去炫耀他们的成就的网站，主要是对网站的破坏。
 
-2. Nmap扫描开放了哪些port，对应端口运行哪些服务，服务版本，OS版本。
-3. 若存在Web服务器，查看https协议版本和使用的加密套件。
-4. F12查看页面元素是否存在隐藏域。
-5. 尝试修改cookie。
-6. 获取robots.txt查找后台入口。
-7. 爬虫所有链接获取更多URL，进一步了解后台及部署了哪些应用。
+### 0x01. Nmap扫描开放了哪些port，对应端口运行哪些服务，服务版本，OS版本。
+
+- 查看主机是否启动`nmap -sn 192.168.56.4`, {>>ping scan, disable port scan<<}
+- 查看端口开启状态`nmap 192.168.56.4`  
+![](../../img/nmap_port.png)
+- 扫描服务版本及操作系统`namp -sV -O 192.168.56.4`  
+![](../../img/nmap_version_os.png)
+
+### 0x02. 识别web应用程序防火墙WAF，入侵检测系统(IDS)或入侵防御系统(IPS)
+
+- 检测是否存在WAF`nmap -sT -sV -p80,443,8080,8081 --script http-waf-detect 192.168.56.4`, `wafw00f x.x.x.x`
+- 识别WAF`nmap -sT -sV -p80,443,8080,8081 --script http-waf-fingerprint 192.168.56.4`
+
+### 0x03. 若存在Web服务器，查看https协议版本和使用的加密套件。
+
+1. 使用nmap查看ssl版本`nmap -sT -p 443 --script ssl-enum-ciphers x.x.x.x`  
+![](../../img/nmap_ssl_1.png)  
+![](../../img/nmap_ssl_2.png)  
+{==在warnings中查看不安全选项==}
+1. 使用sslscan查看 {==是否存在heartbleed漏洞，弱加密套件，证书信息==}, `sslscan x.x.x.x`  
+![](../../img/sslscan_1.png)  
+![](../../img/sslscan_2.png)
+1. [testSSL](https://testssl.sh/)
+    - 下载`git clone --depth 1 https://github.com/drwetter/testssl.sh.git`
+    - 扫描`./testssl.sh x.x.x.x`检测弱ssl协议版本和加密套，serverhello携带的证书，已知漏洞
+
+### 0x04. F12查看页面元素是否存在隐藏域。
+
+靶机地址：<http://x.x.x.x/WackoPicko/> [^bwa1]
+
+[^bwa1]: <http://x.x.x.x/WackoPicko/>
+
+### 0x05. 尝试修改cookie。
+
+- cookie中是否保存重要信息或用户权限标识
+- 通过修改sessionid测试横向越权
+
+!!! warning "重要特性"
+    1. Httponly：无法通过浏览器脚本访问它，{==XSS依赖==}。这意味着cookie只能在服务器修改，但我们仍然可以通过浏览器工具或插件修改它。
+    1. Secure：浏览器只在https请求中传输该cookie。
+    1. Expires：如果把cookie过期时间设为未来某一个时间，cookie将被存储在一个本地文件中，导致浏览器被关闭后cookie仍然保存。攻击者可以从文件中直接获取cookie，可能窃取到其他有效用户的会话。
+
+### 0x06. 获取robots.txt查找后台入口。
+
+靶机地址：<http://x.x.x.x/vicnum/> [^bwa2]
+
+[^bwa2]: <http://x.x.x.x/vicnum/>
+
+### 0x07. 爬虫所有链接获取更多URL，进一步了解后台及部署了哪些应用。
+
+- dirbuster: 使用字典寻找敏感文件或目录`/usr/share/dirbuster/worldlists`，导出报告txt, xml, csv
+- ZAP: 使用ZAP代理进行敏感文件或目录扫描。Applications - 03-Web Application Analysis - owasp-zap
+    - 修改端口：Tools - Options - Local proxies
+
+
+
 8. burpsuite拦截修改请求，如上传文件把`content-type: text/html`改成`image/png`，修改`User-Agent`。
 9. burpsuite intruder爆破爬取URL
 10. repeater多次修改请求
