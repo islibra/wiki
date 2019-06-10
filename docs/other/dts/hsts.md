@@ -13,7 +13,7 @@ NET::ERR_CERT_COMMON_NAME_INVALID
 
 ## 解决方法
 
-配置页面：<chrome://net-internals/#hsts>
+配置页面：`chrome://net-internals/#hsts`
 
 1. Delete domain security policies  
 输入访问有问题的网站域名，然后点击`Delete`。
