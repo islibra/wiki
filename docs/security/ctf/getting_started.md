@@ -1,4 +1,4 @@
-# ctf
+# getting_started
 
 ## 题目分类
 
