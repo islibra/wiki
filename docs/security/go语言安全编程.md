@@ -2,14 +2,15 @@
 
 ## 整数安全
 
-### 无符号反转
-
-!!! example "危险场景"
+!!! danger "危险场景"
     - 数组索引
     - 对象长度
     - 循环计数器
+    - 使用`make([]int, size)`时，如果size是负值或`>math.MaxInt32`会导致程序退出。
 
-```go tab="错误的做法"
+### 无符号反转
+
+```go tab="错误的做法" hl_lines="10"
 import (
 	"fmt"
 	"math"
@@ -24,7 +25,7 @@ func TestUnsigned() {
 }
 ```
 
-```go tab="推荐的做法"
+```go tab="推荐的做法" hl_lines="4"
 var c uint64
 
 // 在操作前校验
@@ -36,9 +37,9 @@ if (math.MaxUint64 - a) < b {
 }
 ```
 
-## 有符号溢出
+### 有符号溢出
 
-```go tab="错误的做法"
+```go tab="错误的做法" hl_lines="6"
 // 有符号整数溢出
 func Testsigned() {
 	var a int32 = math.MaxInt32  //2147483647
@@ -49,7 +50,7 @@ func Testsigned() {
 }
 ```
 
-```go tab="推荐的做法"
+```go tab="推荐的做法" hl_lines="2"
 // 在操作前校验
 if ((a > 0 && b > (math.MaxInt32 - a)) || (a < 0 && b < (math.MinInt32 - a))) {
 	fmt.Println("error: c is too big.")
@@ -59,7 +60,99 @@ if ((a > 0 && b > (math.MaxInt32 - a)) || (a < 0 && b < (math.MinInt32 - a))) {
 }
 ```
 
-使用make([]int, size)时，如果size是负值或>math.MaxInt32会导致程序退出
+### 整型转换截断
+
+```go tab="错误的做法" hl_lines="6"
+// 整型转换截断
+func Testtransfer() {
+	var a int32 = math.MaxInt32  // 2147483647
+	fmt.Println(a)
+
+	var b int16 = int16(a)  // -1
+	fmt.Println(b)
+}
+```
+
+```go tab="推荐的做法" hl_lines="7"
+// 整型转换截断
+func Testtransfer() {
+	var a int32 = math.MaxInt16
+	fmt.Println(a)
+
+	var b int16
+	if (a > math.MaxInt16 || a < math.MinInt16) {
+		fmt.Println("error")
+	} else {
+		b = int16(a)
+		fmt.Println(b)
+	}
+}
+```
+
+### 整型转换符号错误
+
+```go tab="错误的做法" hl_lines="11 12 20 21"
+// 整型转换符号错误
+func Testsymbol() {
+	var a int32
+	var b uint32
+	// 有符号 --> 无符号
+	// 正值不变 a= 123  b= 123
+	a = 123
+	b = uint32(a)
+	fmt.Println("a=", a, " b=", b)
+	// 负值错误 a= -123  b= 4294967173
+	a = -123
+	b = uint32(a)
+	fmt.Println("a=", a, " b=", b)
+	// 无符号 --> 有符号
+	// 未使用符号位不变 b= 2147483647  a= 2147483647
+	b = 1<<31 - 1
+	a = int32(b)
+	fmt.Println("b=", b, " a=", a)
+	// 使用符号位错误 b= 2147483648  a= -2147483648
+	b = 1<<31
+	a = int32(b)
+	fmt.Println("b=", b, " a=", a)
+}
+```
+
+```go tab="推荐的做法" hl_lines="12 26"
+// 整型转换符号错误
+func Testsymbol() {
+	var a int32
+	var b uint32
+	// 有符号 --> 无符号
+	// 正值不变 a= 123  b= 123
+	a = 123
+	b = uint32(a)
+	fmt.Println("a=", a, " b=", b)
+	// 负值错误 a= -123  b= 4294967173
+	a = -123
+	if (a < 0) {
+		fmt.Println("error")
+	} else {
+		b = uint32(a)
+		fmt.Println("a=", a, " b=", b)
+	}
+
+	// 无符号 --> 有符号
+	// 未使用符号位不变 b= 2147483647  a= 2147483647
+	b = 1<<31 - 1
+	a = int32(b)
+	fmt.Println("b=", b, " a=", a)
+	// 使用符号位错误 b= 2147483648  a= -2147483648
+	b = 1<<31
+	if (b >= (1<<31)) {
+		fmt.Println("error")
+	} else {
+		a = int32(b)
+		fmt.Println("b=", b, " a=", a)
+	}
+}
+```
+
+
 
 
 ## IO安全
