@@ -32,6 +32,8 @@
     - [《每天5分钟玩转 OpenStack》教程目录](https://mp.weixin.qq.com/s/QtdMkt9giEEnvFTQzO9u7g)
     - [视频 - 在 VirtualBox 中部署 OpenStack](https://mp.weixin.qq.com/s/g-bKZqRFUGXDghIfGJ16_g)
     - 博客园: <https://www.cnblogs.com/CloudMan6/>
+- [Docker — 从入门到实践](https://yeasy.gitbooks.io/docker_practice/)
+- kubernetes: <https://kubernetes.io/zh/docs/home/>
 
 ### 网络安全
 
