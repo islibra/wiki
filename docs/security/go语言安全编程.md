@@ -178,6 +178,10 @@ func Testsymbol() {
 
 参见[SQL注入](../../../../paas/icsl/%E5%B8%B8%E7%94%A8%E6%94%BB%E5%87%BB%E5%91%BD%E4%BB%A4/#sql)
 
+## OS命令注入
+
+参见[命令注入](../../../../paas/icsl/%E5%B8%B8%E7%94%A8%E6%94%BB%E5%87%BB%E5%91%BD%E4%BB%A4/#_11)
+
 
 ## IO安全
 
