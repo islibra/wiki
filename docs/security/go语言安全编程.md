@@ -4,9 +4,30 @@
 
 !!! danger "危险场景"
     - 数组索引
-    - 对象长度
+    - 对象长度，如使用`make([]int, size)`时，如果size是负值或`> math.MaxInt32`会导致程序退出。
+
+        !!! example
+            ```go tab="code" hl_lines="1 3"
+            size := -1
+            fmt.Println("size: ", size)
+            ary := make([]int, size)
+            fmt.Println("i made an array with -1")
+            for _, i := range ary {
+                i = 0
+                fmt.Println(i)
+            }
+            ```
+
+            ``` tab="output"
+            $ hello.exe
+            size:  -1
+            panic: runtime error: makeslice: len out of range
+
+            goroutine 1 [running]:
+            main.main()
+            	F:/go/src/hello/hello.go:129 +0xca
+            ```
     - 循环计数器
-    - 使用`make([]int, size)`时，如果size是负值或`>math.MaxInt32`会导致程序退出。
 
 ### 无符号反转
 
@@ -153,6 +174,9 @@ func Testsymbol() {
 ```
 
 
+## SQL注入
+
+参见[SQL注入](../../../../paas/icsl/%E5%B8%B8%E7%94%A8%E6%94%BB%E5%87%BB%E5%91%BD%E4%BB%A4/#sql)
 
 
 ## IO安全
@@ -227,15 +251,15 @@ f, err := os.OpenFile("/opt/limit.txt", os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0600
 
 ### 文件路径验证前标准化
 
-参见[上传下载](../../../../paas/docs/icsl/%E5%B8%B8%E7%94%A8%E6%94%BB%E5%87%BB%E5%91%BD%E4%BB%A4/#_12)
+参见[上传下载](../../../../paas/icsl/%E5%B8%B8%E7%94%A8%E6%94%BB%E5%87%BB%E5%91%BD%E4%BB%A4/#_12)
 
 ### 避免在共享目录操作文件
 
-参见[上传下载](../../../../paas/docs/icsl/%E5%B8%B8%E7%94%A8%E6%94%BB%E5%87%BB%E5%91%BD%E4%BB%A4/#_12)
+参见[上传下载](../../../../paas/icsl/%E5%B8%B8%E7%94%A8%E6%94%BB%E5%87%BB%E5%91%BD%E4%BB%A4/#_12)
 
 ### 安全解压
 
-参见[上传下载](../../../../paas/docs/icsl/%E5%B8%B8%E7%94%A8%E6%94%BB%E5%87%BB%E5%91%BD%E4%BB%A4/#_12)
+参见[上传下载](../../../../paas/icsl/%E5%B8%B8%E7%94%A8%E6%94%BB%E5%87%BB%E5%91%BD%E4%BB%A4/#_12)
 
 ## 序列化和反序列化
 
