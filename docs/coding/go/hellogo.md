@@ -159,7 +159,43 @@ for i, v := range primes {  //返回值第一个为下标，第二个为元素�
 
 ## 库函数
 
-- time: time.Now()获取当前时间
+### encoding/json
+
+```go
+// 将字节数组反序列化为对象
+func Unmarshal(data []byte, v interface{}) error
+```
+
+### io/ioutil
+
+```go
+// 一次性读取整个文件
+func ReadFile(filename string) ([]byte, error)
+```
+
+### path/filepath
+
+```go
+// 返回路径中的最后一个元素
+func Base(path string) string
+
+// 返回pattern匹配到的所有文件名
+func Glob(pattern string) (matches []string, err error)
+```
+
+### strconv
+
+```go
+// 将字符串转化成数字
+// base: 进制2-36, 如果为0，根据字符串前缀自动判断：0x为16进制，0为8进制，其他为10进制
+// bitSize: 数字类型：0 int, 8 int8, 16 int16, 32 int32, 64 int64
+// 如果包含非法数字返回ErrSyntax, 0，如果超过类型最大值返回ErrRange, bitSize最大值和符号。
+func ParseInt(s string, base int, bitSize int) (i int64, err error)
+```
+
+### time
+
+time.Now()获取当前时间
 
 ### xml
 
@@ -295,3 +331,13 @@ type FileMode uint32
     - ModeSetgid                                     // g: setgid
     - ModeCharDevice                                 // c: Unix character device, when ModeDevice is set
     - ModeSticky                                     // t: sticky
+
+#### os/user
+
+```go
+type User struct {
+}
+
+// 运行当前程序的用户
+func Current() (*User, error)
+```
