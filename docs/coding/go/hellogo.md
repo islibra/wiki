@@ -161,36 +161,136 @@ for i, v := range primes {  //返回值第一个为下标，第二个为元素�
 
 ### encoding/json
 
-```go
+```go tab="函数原型"
 // 将字节数组反序列化为对象
 func Unmarshal(data []byte, v interface{}) error
 ```
 
+!!! quote
+	示例代码参见：go语言安全编程 - 序列化敏感数据造成信息泄露
+
 ### io/ioutil
 
-```go
+```go tab="函数原型"
 // 一次性读取整个文件
 func ReadFile(filename string) ([]byte, error)
 ```
 
+```go tab="示例代码" hl_lines="8"
+import (
+    "fmt"
+    "io/ioutil"
+)
+
+func main() {
+	dstFilePath := "E:\\doc\\atom\\docs\\index.md"
+    content, err := ioutil.ReadFile(dstFilePath)
+    if err != nil {
+        fmt.Println("error")
+    }
+    fmt.Println(string(content))
+}
+```
+
+### os/user
+
+```go tab="函数原型"
+type User struct {
+}
+
+// 运行当前程序的用户
+func Current() (*User, error)
+```
+
+```go tab="示例代码"
+import (
+    "os/user"
+    "fmt"
+)
+
+func main() {
+	// 运行程序的用户
+    fmt.Println(user.Current())
+}
+```
+
 ### path/filepath
 
-```go
+```go tab="函数原型"
 // 返回路径中的最后一个元素
 func Base(path string) string
 
-// 返回pattern匹配到的所有文件名
+// 返回pattern匹配到的所有文件名完整路径
 func Glob(pattern string) (matches []string, err error)
+```
+
+```go tab="示例代码"
+import (
+    "path/filepath"
+    "fmt"
+)
+
+func main() {
+	// 绝对路径，返回 test.sh
+    fmt.Println(filepath.Base("/tmp/xxx/yyy/test.sh"))
+    // 相对路径，返回 test.sh
+    fmt.Println(filepath.Base("tmp/xxx/yyy/test.sh"))
+    // 空，返回 .
+    fmt.Println(filepath.Base(""))
+    // 全部分隔符，返回 /
+    fmt.Println(filepath.Base("////"))
+
+	// 返回pattern匹配到的所有文件名完整路径
+    fmt.Println(filepath.Glob("E:\\doc\\atom\\docs\\*.md"))
+}
 ```
 
 ### strconv
 
-```go
+```go tab="函数原型"
 // 将字符串转化成数字
 // base: 进制2-36, 如果为0，根据字符串前缀自动判断：0x为16进制，0为8进制，其他为10进制
 // bitSize: 数字类型：0 int, 8 int8, 16 int16, 32 int32, 64 int64
-// 如果包含非法数字返回ErrSyntax, 0，如果超过类型最大值返回ErrRange, bitSize最大值和符号。
+// 如果为空或包含非法数字返回ErrSyntax, 0，如果超过类型最大值返回ErrRange, bitSize同符号最大值。
 func ParseInt(s string, base int, bitSize int) (i int64, err error)
+```
+
+```go tab="示例代码"
+import (
+    "strconv"
+    "fmt"
+)
+
+func main() {
+	// 将字符串转换为数字
+    // 二进制，返回 12
+    intStr := "00001100"
+    fmt.Println(strconv.ParseInt(intStr, 2, 0))
+    // 十进制，返回 123
+    intStr = "123"
+    fmt.Println(strconv.ParseInt(intStr, 10, 0))
+    // 自动判断进制，返回 15
+    intStr = "0x0F"
+    fmt.Println(strconv.ParseInt(intStr, 0, 0))
+    // 空，返回 invalid syntax, 0
+    i, err := strconv.ParseInt("", 0, 0)
+    if err != nil {
+        fmt.Println(err)
+        fmt.Println(i)
+    }
+    // 包含非法字符，返回 invalid syntax, 0
+    j, errj := strconv.ParseInt("10ab", 0, 0)
+    if errj != nil {
+        fmt.Println(errj)
+        fmt.Println(j)
+    }
+    // 超过类型最大值，返回 value out of range, 2147483647
+    imax, errmax := strconv.ParseInt("2147483650", 0, 32)
+    if errmax != nil {
+        fmt.Println(errmax)
+        fmt.Println(imax)
+    }
+}
 ```
 
 ### time
@@ -331,13 +431,3 @@ type FileMode uint32
     - ModeSetgid                                     // g: setgid
     - ModeCharDevice                                 // c: Unix character device, when ModeDevice is set
     - ModeSticky                                     // t: sticky
-
-#### os/user
-
-```go
-type User struct {
-}
-
-// 运行当前程序的用户
-func Current() (*User, error)
-```
