@@ -1,4 +1,24 @@
-# grep_awk_sed
+# find_grep_awk_sed
+
+## find
+
+从指定的起始目录开始，递归地搜索其各个子目录，查找满足寻找条件的文件，并可以对其进行相关的操作。
+
+格式：find [查找目录] [参数] [匹配模型] [[参数] [匹配模型]]
+
+!!! example
+    1. `find . -name "*.sh"`, 在当前目录（及子目录）下查找 {==以sh结尾==} 的文件。{>>-iname不区分大小写<<}
+    2. `find . -perm 755`, 在当前目录（及子目录）下查找 {==属性为755==} 的文件。
+    3. `find . -user root`, 在当前目录（及子目录）下查找 {==属主为root==} 的文件。
+    4. `find /var -mtime -5`, 在 {==`/var`==} 下查找 {==更改时间在5天以内==} 的文件。
+    5. `find /var -mtime +3`, 在 {==`/var`==} 下查找 {==更改时间在3天以前==} 的文件。
+    6. `find /etc -type l`, 在 {==`/etc`==} 下查找文件类型为l的 {==链接文件==}。
+    7. `find . -size +1000000c`, 在当前目录（及子目录）下查找文件大小 {==大于1M==} 的文件，1M是1000000个字节。
+    8. `find . -perm 700 |xargs chmod 777`, 查找出当前目录（及子目录）下所有权限为700的文件，并把其权限重设为777。
+    9. `find . -type f |xargs ls -l`, 查找出文件并查看其详细信息。
+    1. {==逻辑与`-a`，逻辑或`-o`==}，`find . -name "xxx" -o -name "yyy"`
+    1. `find dir -path "dir/ignoredir" [-a] -prune -o -print`, 忽略ignoredir目录，意义为`if -path "test" then -prune else -print`。`find xxx \( -path xxx/iii1 -o -path xxx/iii2 \) -prune -o -print`, 忽略多个文件夹。`find xxx \( -path xxx/iii1 -o -path xxx/iii2 \) -prune -o -name "*.log" -print`, 忽略文件夹查找某类文件。
+
 
 ## grep
 
