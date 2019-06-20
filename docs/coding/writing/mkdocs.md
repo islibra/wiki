@@ -164,6 +164,7 @@ disqus:空disable
 # H1
 ```
 1. 使用H1做title
+1. 自定义标签：<https://shields.io/>，`https://img.shields.io/badge/<LABEL>-<MESSAGE>-<COLOR>.svg`
 1. 符号参见[SmartSymbols](#smartsymbols)
 1. 文本修饰
     - 高亮`==mark me==`, 下划线`^^Insert me^^`, 删除线`~~Delete me~~`
