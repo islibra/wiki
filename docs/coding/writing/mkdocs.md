@@ -205,18 +205,42 @@ Left         | Center        | Right
     text
 ```
 
-- abstract, summary, tldr: 摘要，段落
-- tip, hint, important: 贴士，火种
-- note, seealso: 注释，笔
-- example, snippet: 举例，列表
-- quote, cite: 引用，引号
-- info, todo: 提示，叹号
-- warning, caution, attention: 警告，叹号
-- danger, error: 危险，闪电
-- success, check, done: 成功，对勾
-- failure, fail, missing: 失败，叉叉
-- question, help, faq: 问题，问号
-- bug: 虫虫
+??? abstract "摘要，总结"
+    abstract, summary, tldr
+
+??? tip "贴士"
+    tip, hint, important
+
+??? note "注释，说明"
+    note, seealso
+
+??? example "举例，代码片段"
+    example, snippet
+
+??? quote "引用，参考链接"
+    quote, cite
+
+??? info "提示，TODO"
+    info, todo
+
+??? warning "警告"
+    warning, caution, attention
+
+??? danger "危险"
+    danger, error
+
+??? success "成功，勾选，完成"
+    success, check, done
+
+??? fail "失败"
+    failure, fail, missing
+
+??? faq "问题，疑问，帮助"
+    question, help, faq
+
+??? bug "BUG"
+    bug
+
 
 ### SmartSymbols
 
