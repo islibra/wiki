@@ -4,13 +4,15 @@
 
 ### 选项
 
-- --help all, 查看所有帮助
-- -e, 查询所有进程
-- -f, 输出所有信息，包含UID, PID, PPID, C, STIME, 命令行CMD
+- `--help all`, 查看所有帮助
+- `--no-headers`, 不显示标题
+- `-e`, 查询所有进程
+- `-f`, 输出所有信息，包含UID, PID, PPID, C, STIME, 命令行CMD
+- `-o {format}`, 指定输出格式，如：`ps -o pid,args`, `ps -ew -o pid,ppid,user,cmd`
+- `-w`, 不限制输出宽度
 - -p {PID1} {PID2}, 查询指定进程ID
 - -u {UID1},{UID2} 查询指定用户
-- -o {format}, 指定输出格式，如：`ps -o pid,args`
-- -w, 不限制输出宽度
+
 
 ## 关机
 
