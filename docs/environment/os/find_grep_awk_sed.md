@@ -30,6 +30,7 @@
     ```
 
     !!! note "参数"
+        - -e --regexp=PATTERN 使用正则表达式
         - -i --ignore-case 忽略大小写
         - -v --invert-match 查找不匹配的行
 
