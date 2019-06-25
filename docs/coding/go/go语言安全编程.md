@@ -7,19 +7,16 @@
     - 对象长度，如使用`make([]int, size)`时，如果size是负值或`> math.MaxInt32`会导致程序退出。
 
         !!! example
-            ```go tab="code" hl_lines="1 3"
+            ```go tab="错误的做法" hl_lines="1 3"
             size := -1
-            fmt.Println("size: ", size)
+            fmt.Println("size:", size)
             ary := make([]int, size)
-            fmt.Println("i made an array with -1")
+            fmt.Println("i made a slice with -1")
             for _, i := range ary {
-                i = 0
                 fmt.Println(i)
             }
-            ```
 
-            ``` tab="output"
-            $ hello.exe
+            ////// output
             size:  -1
             panic: runtime error: makeslice: len out of range
 
@@ -27,6 +24,23 @@
             main.main()
             	F:/go/src/hello/hello.go:129 +0xca
             ```
+
+            ```go tab="推荐的做法" hl_lines="5"
+            // make size为负值造成程序崩溃
+            size := -1
+            fmt.Println("size:", size)
+
+            if size < 0 || size > math.MaxInt32 {
+                fmt.Println("error")
+            } else {
+                ary := make([]int, size)
+                fmt.Println("i made a slice with -1")
+                for _, i := range ary {
+                    fmt.Println(i)
+                }
+            }
+            ```
+
     - 循环计数器
 
 ### 无符号反转
