@@ -211,11 +211,11 @@ Left         | Center        | Right
 ??? tip "贴士"
     tip, hint, important
 
-??? note "注释，说明"
-    note, seealso
+??? note "注释，代码片段，说明"
+    note, snippet, seealso
 
-??? example "举例，代码片段"
-    example, snippet
+??? example "举例"
+    example
 
 ??? quote "引用，参考链接"
     quote, cite
