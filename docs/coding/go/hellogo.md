@@ -69,19 +69,32 @@ fmt.Println(a, b, c, d, e)
 ## 数组
 
 ```go
-//数组
+// 数组
 var str [2]string
 str[0] = "hello"
 str[1] = "world"
-fmt.Println(str[0], str[1])
-fmt.Println(str)
-primes := [6]int{2, 3, 5, 7, 11, 13}  //注意这里使用简洁赋值语句，但还是声明了数组类型
-fmt.Println(primes)
-//切片，大小可变的数组
+fmt.Println(str[0], str[1])  // hello world
+fmt.Println(str)  // [hello world]
+
+// 注意这里使用简洁赋值语句，但还是声明了数组类型
+primes := [6]int{2, 3, 5, 7, 11, 13}
+fmt.Println(primes)  // [2 3 5 7 11 13]
+
+// 切片，大小可变的数组
 var s []int = primes[1:4]  //左开右闭区间，下标从0开始
-fmt.Println(s)
-//使用内建函数向切片追加元素
+fmt.Println(s)  // [3 5 7]
+
+// 使用内建函数向切片追加元素
 s = append(s, 9, 8)  //append返回新的切片，大小动态增长，为2的次幂
+fmt.Println(s)  // [3 5 7 9 8]
+
+// 使用make创建slice
+sl := make([]int, 5)
+fmt.Println("length:", len(sl), sl)  // length: 5 [0 0 0 0 0]
+
+// 指定容量
+sl2 := make([]int, 0, 3)  // 类型，长度，容量
+fmt.Println("length:", len(sl2), "capacity:", cap(sl2), sl2)  // length: 0 capacity: 3 []
 ```
 
 ## 结构体
@@ -243,6 +256,19 @@ func main() {
 	// 返回pattern匹配到的所有文件名完整路径
     fmt.Println(filepath.Glob("E:\\doc\\atom\\docs\\*.md"))
 }
+```
+
+### runtime
+ tab="函数原型"
+```go
+// Go通过独立的进程GC进行垃圾回收
+// 可通过runtime包访问GC，如runtime.GC()显式触发GC
+
+// 
+func SetFinalizer(obj interface{}, finalizer interface{})
+```
+
+```go tab="示例代码"
 ```
 
 ### strconv
