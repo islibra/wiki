@@ -171,15 +171,16 @@ disqus:空disable
     - 增加`{+` `+` `add` `+` `+}`, 删除`{-` `-` `del` `-` `-}`, 修改`{~` `~` `is` `~` `>` `are` `~` `~}`, 高亮`{=` `=` `highlight` `=` `=}`, 注释`{>` `>` `comment` `<` `<}`，可修饰行内或段落
     - 上标`H^2^0`, `text^a\ superscript^`, 下标`CH~3~CH~2~OH`, `text~a\ subscript~`
     - 行内代码高亮：`` `:::language mycode` `` or `` `#!language mycode` ``
-2. 一级列表使用`-`，二级列表使用`*`，三级列表使用`+`，子级列表缩进 **4** 个空格，使用复选框：`- [x] item`
+2. 一级列表使用`-`，二级列表使用`*`，三级列表使用`+`，子级列表缩进 **4** 个空格，使用复选框：`- [x] item`  
+列表内容换行：==行尾2个空格==。
 3. 代码块添加`tab="xxx"`分组，添加`hl_lines="3 4"`高亮行
-    - 嵌套在列表中
+    - 代码块嵌套在列表中，==缩进4个空格==
     ```
     - list1
         - sublist1
-        ```
-        code
-        ```
+            ```
+            code
+            ```
         - sublist2
     - list2
     ```
@@ -195,7 +196,7 @@ Left         | Center        | Right
 
 ### Admonition
 
-示例：  
+示例，==前后要有空行==，如果嵌套在列表中，==缩进4个空格==：  
 ```
 !!! type ["custom title or blank"]
     text
