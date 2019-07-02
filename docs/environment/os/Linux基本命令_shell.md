@@ -1,5 +1,8 @@
 # Linux基本命令_shell
 
+设置别名：`alias ll='ls -al'`
+
+
 ## Shell
 
 ```bash
