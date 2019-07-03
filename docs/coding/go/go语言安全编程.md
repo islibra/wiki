@@ -190,11 +190,64 @@ func Testsymbol() {
 
 ## SQL注入
 
-参见[SQL注入](../../../../paas/icsl/%E5%B8%B8%E7%94%A8%E6%94%BB%E5%87%BB%E5%91%BD%E4%BB%A4/#sql)
+```go tab="错误的做法" hl_lines="10"
+import (
+    "database/sql"
+    //...
+)
+
+//db *sql.DB
+db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/demo?charset=utf8")
+//...
+
+var sqlStr = "SELECT xxx FROM xxx WHERE x = '" + x + "'"
+rows, err := db.Query(sqlStr)
+//...
+
+var result string
+for rows.Next() {
+    var xxx string
+    rows.Scan(&xxx)
+    result += xxx + "\n"
+}
+```  
+
+```go tab="正确的做法"
+var sqlStr = "SELECT xxx FROM xxx WHERE x = ?"
+rows, err := db.Query(sqlStr, x)
+```
+
 
 ## OS命令注入
 
-参见[命令注入](../../../../paas/icsl/%E5%B8%B8%E7%94%A8%E6%94%BB%E5%87%BB%E5%91%BD%E4%BB%A4/#_11)
+```go tab="错误的做法" hl_lines="4"
+import "os/exec"
+
+//param: rm -f /opt/pwm/limit.txt && touch /opt/pwm/attack.txt
+cmd := exec.Command("/bin/sh", "-c", param)
+err := cmd.Run()
+```  
+
+```go tab="推荐的做法一"
+import "os"
+
+err := os.Remove(param)  //使用API
+```
+
+```go tab="推荐的做法二" hl_lines="11"
+import (
+    "os"
+    "os/exec"
+)
+
+_, err := os.Stat(param)  //返回文件描述信息
+if err != nil || os.IsNotExist(err) {
+    //...
+}
+
+cmd := exec.Command("rm", "-f", param)  //功能单一
+delErr := cmd.Run()
+```
 
 
 ## IO安全
