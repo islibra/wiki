@@ -1,5 +1,20 @@
 # Linux软件管理
 
+## mount
+
+```bash
+# 挂载iso文件
+# 先在/mnt/下新建一个名为cdrom的文件夹
+# -o 逗号分隔的选项列表
+mount -o loop /xxx/xxx.iso /mnt/cdrom
+umount /mnt/cdrom
+```
+
+---
+以下未整理
+---
+
+
 ## Ubuntu
 
 - 查询软件有哪些版本可用：`sudo apt-cache madison <<packagename>>`, `sudo apt-cache policy <<packagename>>`
