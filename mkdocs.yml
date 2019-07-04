@@ -22,8 +22,9 @@ theme:
   feature:
     tabs: false  # 横向导航
 
-#extra:
-#  disqus: 'islibra'  # 评论
+# 评论
+extra:
+    disqus: 'islibra'
 
 #google_analytics:
 #  - 'UA-XXXXXXXX-X'
