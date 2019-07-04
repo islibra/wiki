@@ -102,6 +102,11 @@ primes := [6]int{2, 3, 5, 7, 11, 13}
 for i, v := range primes {
     // ...
 }
+
+// 循环
+for i := 0; i < 5; i++ {
+	fmt.Println(i)
+}
 ```
 
 ## 导入包
