@@ -161,6 +161,14 @@ v.Scale(10)  //修改指针接收者的值，注意这里还是用点号
 fmt.Println(v.Abs())  //调用结构体方法
 ```
 
+## 循环
+
+```go
+for i := 0; i < 5; i++ {
+	fmt.Println(i)
+}
+```
+
 ## range
 
 ```go
@@ -180,7 +188,7 @@ func Unmarshal(data []byte, v interface{}) error
 ```
 
 !!! quote
-	示例代码参见：go语言安全编程 - 序列化敏感数据造成信息泄露
+	示例代码参见：[序列化敏感数据造成信息泄露](../go%E8%AF%AD%E8%A8%80%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B/#_12)
 
 ### io/ioutil
 
@@ -259,17 +267,46 @@ func main() {
 ```
 
 ### runtime
- tab="函数原型"
-```go
-// Go通过独立的进程GC进行垃圾回收
-// 可通过runtime包访问GC，如runtime.GC()显式触发GC
 
-// 
+```go tab="函数原型"
+// Go通过独立的进程GC进行垃圾回收
+// 可通过runtime包访问GC，如runtime.GC()运行一次垃圾回收
+func GC()
+// 内存统计
+type MemStats struct {
+	Alloc unit64  // 已分配的字节数
+}
+// 获取内存统计数据
+func ReadMemStats(m *MemStats)
+
+// obj被从内存移除前执行操作
+// finalizer = func(obj *typeObj), 传入obj类型的指针参数
 func SetFinalizer(obj interface{}, finalizer interface{})
 ```
 
 ```go tab="示例代码"
+// 查看内存状态
+var m runtime.MemStats
+runtime.ReadMemStats(&m)
+fmt.Printf("%d Kb\n", m.Alloc / 1024)  // 已分配的内存总量 111 Kb
+
+// 在对象obj被从内存移除前执行操作
+func foo()  {
+    var x Vertex
+
+    runtime.SetFinalizer(&x, func(d *Vertex) {
+        fmt.Println("x %p final.", d)
+    })
+}
+
+for i := 0; i < 5; i++ {
+	foo()
+	time.Sleep(time.Millisecond)
+}
 ```
+
+!!! question
+	如何显式看到SetFinalizer执行？
 
 ### strconv
 
@@ -321,7 +358,39 @@ func main() {
 
 ### time
 
-time.Now()获取当前时间
+```go tab="函数原型"
+import "time"
+
+type Time struct {}
+// 获取当前时间
+func Now() Time
+
+type Duration int64
+
+const (
+	Nanosecond Duration = 1  // 纳秒
+	Microsecond         = 1000 * Nanosecond  // 微秒
+	Millisecond         = 1000 * Microsecond  // 毫秒
+	Second              = 1000 * Millisecond  // 秒
+	Minute              = 60 * Second  // 分
+	Hour                = 60 * Minute  // 时
+)
+
+func Sleep(d Duration)
+```
+
+```go tab="示例代码"
+// 获取当前时间 2019-07-03 19:43:19.8512965 +0800 AWST m=+0.078125001
+fmt.Println(time.Now())
+
+time.Sleep(time.Millisecond)
+```
+
+
+---
+以下未整理
+---
+
 
 ### xml
 
