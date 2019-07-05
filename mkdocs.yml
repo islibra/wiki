@@ -22,6 +22,10 @@ theme:
   feature:
     tabs: false  # 横向导航
 
+# 扩展样式
+extra_css:
+  - 'stylesheets/extra.css'
+
 # 评论
 extra:
     disqus: 'islibra'
