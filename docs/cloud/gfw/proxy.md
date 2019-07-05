@@ -1,5 +1,8 @@
 # proxy
 
+???+ tip "蓝灯"
+    <https://github.com/getlantern/lantern>
+
 !!! quote "下载地址"
     <https://github.com/FelisCatus/SwitchyOmega/releases>
 
