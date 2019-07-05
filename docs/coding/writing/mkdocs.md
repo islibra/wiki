@@ -91,6 +91,10 @@ theme:
   feature:
     tabs: true  # 横向导航
 
+# 扩展样式
+extra_css:
+  - 'stylesheets/extra.css'
+
 extra:
   disqus: 'islibra'  # 评论
 
