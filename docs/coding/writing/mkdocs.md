@@ -136,6 +136,7 @@ markdown_extensions:
     1. Homepage URL: BLOG地址，如<https://islibra.github.io/hello-islibra/>
     1. Application description: 描述
     1. Authorization callback URL: 回调地址，同BLOG地址
+1. Github - New repository，新建`comment`仓。
 1. 修改文件路径：`C:\Users\xxx\AppData\Local\Programs\Python\Python37-32\Lib\site-packages\material\partials\integrations\disqus.html`
 
 ```html
