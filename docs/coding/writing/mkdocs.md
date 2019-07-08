@@ -129,6 +129,50 @@ markdown_extensions:
       custom_checkbox: true
 ```
 
+### 添加评论
+
+1. 申请[GitHub Application](https://github.com/settings/applications/new)
+    1. Application name: 应用名称
+    1. Homepage URL: BLOG地址，如<https://islibra.github.io/hello-islibra/>
+    1. Application description: 描述
+    1. Authorization callback URL: 回调地址，同BLOG地址
+1. 修改文件路径：`C:\Users\xxx\AppData\Local\Programs\Python\Python37-32\Lib\site-packages\material\partials\integrations\disqus.html`
+
+```html
+<!--读取配置文件-->
+{% set disqus = config.extra.disqus %}
+<!--meta可以覆盖全局配置-->
+{% if page and page.meta and page.meta.disqus is string %}
+  {% set disqus = page.meta.disqus %}
+{% endif %}
+
+<!--首页不显示-->
+{% if not page.is_homepage and disqus %}
+{% set pageID = page.title | default("404", true) %}
+  <!--outline-->
+  <h2 id="__comments" data-no-instant>{{ lang.t("meta.comments") }}</h2>
+  <form id="gitalk-form" onsubmit="return false;" data-no-instant>
+    <div id="gitalk-container" data-no-instant></div>
+  </form>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script>
+  <script>
+    const gitalk = new Gitalk({
+      clientID: 'xxx',
+      clientSecret: 'xxx',
+      repo: 'comment',  // 使用单独的仓评论
+      owner: 'islibra',  // 仓库所有者
+      admin: ['islibra'],  // 仓库管理员列表
+      id: '{{ page.title | default("404", true)  }}',  // 页面唯一标识
+      distractionFreeMode: false,  // 全屏遮罩效果
+      pagerDirection: 'last'  // 排序方式：first按评论创建时间正序，last倒序
+    })
+    gitalk.render('gitalk-container')
+  </script>
+{% endif %}
+```
+
+
 ## MD语法
 
 ### MkDocs特色
