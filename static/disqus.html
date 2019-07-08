@@ -1,0 +1,26 @@
+{% set disqus = config.extra.disqus %}
+{% if page and page.meta and page.meta.disqus is string %}
+  {% set disqus = page.meta.disqus %}
+{% endif %}
+{% if not page.is_homepage and disqus %}
+{% set pageID = page.title | default("404", true) %}
+  <h2 id="__comments" data-no-instant>{{ lang.t("meta.comments") }}</h2>
+  <form id="gitalk-form" onsubmit="return false;" data-no-instant>
+    <div id="gitalk-container" data-no-instant></div>
+  </form>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script>
+  <script>
+    const gitalk = new Gitalk({
+      clientID: '731aec4fb0d6c910ea1c',
+      clientSecret: '0122498e12a52f99bd3356ac3ad2da17b5e4d322',
+      repo: 'comment',
+      owner: 'islibra',
+      admin: ['islibra'],
+      id: '{{ page.title | default("404", true)  }}',
+      distractionFreeMode: false,
+      pagerDirection: 'last'
+    })
+    gitalk.render('gitalk-container')
+  </script>
+{% endif %}
