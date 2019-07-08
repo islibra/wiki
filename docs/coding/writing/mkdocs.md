@@ -137,7 +137,9 @@ markdown_extensions:
     1. Application description: 描述
     1. Authorization callback URL: 回调地址，同BLOG地址
 1. Github - New repository，新建`comment`仓。
-1. 修改文件路径：`C:\Users\xxx\AppData\Local\Programs\Python\Python37-32\Lib\site-packages\material\partials\integrations\disqus.html`
+1. 修改文件路径：
+    - `C:\Users\xxx\AppData\Local\Programs\Python\Python37-32\Lib\site-packages\material\partials\integrations\disqus.html`
+    - `/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/material/partials/integrations/disqus.html`
 
 ```html
 <!--读取配置文件-->
@@ -157,6 +159,7 @@ markdown_extensions:
   </form>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.css">
   <script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script>
+  <script src="https://cdnjs.loli.net/ajax/libs/blueimp-md5/2.10.0/js/md5.min.js"></script>
   <script>
     const gitalk = new Gitalk({
       clientID: 'xxx',
@@ -164,7 +167,8 @@ markdown_extensions:
       repo: 'comment',  // 使用单独的仓评论
       owner: 'islibra',  // 仓库所有者
       admin: ['islibra'],  // 仓库管理员列表
-      id: '{{ page.title | default("404", true)  }}',  // 页面唯一标识
+      //id: '{{ page.title | default("404", true)  }}',  // 页面唯一标识
+      id: md5(location.pathname),
       distractionFreeMode: false,  // 全屏遮罩效果
       pagerDirection: 'last'  // 排序方式：first按评论创建时间正序，last倒序
     })
