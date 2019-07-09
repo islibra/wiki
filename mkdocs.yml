@@ -14,6 +14,7 @@ copyright: 'Copyright &copy; 2018 - 2019 李晓龙'
 theme:
   name: 'material'
   language: 'zh'  # 配置语言
+  #favicon: 'img/favicon.ico'  # 修改图标，docs目录下
   palette:  # 颜色
     primary: 'cyan'
     accent: 'red'
