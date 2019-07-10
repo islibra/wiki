@@ -1,6 +1,7 @@
 # Linux基本命令_shell
 
-设置别名：`alias ll='ls -al'`，添加到`/etc/profile`并执行`source /etc/profile`永久生效。
+- 设置别名：`alias ll='ls -al'`，添加到`/etc/profile`并执行`source /etc/profile`永久生效。
+- 读取符号链接指向的文件：`readlink xxxlinkfile`
 
 
 ## Shell
