@@ -25,23 +25,24 @@
 
 二层广播域，在project下创建多个network。
 
-- local: 单机lo
-- flat: 无VLAN tagging
-- VLAN: 具有802.1q tagging
+- local: 单机lo, 同一节点上同一网络的instance通信
+- flat: 无VLAN tagging, 同一网络跨节点通信
+- VLAN: 具有802.1q tagging, 跨节点
 - VxLAN: 唯一标识segmentation ID(VNI)，二层数据包封装成UDP包在三层传输
 - GRE: 使用IP包封装
 
 ### subnet
 
-IP地址池，一个network有多个subnet。
+IP地址段，一个network有多个subnet。
 
 ### port
 
 虚拟交换机上的端口，定义IP和MAC。instance的虚拟网卡VIF(Virtual Interface)绑定到port时分配IP和MAC。一个subnet有多个port。
 
 !!! abstract "映射关系"
-    project 1:n network 1:n subnet 1:n port 1:1 VIF n:1 instance
+    project **1:n** network **1:n** subnet **1:n** port **1:1** VIF **n:1** instance
 
 
 ???+ quote "已读"
-    [Neutron 功能概述 - 每天5分钟玩转 OpenStack（65）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587695&idx=1&sn=17a595f7225b1cf3bb5e6b6879d6d005&chksm=8d3080f6ba4709e0692ec0c9f26f4832c0ccf92b9f77b7f7c375a80940ec107aefb7fe9d9aee&scene=21#wechat_redirect)
+    - [Neutron 功能概述 - 每天5分钟玩转 OpenStack（65）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587695&idx=1&sn=17a595f7225b1cf3bb5e6b6879d6d005&chksm=8d3080f6ba4709e0692ec0c9f26f4832c0ccf92b9f77b7f7c375a80940ec107aefb7fe9d9aee&scene=21#wechat_redirect)
+    - [Neutron 网络基本概念 - 每天5分钟玩转 OpenStack（66）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587708&idx=1&sn=f7dea80905f19bf460e1aa67c5d2453f&chksm=8d3080e5ba4709f3f934ec4dd099a14f1641b0b200b2f4e2dc27ad39cbc9c58447d46436dc0d&scene=21#wechat_redirect)
