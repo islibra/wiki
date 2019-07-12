@@ -14,6 +14,16 @@
 - -u {UID1},{UID2} 查询指定用户
 
 
+## 重启服务
+
+```bash
+# 方式一
+service xxx restart
+# 方式二
+systemctl restart xxx.service
+```
+
+
 ## 关机
 
 ```bash
