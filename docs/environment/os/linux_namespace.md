@@ -214,3 +214,11 @@ root@SZX1000451827:/proc# cat /proc/$$/uid_map
 
 ???+ quote "参考链接"
     [Linux Namespace : User](https://www.cnblogs.com/sparkdev/p/9462838.html)
+
+
+## UTS
+
+容器运行后创建新的`uts namespace`，以`CONTAINER ID`作为新的hostname。
+
+???+ quote "参考链接"
+    [Linux Namespace : UTS](https://www.cnblogs.com/sparkdev/p/9377072.html)
