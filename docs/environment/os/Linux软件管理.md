@@ -10,15 +10,8 @@ mount -o loop /xxx/xxx.iso /mnt/cdrom
 umount /mnt/cdrom
 ```
 
----
-以下未整理
----
 
-
-## Ubuntu
-
-- 查询软件有哪些版本可用：`sudo apt-cache madison <<packagename>>`, `sudo apt-cache policy <<packagename>>`
-- 安装指定版本：`sudo apt-get install xxx=version`
+## rhel
 
 ```bash
 #Redhat查询软件是否安装
@@ -26,6 +19,7 @@ rpm -qa xxx
 #Redhat安装软件
 rpm -ivh xxx.rpm
 ```
+
 
 ## 压缩解压文件
 
@@ -134,6 +128,16 @@ $ rar e FileName.rar  #压缩
 $ cp rar_static /usr/bin/rar
 ```
 
+
+---
+以下未整理
+---
+
+
+## Ubuntu
+
+- 查询软件有哪些版本可用：`sudo apt-cache madison <<packagename>>`, `sudo apt-cache policy <<packagename>>`
+- 安装指定版本：`sudo apt-get install xxx=version`
 
 
 # 安装JDK的步骤
