@@ -1,11 +1,6 @@
----
-title: MySQL
-date: 2018-09-08 11:58:45
-categories: db
-tags:
----
+# MySQL
 
-# 术语
+## 术语
 
 schema：数据库，例如查询所有数据库名称和默认编码：
 
@@ -25,19 +20,20 @@ mysql> select schema_name, default_character_set_name from information_schema.sc
 ```
 
 
-# 注释
+## 注释
 
 ```sql
 /* ... */
 ```
 
-> `/*! ... */` 仅在MySQL中执行。如：`/*! select * from user*/;`
-> `/*!50001 select * from user*/;` 仅在5.00.01以上的MySQL版本中执行。
+???+ tip
+    - `/*! ... */` 仅在MySQL中执行。如：`/*! select * from user*/;`
+    - `/*!50001 select * from user*/;` 仅在5.00.01以上的MySQL版本中执行。
 
 
-# information_schema数据库
+## information_schema数据库
 
-## 字符集
+### 字符集
 
 + CHARACTER_SETS: 字符集
 
@@ -59,9 +55,9 @@ select * from information_schema.COLLATIONS where CHARACTER_SET_NAME='utf8';
 ```
 
 
-### 设置级别
+#### 设置级别
 
-#### server
+##### server
 
 创建数据库时未指定字符集，字符序，默认使用server字符集，字符序。
 
@@ -101,7 +97,8 @@ init-connect='SET NAMES utf8'
 set character_set_server=utf8;  /*重启后生效*/
 ```
 
-#### database
+
+##### database
 
 ```sql
 /*查看数据库字符集，字符序*/
@@ -114,7 +111,7 @@ CREATE DATABASE test_schema CHARACTER SET utf8;
 ALTER DATABASE test_schema default character set=gb2312;
 ```
 
-#### table
+##### table
 
 ```sql
 /*创建表时指定字符集*/
@@ -131,7 +128,7 @@ select * from information_schema.TABLES where TABLE_SCHEMA='test_schema' and TAB
 SHOW CREATE TABLE Persons;
 ```
 
-#### column
+##### column
 
 类型为CHAR, VARCHAR, TEXT的列，可以指定字符集，字符序。
 
@@ -143,19 +140,20 @@ select * from information_schema.COLUMNS where TABLE_SCHEMA='test_schema' and TA
 ```
 
 
-参考链接：[Character Sets, Collations, Unicode](https://dev.mysql.com/doc/refman/5.7/en/charset.html)
+???+ quote "参考链接"
+    [Character Sets, Collations, Unicode](https://dev.mysql.com/doc/refman/5.7/en/charset.html)
 
 
-## 权限
+### 权限
 
-> + SCHEMA_PRIVILEGES 数据库相关权限，mysql.db
-> + TABLE_PRIVILEGES 表相关权限，mysql.tables_priv
-> + COLUMN_PRIVILEGES 表授权的用户对象
-> + USER_PRIVILEGES 用户相关权限，mysql.user
->   + Select_priv
->   + Insert_priv
->   + Update_priv
->   + Delete_priv
++ SCHEMA_PRIVILEGES 数据库相关权限，mysql.db
++ TABLE_PRIVILEGES 表相关权限，mysql.tables_priv
++ COLUMN_PRIVILEGES 表授权的用户对象
++ USER_PRIVILEGES 用户相关权限，mysql.user
+    + Select_priv
+    + Insert_priv
+    + Update_priv
+    + Delete_priv
 
 ```sql
 /* 新增用户，限制登录ip为10.155.123.%，%为通配符 */
@@ -164,7 +162,7 @@ flush privileges;  /* 刷新系统权限相关表 */
 service mysqld restart  /* 重启生效 */
 ```
 
-### 权限分配
+#### 权限分配
 
 `GRANT 权限 ON 数据库.* TO 用户名@'登录主机' IDENTIFIED BY '密码'`
 
@@ -179,26 +177,25 @@ GRANT SELECT ON test.user TO kaka@'10.155.123.55' IDENTIFIED BY '123456';
 show Grants for 'kaka'@'10.155.123.55';
 ```
 
-## 实体对象
+### 实体对象
 
-> + COLUMNS 表字段
-> + SCHEMATA 所有数据库及默认字符集
-
-
-# MySQL协议
-
-## 基本数据类型
-
-### Integers
++ COLUMNS 表字段
++ SCHEMATA 所有数据库及默认字符集
 
 
-#### Fixed-length integers
+## MySQL协议
 
-定长，例 int<3> 
+### 基本数据类型
+
+#### Integers
+
+##### Fixed-length integers
+
+定长，例 int<3>
 `01 00 00`
 
 
-#### Length-encoded integers
+##### Length-encoded integers
 
 用第一个字节代表存储长度。例：
 
@@ -211,38 +208,38 @@ show Grants for 'kaka'@'10.155.123.55';
 + 0xfe 8字节
 
 
-### Strings
+#### Strings
 
-#### FixedLengthString
+##### FixedLengthString
 
 定长，例 `string<fix>`
 
 
-#### NulTerminatedString
+##### NulTerminatedString
 
 `string<NUL>` ，以 `00` 结尾。
 
 
-#### VariableLengthString
+##### VariableLengthString
 
 `string<var>`
 
 
-#### LengthEncodedString
+##### LengthEncodedString
 
 `string<lenenc>`
 
 
-#### RestOfPacketString
+##### RestOfPacketString
 
 `string<EOF>`
 
 
-## Packets
+### Packets
 
 MySQL协议包被切分为最多2^24-1字节，每个分片携带包头。
 
-### Payload
+#### Payload
 
 | Type	| Name	| Description |
 | --- | --- | --- |
@@ -266,3 +263,20 @@ MySQL协议包被切分为最多2^24-1字节，每个分片携带包头。
 * sequence_id: 0x00
 * 命令类型：0x03
 * 命令：0x53 ...
+
+
+## InnoDB, 数据库引擎
+
+### 文件系统
+
+- datafile, 数据文件，划分为64个page，默认非压缩表的page size为16Kb，总共1M（一个Extent）。
+    - 主系统表空间文件ibdata。
+    - 用户创建表产生ibd文件，归属于独立的表空间tablespace（一般一个表空间一个文件）。
+
+- redo日志，默认以512字节-4KB的block单位写入。
+- undo tablespace文件。
+- 临时表空间ibtmp1。
+
+
+???+ quote "参考链接"
+    [MySQL · 引擎特性 · InnoDB 文件系统之文件物理结构](http://mysql.taobao.org/monthly/2016/02/01/)
