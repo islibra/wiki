@@ -1,4 +1,4 @@
-# git常用命令
+# Git常用命令
 
 ## 0x00_配置git代理
 
@@ -53,4 +53,7 @@ git push origin branchname #将本地修改的文件提交到远程个人仓
 
 发起merge，从远程个人仓merge到远程主干仓
 
-## END
+
+## 0x03_其他
+
+撤销并丢弃本地修改：`git checkout .`
