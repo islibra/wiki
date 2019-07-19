@@ -218,16 +218,21 @@ disqus:空disable
 # H1
 ```
 1. 使用H1做title
-1. 自定义标签：<https://shields.io/>，`https://img.shields.io/badge/<LABEL>-<MESSAGE>-<COLOR>.svg`
-1. 符号参见[SmartSymbols](#smartsymbols)
-1. 文本修饰
-    - 高亮`==mark me==`, 下划线`^^Insert me^^`, 删除线`~~Delete me~~`
-    - 增加`{+` `+` `add` `+` `+}`, 删除`{-` `-` `del` `-` `-}`, 修改`{~` `~` `is` `~` `>` `are` `~` `~}`, 高亮`{=` `=` `highlight` `=` `=}`, 注释`{>` `>` `comment` `<` `<}`，可修饰行内或段落
-    - 上标`H^2^0`, `text^a\ superscript^`, 下标`CH~3~CH~2~OH`, `text~a\ subscript~`
+1. 自定义标签：<https://shields.io/>，如：`https://img.shields.io/badge/<LABEL>-<MESSAGE>-<COLOR>.svg`
+1. 文本修饰（带 ^^下划线^^ 的可修饰行内或段落）
+    - 加粗`**bold**`, 高亮`==mark me==`
+    - 下划线`^^Insert me^^`
+    - 删除线`~~Delete me~~`
+    - ^^增加^^`{+ + add + +}`, ^^修改^^`{~ ~ is ~> are ~ ~}`
+    - ^^删除^^`{- - del - -}`
+    - ^^高亮^^`{= = highlight = =}`
+    - ^^注释^^`{> > comment < <}`
+    - 上标`H^2^0`, `text^a\ superscript^`
+    - 下标`CH~3~CH~2~OH`, `text~a\ subscript~`
     - 行内代码高亮：`` `:::language mycode` `` or `` `#!language mycode` ``
-2. 一级列表使用`-`，二级列表使用`*`，三级列表使用`+`，子级列表缩进 **4** 个空格，使用复选框：`- [x] item`  
-列表内容换行：==行尾2个空格==。
-3. 代码块添加`tab="xxx"`分组，添加`hl_lines="3 4"`高亮行
+1. 符号参见[SmartSymbols](#smartsymbols)
+1. 注释块使用`> `
+1. 代码块添加`tab="xxx"`分组，添加`hl_lines="3 4"`高亮行
     - 代码块嵌套在列表中，==缩进4个空格==
     ```
     - list1
@@ -238,6 +243,9 @@ disqus:空disable
         - sublist2
     - list2
     ```
+1. 一级列表使用`-`，二级列表使用`*`，三级列表使用`+`，子级列表缩进 **4** 个空格  
+使用复选框：`- [x] item`  
+列表内容换行：==行尾2个空格==。
 1. 表格  
 ```
 First Header | Second Header | Third Header
@@ -245,7 +253,7 @@ First Header | Second Header | Third Header
 Left         | Center        | Right
 ```
 1. 提示块参见[Admonition](#admonition)
-4. 脚注`[^1]`，脚注可定义在任意位置，单行`[^1]: xxx`，多行每行开头4个空格，链接形式`https://xxx/#fn:1`
+1. 脚注`[^1]`，脚注可定义在任意位置，单行`[^1]: xxx`，多行每行开头4个空格，链接形式`https://xxx/#fn:1`
 
 
 ### Admonition
@@ -269,7 +277,7 @@ Left         | Center        | Right
 ??? note "注释，代码片段，说明"
     note, snippet, seealso
 
-??? example "举例"
+??? example "举例，列表"
     example
 
 ??? quote "引用，参考链接"
