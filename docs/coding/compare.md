@@ -20,23 +20,6 @@ func main() {
 }
 ```
 
-## 打印输出
-
-```python tab="python"
-print("hello world!")
-# 输出多个元素
-print(a, b, c)
-# end关键字，控制单行输出，末尾添加指定字符。
-print(x, end=',')
-```
-
-```go tab="go"
-fmt.Printf("hello, world\n")
-// 输出多个元素
-fmt.Println(a, b, c, d, e)
-// 格式化输出
-fmt.Printf("the %d ele is %d\n", i, v)
-```
 
 ## 注释
 
@@ -56,6 +39,53 @@ fmt.Printf("the %d ele is %d\n", i, v)
 // 注释
 ```
 
+
+## 打印输出
+
+```python tab="python"
+print("hello world!")
+# 输出多个元素
+print(a, b, c)
+# end关键字，控制单行输出，末尾添加指定字符。
+print(x, end=',')
+```
+
+```go tab="go"
+fmt.Printf("hello, world\n")
+// 输出多个元素
+fmt.Println(a, b, c, d, e)
+// 格式化输出
+fmt.Printf("the %d ele is %d\n", i, v)
+```
+
+
+## 运行
+
+```bash tab="python"
+python xxx.py
+```
+
+```bash tab="go"
+go run xxx.go
+```
+
+
+## 数据类型
+
+```python
+# 布尔值
+isTrue = True
+isFalse = False
+```
+
+```go
+```
+
+ tab="python"
+
+ tab="go"
+
+
 ## 变量赋值
 
 ```python tab="python"
@@ -70,15 +100,6 @@ var c, d int [= 1, 2]  //赋值
 e := 3
 ```
 
-## 运行
-
-```bash tab="python"
-python xxx.py
-```
-
-```bash tab="go"
-go run xxx.go
-```
 
 ## for循环
 
@@ -108,6 +129,21 @@ for i := 0; i < 5; i++ {
 	fmt.Println(i)
 }
 ```
+
+
+## 函数
+
+```python tab="python"
+def xxx(arg1, arg2):
+    # TODO:
+    return xxx
+```
+
+```go
+```
+
+ tab="go"
+
 
 ## 导入包
 
