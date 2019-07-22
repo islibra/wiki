@@ -76,7 +76,7 @@ kali设置相同。
 ![](../../img/nmap_ssl_1.png)  
 ![](../../img/nmap_ssl_2.png)  
 {==在warnings中查看不安全选项==}
-1. 使用sslscan查看 {==是否存在heartbleed漏洞，弱加密套件，证书信息==}, `sslscan x.x.x.x`  
+1. 使用[sslscan](https://github.com/rbsec/sslscan/releases)查看 {==是否存在heartbleed漏洞，弱加密套件，证书信息==}, `sslscan x.x.x.x[:port]`  
 ![](../../img/sslscan_1.png)  
 ![](../../img/sslscan_2.png)
 1. [testSSL](https://testssl.sh/)
@@ -197,6 +197,16 @@ bash将函数存储为环境变量，函数结束后继续执行命令。CGI将�
 - Kerberos身份验证：Windows凭证登录
 - Bearer tokens
 - 爆破tomcat部署webshell
+
+#### 使用Burp Suite intruder字典攻击
+
+1. 使用`Burp Suite`代理。
+1. 访问目标网站，找到login的url发送到`Intruder`。
+1. 进入`Positions`页签，点击`Clear`清除占位符。
+1. 在需要字典攻击的参数值位置点击`Add`添加占位符。
+1. 攻击类型选择`Cluster bomb`。
+1. 进去`Payloads`页签，选择`Payload set` - `1`，设置为`Simple list`，点击`Load`导入用户名；选择`2`，设置为`Simple list`，点击`Load`导入密码。
+1. 菜单`Intruder`，`Start attack`。
 
 
 ### 二、会话管理
