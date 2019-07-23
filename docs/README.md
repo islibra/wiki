@@ -19,6 +19,7 @@
 - [Algorithm Visualizer](https://algorithm-visualizer.org/)
 - [Algorithm Visualizer - Github](https://github.com/algorithm-visualizer/algorithm-visualizer)
 - [python实现基于深度学习的网络欺凌检测模型](https://mp.weixin.qq.com/s?__biz=MjM5NjA0NjgyMA==&mid=2651075726&idx=1&sn=0279918927745ff6a8899ebe27592daa&chksm=bd1fa6058a682f130fb35265924858bbdec766a452c3d742be429a650b8393077524e115ba0b&xtrack=1&scene=0&subscene=92&sessionid=1559655937&clicktime=1559657542&ascene=7&devicetype=android-28&version=2700043b&nettype=3gnet&abtest_cookie=BgABAAgACgALABIAEwAVAAgAnoYeACOXHgBWmR4AxZkeANyZHgD1mR4AA5oeAA2aHgAAAA%3D%3D&lang=zh_CN&pass_ticket=aSykkTizzSN1ZCZ6bSrqfZt5Is9H%2F4Lgw4gEEVKAyiWlMIffXq7CPS6w1pwbAswD&wx_header=1)
+- [六维图见过么？Python 画出来了](https://mp.weixin.qq.com/s?__biz=MjM5NzE1MDA0MQ==&mid=2247494113&idx=2&sn=b3c7aa8acb69d5614eb094f5fa3c313d&chksm=a6dcc5d791ab4cc177f18544369e1fbec94061250e1995962b65f0022beb3a21772870426712&xtrack=1&scene=90&subscene=93&sessionid=1561783699&clicktime=1561783780&ascene=56&devicetype=android-28&version=2700043c&nettype=3gnet&abtest_cookie=BgABAAgACgALABIAEwAVAAcAnoYeACOXHgBWmR4AxZkeANyZHgD1mR4ADJoeAAAA&lang=zh_CN&pass_ticket=u4SgrHa3V%2BVQO%2BfgUuR2HEKo4J1p%2Fg5D34vcOrGGVpsdCew73lMP3OAkZ2oLVor5&wx_header=1)
 
 ### 教程
 

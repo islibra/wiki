@@ -65,7 +65,7 @@ print(bubble(input_list))
 def bubble(inlist):
     # 优化2.1:
     indexLimit = len(inlist)-1
-    lastExchangeIndex = len(inlist)-1
+    lastExchangeIndex = 0
     # 2. 总共进行1~length-1次比较即可，range是左开右闭区间
     for i in range(1, len(inlist)):
         print("round:", i)
@@ -101,3 +101,9 @@ print(bubble(input_list))
 ```
 
 - 时间复杂度：O(n^2^)
+- 空间复杂度：O(1)
+
+
+???+ quote "参考链接"
+    - [漫画：什么是冒泡排序？](https://mp.weixin.qq.com/s/wO11PDZSM5pQ0DfbQjKRQA)
+    - [漫画：什么是鸡尾酒排序？（修订版）](https://mp.weixin.qq.com/s/CoVZrvis6BnxBQgQrdc5kA)
