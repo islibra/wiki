@@ -20,18 +20,28 @@ nameserver x.x.x.x
 
 ### 0x02_网卡配置文件
 
-```bash
-# Red Hat
+> 在网卡配置文件配置了DNS，重启网络服务后，会在`/etc/resolv.conf`中自动生成DNS。
+
+```bash tab="Red Hat"
 $ vim /etc/sysconfig/network-scripts/ifcfg-eth0
 DNS1="x.x.x.x"
 DNS2="y.y.y.y"
+```
 
-# ubuntu
+```bash tab="ubuntu"
 $ vim /etc/network/interfaces
 auto lo
 auto eth0
 iface eth0 inet static
 ```
+
+```bash
+# 重启网络服务
+service network restart
+```
+
+???+ tip "系统解析优先级"
+    本地hosts  >  网卡配置  >  系统DNS配置
 
 
 ## 设置某IP禁止访问
