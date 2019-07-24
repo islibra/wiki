@@ -1,11 +1,10 @@
----
-title: Tips
-date: 2018-08-25 20:22:57
-categories: os
-tags:
----
+# Tips
 
-# 查看文件正在被谁占用
+## 禁用TrustedInstaller
+
+开始 - 运行 - services.msc - Windows Modules Installer, 停止并禁用。
+
+## 查看文件正在被谁占用
 
 ```bash
 $ ps -ef | grep vi
@@ -19,7 +18,7 @@ paas     pts/2        2018-08-13 15:17 (10.65.74.130)
 paas     pts/3        2018-08-14 12:42 (10.74.201.219)
 ```
 
-# rm: 无法删除"xxxdir": 设备或资源忙
+## rm: 无法删除"xxxdir": 设备或资源忙
 
 ```bash
 umount xxxdir
