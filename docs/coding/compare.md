@@ -180,14 +180,25 @@ import (
 rand.xxx()
 ```
 
-## 模板
 
-```python
+## 类
+
+```python tab="python"
+# 定义类
+# (object)代表继承自object
+class User(object):
+    # 定义构造方法
+    def __init__(self, nm, pd):
+        self.name = nm
+        self.password = pd
+
+user = User('alice', 'Admin@123')
+
+# output: alice, Admin@123
+print('{user.name}, {user.password}'.format(user=user))
 ```
 
 ```go
 ```
-
- tab="python"
 
  tab="go"
