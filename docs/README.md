@@ -41,6 +41,8 @@
 - [先知社区](https://xz.aliyun.com/)
 - [Golang安全资源合集](https://github.com/re4lity/Hacking-With-Golang/blob/master/README.md)
 - 廖新喜：<http://xxlegend.com/>
+- [SHODAN](https://www.shodan.io/): 搜索引擎, 搜索internet上的设备.
+    - 如搜索使用了`Werkzeug`的服务器, 关键词: `"Server: Werkzeug"`, `"Server: Werkzeug" and "Set=Cookie: session="`
 
 ### 实用
 
