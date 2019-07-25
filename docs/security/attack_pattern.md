@@ -27,6 +27,13 @@ ps.setString(1, name);
     [彻底干掉恶心的 SQL 注入漏洞， 一网打尽！](https://mp.weixin.qq.com/s/hdOnO-tSGkQp0Wq3wcsIkw)
 
 
+## 命令注入
+
+### Python格式化字符串漏洞
+
+参见: [格式化字符串](../../coding/python/0x01_datatype/#_3)
+
+
 ## DoS
 
 ### zip
