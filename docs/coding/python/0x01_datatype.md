@@ -3,16 +3,16 @@
 ## 字符串
 
 - 重复：`"repeatstring"*3`
-- 索引：  
-```python
-str = "abcdefg"
-print(str[0], str[-1], str[2:5])  #切片前闭后开
+- 索引：
 
-###
-a g cde
-```
+    ```python
+    str = "abcdefg"
+    # 切片前闭后开
+    print(str[0], str[-1], str[2:5])  # a g cde
+    ```
 
-字符串不能改变，如`word[0] = 'm'`会导致错误。
+???+ error
+    字符串不能改变，如`word[0] = 'm'`会导致错误。
 
 ### 字符串处理
 
@@ -24,13 +24,95 @@ print('1'.rjust(3))  # 右对齐
 print('2'.center(3))  # 居中
 print('3'.ljust(3))  # 左对齐
 print('12'.zfill(5))  # 0填充
-# 格式化字符串
-print('This is a {} length string, and its value is {}'.format(3, 'abc'))
-# 指定位置和关键字
-print('This is another {1} length string, and its value is {0}, also {str} is 3.'.format('abc', 3, str='def'))
-# 宽度和类型
-print('{0:10} ==> {1:10d}'.format('jack', 4097))
 ```
+
+#### 格式化字符串
+
+##### 0x00_%操作符
+
+```python
+name = 'Alice'
+print('Hello, %s!' % name)  # Hello, Alice!
+```
+
+##### 0x01_标准库string.Template[^template]
+
+[^template]: <https://docs.python.org/zh-cn/3/tutorial/stdlib2.html#templating>
+
+```python
+from string import Template
+
+
+name = 'Alice'
+good = 'car'
+t = Template('Hello, ${nm}, i have $$10 to buy the $gd!')
+# Hello, Alice, i have $10 to buy the car!
+print(t.substitute(nm=name, gd=good))
+```
+
+##### 0x02_format方法
+
+```python
+# This is a 3 length string, and its value is abc
+print('This is a {} length string, and its value is {}'.format(3, 'abc'))
+
+# 指定位置和关键字
+# This is another 3 length string, and its value is abc, also def is 3.
+print('This is another {1} length string, and its value is {0}, also {str} is 3.'.format('abc', 3, str='def'))
+
+# 宽度和类型
+# jack       ==>       4097
+print('{0:10} ==> {1:10d}'.format('jack', 4097))
+errorno = 50159747054
+# There is an badc0ffee error!
+print('There is an {erno:x} error!'.format(erno=errorno))
+
+# 输出类属性
+class User(object):
+    def __init__(self, nm, pd):
+        self.name = nm
+        self.password = pd
+
+
+user = User('Jack', 'Changeme123')
+# Jack, Changeme123
+print('{u.name}, {u.password}'.format(u=user))
+```
+
+???+ danger "安全风险"
+    {==控制格式化字符串, 泄露敏感信息==}
+
+    ```python
+    config = {'SECRET_KEY': 'CHANGEME123'}
+
+
+    class User(object):
+        def __init__(self, nm):
+            self.name = nm
+
+
+    user = User('Jack')
+
+    # {'SECRET_KEY': 'CHANGEME123'}
+    print('{0.__class__.__init__.__globals__[config]}'.format(user))
+    ```
+
+##### 0x03_f-Strings
+
+???+ danger "安全风险"
+    {==执行字符串表达式==}
+
+    ```python
+    a, b = 5, 10
+    # Five plus ten is 15 and not 50.
+    print(f'Five plus ten is {a + b} and not {a * b}.')
+    # ...
+    print(f'{__import__("os").system("dir")}')
+    ```
+
+
+???+ quote "参考链接"
+    [Python Web之flask session&格式化字符串漏洞](https://xz.aliyun.com/t/3569)
 
 
 ## 列表
