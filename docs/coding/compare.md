@@ -85,6 +85,13 @@ isFalse = False
 
  tab="go"
 
+### 数据类型转换
+
+```python tab="python"
+# byte  -->  int
+int.from_bytes(xxx, byteorder='big')
+```
+
 
 ## 变量赋值
 
