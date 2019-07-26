@@ -23,6 +23,38 @@ ps.setString(1, name);
     **order by** 不能使用参数绑定，需要通过白名单过滤。
 
 
+### MyBatis
+
+#### XML
+
+定义Mapper接口:
+
+```java
+@Mapper
+public interface UserMapper {
+    User getById(int id);
+}
+```
+
+XML配置文件:
+
+```xml
+<select id="getById" resultType="org.example.User">
+    SELECT * FROM user WHERE id = #{id}
+</select>
+```
+
+#### Annotation
+
+```java
+@Mapper
+public interface UserMapper {
+    @Select("SELECT * FROM user WHERE id= #{id}")
+    User getById(@Param("id") int id);
+}
+```
+
+
 ???+ quote "参考链接"
     [彻底干掉恶心的 SQL 注入漏洞， 一网打尽！](https://mp.weixin.qq.com/s/hdOnO-tSGkQp0Wq3wcsIkw)
 
