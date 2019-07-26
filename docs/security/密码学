@@ -1,0 +1,56 @@
+# 密码学
+
+## 密码算法分类
+
+- 保密性
+    - 对称加密
+        - 流加密：RC4, GSM/A5
+        - 分组加密：DES, 3DES, AES(ECB, CBC, OFB)
+    - 非对称加密：RSA
+- 完整性
+    - Hash（消息摘要，单向散列，数字指纹）: MD5, SHA-1, SHA256
+    - MAC（消息认证码，使用 **密钥** 生成密文追加到明文一同发送）: HMAC, CMAC
+    - 数字签名：RSA, DSA, ECDSA
+- 认证性
+- 不可否认性
+- 可用性
+
+密钥交换：DH, ECDH
+
+
+## 随机数发生器
+
+- OpenSSL: RAND_bytes()，初始化时调用RAND_seed()设置随机数种子。
+- iPSI: CRYPT_random()，初始化时调用CRYPT_randSeed()设置随机数种子。
+- JDK: java.security.SecureRandom()
+- Unix: /dev/random
+- Windows: RtlGenRandom()
+- VxWorks CCI: cciRand()
+
+???+ danger "不安全的随机数"
+    - C标准库random(), rand()
+    - Java: java.util.Random
+
+
+## 分组密码算法工作模式
+
+- **禁止使用** ECB电子密码本：每个分组单独加解密，需进行填充。
+- CBC密码分组链接：每个分组与上一分组密文异或，第一个分组与IV异或。
+- CFB密码反馈
+- OFB输出反馈
+- CTR计数器
+
+
+## Hash
+
+> 任意长度消息，生成固定长度hash。  
+> 使用原像攻击，第二原像攻击，碰撞攻击破解。
+
+- 用作MAC，如HMAC
+- 使用私钥加密HASH，生成数字签名
+- 单向密码校验，加盐防止相同的口令出现相同的密文。口令密文和盐明文及用户ID一起存储。
+- 产生对称密钥
+- 文件完整性校验
+
+???+ danger
+    禁止Hash(key||message)
