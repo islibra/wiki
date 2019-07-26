@@ -31,8 +31,13 @@ DNS2="y.y.y.y"
 ```bash tab="ubuntu"
 $ vim /etc/network/interfaces
 auto lo
+iface lo inet loopback
 auto eth0
 iface eth0 inet static
+address x.x.x.x
+netmask 255.255.255.0
+gateway x.x.x.1
+dns-nameservers x.x.x.x y.y.y.y
 ```
 
 ```bash
