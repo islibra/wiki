@@ -209,3 +209,51 @@ print('{user.name}, {user.password}'.format(user=user))
 ```
 
  tab="go"
+
+
+## 库函数
+
+```python tab="Python"
+# 时间
+import time
+# 当前时间(自1970-1-1, 以秒为单位)
+print(time.time())  # 1564106732.322287
+# 转换为时间元组
+# time.struct_time(tm_year=2019, tm_mon=7, tm_mday=26, tm_hour=10, tm_min=20, tm_sec=45, tm_wday=4, tm_yday=207, tm_isdst=0)
+print(time.localtime(time.time()))
+# 格式化时间
+# Fri Jul 26 10:22:56 2019
+print(time.asctime(time.localtime(time.time())))
+
+# 自定义格式化
+# 2019-07-26 10:29:16
+print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+# %a 简化星期, %b 简化月份
+# Fri Jul 26 10:29:16 2019
+print(time.strftime("%a %b %d %H:%M:%S %Y", time.localtime()))
+# 反格式化
+timestr = 'Fri Jul 26 10:22:56 2019'
+# 1564107776.0
+print(time.mktime(time.strptime(timestr, "%a %b %d %H:%M:%S %Y")))
+
+# sleep秒
+time.sleep(6)
+
+# 月历
+import calendar
+#     July 2019
+# Mo Tu We Th Fr Sa Su
+# 1  2  3  4  5  6  7
+# 8  9 10 11 12 13 14
+# 15 16 17 18 19 20 21
+# 22 23 24 25 26 27 28
+# 29 30 31
+print(calendar.month(2019, 7))
+```
+
+
+## 规范
+
+### Python
+
+1. 最后空一行
