@@ -54,6 +54,47 @@ public interface UserMapper {
 }
 ```
 
+???+ danger "安全风险"
+    - 使用`#{}`会自动生成`PreparedStatement`, 可有效防止SQL注入.
+    - 而使用`${}`会直接注入原始字符串, 导致 {==SQL注入==}, 注意注入的 **参数类型要为字符串**!  
+        ```xml
+        <select id="getByName" resultType="org.example.User">
+            SELECT * FROM user WHERE name = '${name}' limit 1
+        </select>
+        <!--当name的值为 ' or '1'='1 时, 相当于执行-->
+        <!--SELECT * FROM user WHERE name = '' or '1'='1' limit 1-->
+        ```
+
+???+ warning
+    **order by** 使用`#{}`会被替换为字符串, 如`ORDER BY #{sortBy}`  ^sortBy=name^-->  `ORDER BY "name"`, 因此需要通过白名单过滤, 或使用if标签, 如:
+
+    ```java tab="Java"
+    List<User> getUserListSortBy(@Param("sortBy") String sortBy);
+    ```
+
+    ```xml tab="xml"
+    <select id="getUserListSortBy" resultMap="org.example.User">
+        select * from user
+        <if test="sortBy == 'name' or sortBy = 'email'">
+            order by ${sortBy}
+        </if>
+    </select>
+    ```
+
+    ```xml tab="带默认值的情况"
+    <select id="getUserListSortBy" resultMap="org.example.User">
+        select * from user
+        <choose>
+            <when test="sortBy == 'name' or sortBy = 'email'">
+                order by ${sortBy}
+            </when>
+            <otherwise>
+                order by name
+            </otherwise>
+        </choose>
+    </select>
+    ```
+
 
 ???+ quote "参考链接"
     [彻底干掉恶心的 SQL 注入漏洞， 一网打尽！](https://mp.weixin.qq.com/s/hdOnO-tSGkQp0Wq3wcsIkw)
