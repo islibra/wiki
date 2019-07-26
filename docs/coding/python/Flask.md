@@ -107,7 +107,130 @@ $ python -m flask run
     1. 开始 - 运行 - cmd, 执行`flask run`
 
 
-## SECRET_KEY
+## 加盐哈希口令生成和验证
+
+Flask内置函数:
+
+- werkzeug.security.generate_password_hash()
+
+    ```python tab="函数原型"
+    # :param password: 明文口令
+    # :param method: 哈希算法, pbkdf2:<method>[:iterations]
+    # :param salt_length: 盐值长度
+    # 返回格式: method$salt$hash, 如: pbkdf2:sha256:80000$salt$hash
+    def generate_password_hash(password, method="pbkdf2:sha256", salt_length=8):
+        return "%s$%s$%s" % (actual_method, salt, h)
+    ```
+
+    ```python tab="示例代码"
+    from werkzeug.security import generate_password_hash
+    # pbkdf2:sha256:150000$pgyrXMK9$cae0f328a52fa4aa0d5aef735dec73f45d5dc6e5116f7af66d73b5e0c28fca12
+    print(generate_password_hash("Changeme123"))
+    ```
+
+- werkzeug.security.check_password_hash()
+
+    ```python tab="函数原型"
+    # :param pwhash: 哈希值
+    # :param password: 待验证的明文口令
+    # 返回 True or False
+    def check_password_hash(pwhash, password):
+    ```
+
+    ```python tab="示例代码"
+    from werkzeug.security import generate_password_hash
+    from werkzeug.security import check_password_hash
+    passwd = "Changeme123"
+    h = generate_password_hash(passwd)
+    # pbkdf2:sha256:150000$L8TX9THQ$2b97541bbec34278da9d5aad08fa88c4b8389f88725977218c752b5d272f48f5
+    print(h)
+    # True
+    print(check_password_hash(h, passwd))
+    ```
+
+
+## 令牌签名和校验(token防篡改)
+
+> 指定密钥和盐值进行HMAC.
+
+### 安装
+
+```bash
+$ pip install itsdangerous
+```
+
+???+ danger
+    可以将签名后的session存放到客户端的Cookies中, 服务器不再保存. 但是要注意 **密钥** 的[安全性](#session).
+
+```python
+from itsdangerous import *
+import time
+SECRET_KEY = 'CHANGEME'
+s = Signer(SECRET_KEY)
+# 签名
+ss = s.sign('Hello World!')
+# b'Hello World!.seH0qYn3IHYSr6adRbwBZaexyvc'
+print(ss)
+# 验证
+# b'Hello World!'
+print(s.unsign(ss))
+
+# 带有效期的签名
+s = TimestampSigner(SECRET_KEY)
+ss = s.sign('Hello World!')
+# 1564133802.0708034 b'Hello World!.XTrJqg.d0SuPmLWj0mhz4HDMqRT6d1PJgo'
+print(time.time(), ss)
+# 1564133802.0708034 b'Hello World!'
+print(time.time(), s.unsign(ss, max_age=5))
+time.sleep(6)
+# 1564133808.071034
+# itsdangerous.exc.SignatureExpired: Signature age 6 > 5 seconds
+print(time.time())
+print(s.unsign(ss, max_age=5))
+
+# 签名对象
+s = Serializer(SECRET_KEY)
+o = s.dumps({'id': '1'})
+# {"id": "1"}.DJpagBmU6ZN6mdS0Ry5lJ8OQDXY
+print(o)
+# {'id': '1'}
+print(s.loads(o))
+
+# BASE64后URL传输
+s = URLSafeSerializer(SECRET_KEY)
+o = s.dumps({'id': '1'})
+# eyJpZCI6IjEifQ.TyYqF0bGI9yCT7Mk-_MteYq-DHE
+print(o)
+# {'id': '1'}
+print(s.loads(o))
+
+# 增加header_fields
+s = JSONWebSignatureSerializer(SECRET_KEY)
+o = s.dumps({'id': '1'})
+# b'eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjEifQ.1B7CxRQA6gNCHfgOWNsNP8xZ2ZYLXtek-pqWnwk6cqIfLK9KSe_5S5sJOoPW7mm05xI5X0QgYBvpYy-W7Ce3NQ'
+print(o)
+# {'id': '1'}
+print(s.loads(o))
+o = s.dumps({'id': '1'}, header_fields={'v': 1})
+# b'eyJ2IjoxLCJhbGciOiJIUzUxMiJ9.eyJpZCI6IjEifQ.twRbCZS6LbWpYPzcFOced-C8on7GQ7mGn-XgGOHhhJUbJ3272dIZXsWgbwMbmops2Hk1mY94CKk8691WLjHY8w'
+print(o)
+# ({'id': '1'}, {'v': 1, 'alg': 'HS512'})
+print(s.loads(o, return_header=True))
+
+# 加盐
+s1 = URLSafeSerializer(SECRET_KEY, salt='salt1')
+s2 = URLSafeSerializer(SECRET_KEY, salt='salt2')
+# eyJpZCI6IjEifQ.MUK4Si6roJe2UW26KaMFfrCWboQ
+print(s1.dumps({'id': '1'}))
+# eyJpZCI6IjEifQ.PIlNB4pSoZy5aI6lqYz7X9xO0DI
+print(s2.dumps({'id': '1'}))
+```
+
+???+ quote "参考链接"
+    [IT'S DANGEROUS](https://pythonhosted.org/itsdangerous/)
+
+
+## 客户端session的安全性
 
 ```python tab="生成session" hl_lines="6 12 13"
 from flask import Flask, session
