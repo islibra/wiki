@@ -66,34 +66,60 @@ public interface UserMapper {
         ```
 
 ???+ warning
-    **order by** 使用`#{}`会被替换为字符串, 如`ORDER BY #{sortBy}`  ^sortBy=name^-->  `ORDER BY "name"`, 因此需要通过白名单过滤, 或使用if标签, 如:
+    - **order by** 使用`#{}`会被替换为字符串, 如`ORDER BY #{sortBy}`  ^sortBy=name^-->  `ORDER BY "name"`, 因此需要通过白名单过滤, 或使用if标签, 如:
 
-    ```java tab="Java"
-    List<User> getUserListSortBy(@Param("sortBy") String sortBy);
-    ```
+        ```java tab="Java"
+        List<User> getUserListSortBy(@Param("sortBy") String sortBy);
+        ```
 
-    ```xml tab="xml"
-    <select id="getUserListSortBy" resultMap="org.example.User">
-        select * from user
-        <if test="sortBy == 'name' or sortBy = 'email'">
-            order by ${sortBy}
-        </if>
-    </select>
-    ```
-
-    ```xml tab="带默认值的情况"
-    <select id="getUserListSortBy" resultMap="org.example.User">
-        select * from user
-        <choose>
-            <when test="sortBy == 'name' or sortBy = 'email'">
+        ```xml tab="xml"
+        <select id="getUserListSortBy" resultMap="org.example.User">
+            select * from user
+            <if test="sortBy == 'name' or sortBy = 'email'">
                 order by ${sortBy}
-            </when>
-            <otherwise>
-                order by name
-            </otherwise>
-        </choose>
-    </select>
-    ```
+            </if>
+        </select>
+        ```
+
+        ```xml tab="带默认值的情况"
+        <select id="getUserListSortBy" resultMap="org.example.User">
+            select * from user
+            <choose>
+                <when test="sortBy == 'name' or sortBy = 'email'">
+                    order by ${sortBy}
+                </when>
+                <otherwise>
+                    order by name
+                </otherwise>
+            </choose>
+        </select>
+        ```
+
+    - **like** 需要使用通配符`%`和`_`
+        - 方法一: 在Java中参数值两边拼接`%`, 再使用`#{}`
+        - 方法二: 在xml中使用`bind`标签构造新参数, 再使用`#{}`
+
+            ```java tab="Java"
+            List<User> getUserListLike(@Param("name") String name);
+            ```
+
+            ```xml tab="xml"
+            <select id="getUserListLike" resultType="org.example.User">
+                <bind name="pattern" value="'%' + name + '%'" />
+                    SELECT * FROM user WHERE name LIKE #{pattern}
+            </select>
+            ```
+
+        - 方法三: 在xml中使用SQL语法`concat()`函数
+
+            ```xml
+            <select id="getUserListLikeConcat" resultType="org.example.User">
+                SELECT * FROM user WHERE name LIKE concat ('%', #{name}, '%')
+            </select>
+            ```
+
+    ???+ danger
+        需要对用户输入进行过滤, 防止在大数据量情况下输入`{==%%==}`导致{==DOS==}。
 
 
 ???+ quote "参考链接"
