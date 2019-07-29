@@ -146,10 +146,12 @@ def xxx(arg1, arg2):
     return xxx
 ```
 
-```go
+```c tab="c"
+int add(int a, int b)
+{
+    return a + b;
+}
 ```
-
- tab="go"
 
 
 ## 导入包
@@ -187,6 +189,11 @@ import (
 rand.xxx()
 ```
 
+```c tab="c"
+#include <stdio.h>
+#include <stdlib.h>
+```
+
 
 ## 类
 
@@ -205,10 +212,34 @@ user = User('alice', 'Admin@123')
 print('{user.name}, {user.password}'.format(user=user))
 ```
 
-```go
+## 结构体
+
+```c tab="c"
+struct Point
+{
+    // 属性默认公有
+    float x, y;
+};
 ```
 
- tab="go"
+## 指针
+
+```c tab="c"
+Point* position = NULL;
+
+position->x
+position->y
+```
+
+## 宏定义
+
+```c tab="c"
+#if xxx
+#define XXX xxx(xxx)
+#else
+#define YYY yyy(yyy)
+#endif
+```
 
 
 ## 库函数
