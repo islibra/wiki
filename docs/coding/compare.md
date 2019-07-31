@@ -90,6 +90,8 @@ isFalse = False
 ```python tab="python"
 # byte  -->  int
 int.from_bytes(xxx, byteorder='big')
+# string  -->  int
+xxxint = int(xxxstr)
 ```
 
 
