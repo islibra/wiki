@@ -163,7 +163,7 @@ print(a, b, a-b, a|b, a&b, a^b)  # 差集，并集，交集，余集
 
 ## 字典
 
-无序，键值对集合
+> 无序，键值对集合
 
 ```python
 dic = {}  # 创建空字典
@@ -176,6 +176,16 @@ print(tel['Bob'])  # 索引
 tel['David'] = 3456  # 添加
 del tel['Alice']  # 删除
 print(tel)
+
+
+# 往字典中添加数据
+info = {"name": 123}
+# {'name': 123}
+print(info)
+info.update({"newkey": {"age": 100}})
+# {'name': 123, 'newkey': {'age': 100}}
+print(info)
+
 
 print(list(tel.keys()))  # 返回key列表
 
