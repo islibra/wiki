@@ -26,6 +26,26 @@
 - <http://pawnable.kr/play.php>，pwn类游乐场，不到100题，代理无法访问。
 - <http://ctf.moonsoscom/pentest/index.php>，B方向，米安的Web漏洞靶场，基础，核心知识点，代理无法访问。
 
+???+ quote "新手上路"
+    维基
+    https://ctf-wiki.github.io/ctf-wiki/
+    https://github.com/firmianay/CTF-All-In-One
+
+    题库资源：
+    https://github.com/ctfs/
+
+    工具：
+    https://www.ctftools.com/down/
+    https://down.52pojie.cn/
+
+    做题平台&漏洞演练：
+    https://pwnable.tw/
+    https://pwnable.kr/
+    https://exploit-exercises.com
+    https://pentesterlab.com
+    https://github.com/vulhub/vulhub
+
+
 ## 推荐工具
 
 - 010 Editor：<https://www.sweetscape.com/010editor/>，16进制编辑器。
