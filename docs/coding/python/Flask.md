@@ -107,6 +107,26 @@ $ python -m flask run
     1. 开始 - 运行 - cmd, 执行`flask run`
 
 
+## API
+
+### flask.Request[^request]
+
+> 继承自`werkzeug.wrappers.Request`类.  
+> flask.request全局对象, 接收并解析客户端发来的请求, 线程安全.
+
+#### property
+
+1. args: URL参数
+1. data: body中的数据
+1. is_json: 判断body中的数据是否JSON格式
+1. json: 返回解析JSON后的body数据
+1. remote_addr: 客户端IP
+
+#### classmethod
+
+[^request]: <https://flask.palletsprojects.com/en/1.1.x/api/?highlight=request%20data#incoming-request-data>
+
+
 ## 加盐哈希口令生成和验证
 
 Flask内置函数:
