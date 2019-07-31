@@ -54,6 +54,12 @@
 - [sparkdev](https://www.cnblogs.com/sparkdev/)
 
 
+## 名词解释
+
+- CRUD: Create, Retrieve, Update, Delete
+- native: 原生的, 如native sql; cloud native
+
+
 ## 语录
 
 - 不要奢求项目经理管人的死活，因为他们的KPI里只有进度，除非给他们的KPI增加加班率或项目结束后半年内的离职率。

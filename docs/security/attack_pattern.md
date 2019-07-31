@@ -137,6 +137,37 @@ public interface UserMapper {
     ???+ danger
         需要对用户输入进行过滤, 防止在大数据量情况下输入`{==%%==}`导致{==DOS==}。
 
+    - **in**, 使用`<foreach>`和`#{}`
+
+        ```java tab="Java"
+        List<User> getUserListIn(@Param("nameList") List<String> nameList);
+        ```
+
+        ```xml tab="xml"
+        <select id="selectUserIn" resultType="com.example.User">
+            SELECT * FROM user WHERE name in
+            <foreach item="name" collection="nameList" open="(" separator="," close=")">
+                #{name}
+            </foreach>
+        </select>
+        ```
+
+    - **limit**, 使用`#{}`
+
+        ```java tab="Java"
+        List<User> getUserListLimit(@Param("offset") int offset, @Param("limit") int limit);
+        ```
+
+        ```xml tab="xml"
+        <select id="getUserListLimit" resultType="org.example.User">
+            SELECT * FROM user limit #{offset}, #{limit}
+        </select>
+        ```
+
+### JPA & Hibernate
+
+略
+
 
 ???+ quote "参考链接"
     [彻底干掉恶心的 SQL 注入漏洞， 一网打尽！](https://mp.weixin.qq.com/s/hdOnO-tSGkQp0Wq3wcsIkw)

@@ -81,3 +81,13 @@ for i in slist:
     print(chr(i), end='')  # 输出字符形式
 # 786OsErtk12
 ```
+
+## xff_referer
+
+- X-Forwarded-For: 123.123.123.123, 简称XFF, 在通过http代理或负载均衡服务器时, 添加该项代表客户端真实IP.
+- Referer: https://www.google.com, 请求链接所属页面地址.
+
+> 这两个值都可以伪造.
+
+???+ tip
+    使用 **Burp Suite** 拦截修改时, 直接在`Raw`中添加无效, 需要在`Headers`中点击`Add`添加.
