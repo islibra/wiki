@@ -1,6 +1,8 @@
----
-title: angularjs
----
+# AngularJS
+
+官方网站:  
+1.x: <https://angularjs.org/>  
+latest: <https://angular.io/>
 
 # 引入angularjs
 
