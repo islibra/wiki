@@ -1,4 +1,4 @@
-# 10_socket
+# 0x0B_socket
 
 ## 服务端
 
@@ -8,7 +8,10 @@
 import socket, sys
 
 # 创建套接字
-serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # family: AF_UNIX, AF_INET,, type: SOCK_STREAM, SOCK_DGRAM,, proto 0
+# address family: AF_INET(the default), AF_INET6, AF_UNIX, AF_CAN, AF_PACKET, or AF_RDS.
+# type: SOCK_STREAM(the default), SOCK_DGRAM, SOCK_RAW or perhaps one of the other SOCK_ constants.
+# proto 0, 如果是AF_CAN, 则为CAN_RAW, CAN_BCM or CAN_ISOTP.
+serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # 获取本地主机名
 host = socket.gethostname()
@@ -52,4 +55,20 @@ msg = s.recv(1024)
 s.close()
 
 print(msg.decode('utf-8'))
+```
+
+## 获取本机IP
+
+```python
+import socket
+
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+try:
+    s.connect(('8.8.8.8', 80))
+    # x.x.x.x
+    print(s.getsockname()[0])
+except Exception as e:
+    print("error")
+finally:
+    s.close()
 ```
