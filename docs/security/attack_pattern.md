@@ -1,5 +1,72 @@
 # attack_pattern
 
+## XSS
+
+???+ tip
+    使用 **AngularJS** 框架的应用, 检查页面元素, 属性中携带`class="ng-binding"`的即为绑定输出, 已经过输出编码, 不存在XSS.
+
+### jQuery
+
+> 如果使用`$('#id').text()`或`$('#id').val()`, 则不存在XSS.
+
+???+ danger
+    存在XSS的方法:
+
+    - `$('#id').append()`
+    - `$('#id').html()`
+    - after
+    - appendTo
+    - before
+    - insertAfter
+    - insertBefore
+    - prepend
+    - prependTo
+    - replaceAll
+    - replaceWith
+    - unwrap
+    - wrap
+    - wrapAll
+    - wrapInner
+
+```html hl_lines="11 14"
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("#textbtn").click(function(){
+    $("#test1").text("<h1>Hello islibra world!</h1>");
+  });
+  $("#appendbtn").click(function(){
+    $("#test1").append("<h1>Hello islibra world!</h1><script>alert('xss')<\/script>");
+  });
+  $("#htmlbtn").click(function(){
+    $("#test2").html("<b>Hello world!</b>");
+  });
+  $("#valuebtn").click(function(){
+    $("#test3").val("\"><h1>Dolly</h1> Duck");
+  });
+});
+</script>
+</head>
+<body>
+
+<p id="test1">This is a paragraph.</p>
+<p id="test2">This is another paragraph.</p>
+
+<p>Input field: <input type="text" id="test3" value="Mickey Mouse"></p>
+
+<button id="textbtn">Set Text</button>
+<button id="appendbtn">Append Text</button>
+<button id="htmlbtn">Set HTML</button>
+<button id="valuebtn">Set Value</button>
+
+</body>
+</html>
+```
+
+
 ## SSRF
 
 > 所有场景都可攻击 **内网** 或 **本地**
