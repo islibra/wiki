@@ -290,3 +290,7 @@ print(calendar.month(2019, 7))
 ### Python
 
 1. 最后空一行
+
+### JavaScript
+
+1. 语句和`function(){};`后面带分号
