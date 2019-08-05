@@ -265,7 +265,26 @@ MySQL协议包被切分为最多2^24-1字节，每个分片携带包头。
 * 命令：0x53 ...
 
 
+## 日志
+
+- error log: MySQL启停, 运行过程中的错误信息.
+- general log: 查询日志, 建立的客户端连接和执行的语句.
+- slow log: 执行时间超过long_query_time的查询和不使用索引的查询.
+- bin log: 所有更改数据的语句.
+- relay log: 主从复制时使用的日志.
+
+???+ quote "参考链接"
+    [详细分析MySQL的日志(一)](https://www.cnblogs.com/f-ck-need-u/p/9001061.html)
+
+
 ## InnoDB, 数据库引擎
+
+### 事务日志
+
+> 都是用来恢复数据.
+
+- redo log, 前滚, 记录数据库中每页的修改.
+- undo log, 回滚
 
 ### 文件系统
 
