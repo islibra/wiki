@@ -132,6 +132,10 @@ app.controller('myCtrl', function($scope) {
 </body>
 ```
 
+???+ tip
+    script放入外部文件, 在body内底部引用, 如: `<script src="personController.js"></script>`
+
+
 ### 在控制器中可定义方法改变属性值
 
 ```html
@@ -230,6 +234,341 @@ app.directive("runoobDirective", function() {
     ```html
     <!-- directive: runoob-directive -->
     ```
+
+
+## 过滤器
+
+> 添加到表达式或指令中.
+
+过滤器 | 描述
+--- | ---
+currency | 格式化数字为货币格式。
+lowercase | 格式化字符串为小写。
+uppercase | 格式化字符串为大写。
+filter | 从数组项中选择一个子集。
+orderBy | 根据某个表达式排列数组。
+
+```html tab="currency"
+<div ng-app="myApp" ng-controller="myCtrl">
+    <input type="number" ng-model="quantity">
+    <input type="number" ng-model="price">
+
+    <p>总价 = {{ (quantity * price) | currency }}</p>
+</div>
+```
+
+```html tab="orderBy"
+<ul>
+    <li ng-repeat="x in names | orderBy:'country'">
+        {{ x.name + ', ' + x.country }}
+    </li>
+</ul>
+<script>
+$scope.names = [
+    {
+        "name": "Emil",
+        "country": "India"
+    }, {
+        "name": "Tobias",
+        "country": "China"
+    }, {
+        "name": "Linus",
+        "country": "American"
+    }];
+</script>
+```
+
+```html tab="filter"
+<p><input type="text" ng-model="filterStr"></p>
+<ul>
+    <li ng-repeat="x in names | filter:filterStr | orderBy:'country'">
+        {{ (x.name | uppercase) + ', ' + x.country }}
+    </li>
+</ul>
+<script>
+$scope.names = [
+    {
+        "name": "Emil",
+        "country": "India"
+    }, {
+        "name": "Tobias",
+        "country": "China"
+    }, {
+        "name": "Linus",
+        "country": "American"
+    }];
+</script>
+```
+
+
+## 自定义过滤器
+
+```html
+名: <input type="text" ng-model="firstName"><br>
+姓: <input type="text" ng-model="lastName"><br>
+姓名: {{(firstName | reverse) + " " + lastName}}<br>
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope) {
+    $scope.firstName= "John";
+    $scope.lastName= "Doe";
+});
+app.filter('reverse', function() {  // 可以注入依赖
+    return function(text) {
+        return text.split("").reverse().join("");
+    }
+});
+</script>
+```
+
+
+## service
+
+> 通过参数传入controller.
+
+```html tab="location"
+{{myUrl}}
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $location) {
+    $scope.myUrl = $location.absUrl();
+});
+</script>
+```
+
+```html
+{{myWelcome}}
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $http) {
+    $http.get("bnv.html").then(function (response) {
+        $scope.myWelcome = response.data;
+    });
+});
+</script>
+```
+
+
+
+
+// 简单的 GET 请求，可以改为 POST
+$http({
+    method: 'GET',
+    url: '/someUrl'
+}).then(function successCallback(response) {
+        // 请求成功执行代码
+    }, function errorCallback(response) {
+        // 请求失败执行代码
+});
+
+var app = angular.module('myApp', []);
+
+app.controller('siteCtrl', function($scope, $http) {
+    $http({
+        method: 'GET',
+        url: 'https://www.runoob.com/try/angularjs/data/sites.php'
+    }).then(function successCallback(response) {
+            $scope.names = response.data.sites;
+        }, function errorCallback(response) {
+            // 请求失败执行代码
+    });
+
+});
+
+$http.get('/someUrl', config).then(successCallback, errorCallback);
+$http.post('/someUrl', data, config).then(successCallback, errorCallback);
+
+<div ng-app="myApp" ng-controller="siteCtrl">
+
+<ul>
+  <li ng-repeat="x in names">
+    {{ x.Name + ', ' + x.Country }}
+  </li>
+</ul>
+
+</div>
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('siteCtrl', function($scope, $http) {
+  $http.get("https://www.runoob.com/try/angularjs/data/sites.php")
+  .then(function (response) {$scope.names = response.data.sites;});
+});
+</script>
+
+$http.get
+$http.head
+$http.post
+$http.put
+$http.delete
+$http.jsonp
+$http.patch
+
+
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $timeout) {
+    $scope.myHeader = "Hello World!";
+    $timeout(function () {
+        $scope.myHeader = "How are you today?";
+    }, 2000);
+});
+
+
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $interval) {
+    $scope.theTime = new Date().toLocaleTimeString();
+    $interval(function () {
+        $scope.theTime = new Date().toLocaleTimeString();
+    }, 1000);
+});
+
+
+自定义
+app.service('hexafy', function() {
+    this.myFunc = function (x) {
+        return x.toString(16);
+    }
+});
+app.controller('myCtrl', function($scope, hexafy) {
+    $scope.hex = hexafy.myFunc(255);
+});
+在过滤器中使用
+app.filter('myFormat',['hexafy', function(hexafy) {
+    return function(x) {
+        return hexafy.myFunc(x);
+    };
+}]);
+<ul>
+<li ng-repeat="x in counts">{{x | myFormat}}</li>
+</ul>
+
+
+允许跨域请求访问
+响应头添加客户端域名
+header('Access-Control-Allow-Origin:http://client.runoob.com');
+header('Access-Control-Allow-Origin:*');
+
+
+
+利用数组和ng-options创建下拉列表
+<div ng-app="myApp" ng-controller="myCtrl">
+
+<select ng-init="selectedName = names[0]" ng-model="selectedName" ng-options="x for x in names">
+</select>
+
+</div>
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope) {
+    $scope.names = ["Google", "Runoob", "Taobao"];
+});
+</script>
+
+
+$scope.sites = [
+    {site : "Google", url : "http://www.google.com"},
+    {site : "Runoob", url : "http://www.runoob.com"},
+    {site : "Taobao", url : "http://www.taobao.com"}
+];
+<select ng-model="selectedSite" ng-options="x.site for x in sites">
+</select>
+
+<h1>你选择的是: {{selectedSite.site}}</h1>
+<p>网址为: {{selectedSite.url}}</p>
+
+对象作为数据源
+$scope.cars = {
+car01 : {brand : "Ford", model : "Mustang", color : "red"},
+car02 : {brand : "Fiat", model : "500", color : "white"},
+car03 : {brand : "Volvo", model : "XC90", color : "black"}
+};
+<select ng-model="selectedCar" ng-options="y.brand for (x, y) in cars">
+</select>
+
+
+
+
+表格
+<table>
+  <tr ng-repeat="x in names">
+<td>{{ $index + 1 }}</td>
+    <td>{{ x.Name }}</td>
+    <td>{{ x.Country }}</td>
+  </tr>
+</table>
+
+
+
+
+<button ng-disabled="mySwitch">点我!</button>
+
+<p ng-show="true">我是可见的。</p>
+<p ng-hide="true">我是不可见的。</p>
+<p ng-show="hour > 12">我是可见的。</p>
+
+
+<button ng-click="count = count + 1">点我！</button>
+
+<p>{{ count }}</p>
+
+
+定义模块依赖关系
+var app = angular.module("myApp", []);
+
+
+表单验证
+<form  ng-app="myApp"  ng-controller="validateCtrl"
+name="myForm" novalidate>
+
+<p>用户名:<br>
+  <input type="text" name="user" ng-model="user" required>
+  <span style="color:red" ng-show="myForm.user.$dirty && myForm.user.$invalid">
+  <span ng-show="myForm.user.$error.required">用户名是必须的。</span>
+  </span>
+</p>
+
+<p>邮箱:<br>
+  <input type="email" name="email" ng-model="email" required>
+  <span style="color:red" ng-show="myForm.email.$dirty && myForm.email.$invalid">
+  <span ng-show="myForm.email.$error.required">邮箱是必须的。</span>
+  <span ng-show="myForm.email.$error.email">非法的邮箱。</span>
+  </span>
+</p>
+
+<p>
+  <input type="submit"
+  ng-disabled="myForm.user.$dirty && myForm.user.$invalid ||
+  myForm.email.$dirty && myForm.email.$invalid">
+</p>
+
+</form>
+
+属性描述
+$dirty表单有填写记录
+$valid字段内容合法的
+$invalid字段内容是非法的
+$pristine表单没有填写记录
+
+
+API
+API描述
+angular.lowercase (<angular1.7）
+angular.$$lowercase()（angular1.7+）转换字符串为小写
+angular.uppercase() (<angular1.7）
+angular.$$uppercase()（angular1.7+）转换字符串为大写
+angular.isString()判断给定的对象是否为字符串，如果是返回 true。
+angular.isNumber()判断给定的对象是否为数字，如果是返回 true。
+app.controller('myCtrl', function($scope) {
+    $scope.x1 = "RUNOOB";
+    $scope.x2 = angular.$$lowercase($scope.x1);
+});
+
+
+监控模型变量
+$scope.$watch('passw1',function() {$scope.test();});
+$scope.test = function() {
+...}
 
 
 ## 安全函数
