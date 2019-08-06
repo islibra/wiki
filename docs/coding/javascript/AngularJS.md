@@ -327,7 +327,7 @@ app.filter('reverse', function() {  // 可以注入依赖
 > 通过参数传入controller.
 
 ```html tab="location"
-{{myUrl}}
+<h1>{{myUrl}}</h1>
 <script>
 var app = angular.module('myApp', []);
 app.controller('myCtrl', function($scope, $location) {
@@ -336,84 +336,46 @@ app.controller('myCtrl', function($scope, $location) {
 </script>
 ```
 
-```html
-{{myWelcome}}
+```html tab="http"
+<h1>{{myWelcome}}</h1>
 <script>
 var app = angular.module('myApp', []);
 app.controller('myCtrl', function($scope, $http) {
-    $http.get("bnv.html").then(function (response) {
+    // 注意必须是同一个域下的资源才能访问成功
+    $http.get("service.html").then(function (response) {
         $scope.myWelcome = response.data;
+    });
+
+    // 另一种写法
+    $http({
+        method: 'GET',
+        url: 'service.html'
+    }).then(function successCallback(response) {
+        // service.html {"sites": "localhost"}
+        $scope.myWelcome = response.data.sites;
+    }, function errorCallback(response) {
+        // 请求失败执行代码
     });
 });
 </script>
 ```
 
-
-
-
-// 简单的 GET 请求，可以改为 POST
-$http({
-    method: 'GET',
-    url: '/someUrl'
-}).then(function successCallback(response) {
-        // 请求成功执行代码
-    }, function errorCallback(response) {
-        // 请求失败执行代码
-});
-
-var app = angular.module('myApp', []);
-
-app.controller('siteCtrl', function($scope, $http) {
-    $http({
-        method: 'GET',
-        url: 'https://www.runoob.com/try/angularjs/data/sites.php'
-    }).then(function successCallback(response) {
-            $scope.names = response.data.sites;
-        }, function errorCallback(response) {
-            // 请求失败执行代码
-    });
-
-});
-
-$http.get('/someUrl', config).then(successCallback, errorCallback);
-$http.post('/someUrl', data, config).then(successCallback, errorCallback);
-
-<div ng-app="myApp" ng-controller="siteCtrl">
-
-<ul>
-  <li ng-repeat="x in names">
-    {{ x.Name + ', ' + x.Country }}
-  </li>
-</ul>
-
-</div>
-
+```html tab="timeout"
+<h1>{{myUrl}}</h1>
 <script>
 var app = angular.module('myApp', []);
-app.controller('siteCtrl', function($scope, $http) {
-  $http.get("https://www.runoob.com/try/angularjs/data/sites.php")
-  .then(function (response) {$scope.names = response.data.sites;});
-});
-</script>
-
-$http.get
-$http.head
-$http.post
-$http.put
-$http.delete
-$http.jsonp
-$http.patch
-
-
-var app = angular.module('myApp', []);
-app.controller('myCtrl', function($scope, $timeout) {
-    $scope.myHeader = "Hello World!";
+app.controller('myCtrl', function($scope, $location, $timeout) {
+    $scope.myUrl = $location.absUrl();
     $timeout(function () {
-        $scope.myHeader = "How are you today?";
+        $scope.myWelcome = "How are you today?";
     }, 2000);
 });
+</script>
+```
 
-
+```html tab="interval"
+<h1>{{theTime}}</h1>
+<script>
 var app = angular.module('myApp', []);
 app.controller('myCtrl', function($scope, $interval) {
     $scope.theTime = new Date().toLocaleTimeString();
@@ -421,32 +383,63 @@ app.controller('myCtrl', function($scope, $interval) {
         $scope.theTime = new Date().toLocaleTimeString();
     }, 1000);
 });
+</script>
+```
 
+- $http.get('/someUrl', config).then(successCallback, errorCallback);
+- $http.post('/someUrl', data, config).then(successCallback, errorCallback);
+- $http.head
+- $http.put
+- $http.delete
+- $http.jsonp
+- $http.patch
 
-自定义
+???+ tip "允许跨域请求访问"
+    需要在响应头中添加客户端域名, 如:
+
+    ```php tab="php"
+    header('Access-Control-Allow-Origin:http://client.runoob.com');
+    header('Access-Control-Allow-Origin:*');
+    ```
+
+## 自定义service
+
+```javascript
 app.service('hexafy', function() {
     this.myFunc = function (x) {
         return x.toString(16);
     }
 });
 app.controller('myCtrl', function($scope, hexafy) {
-    $scope.hex = hexafy.myFunc(255);
+    $scope.myUrl = hexafy.myFunc(255);
 });
+```
+
 在过滤器中使用
+
+```html
+<p>我的第一个表达式： {{ (5 + 5) | myFormat }}</p>
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope) {
+});
+// 自定义service
+app.service('hexafy', function() {
+    this.myFunc = function (x) {
+        return x.toString(16);
+    }
+});
+// 自定义过滤器调用service
 app.filter('myFormat',['hexafy', function(hexafy) {
     return function(x) {
         return hexafy.myFunc(x);
     };
 }]);
-<ul>
-<li ng-repeat="x in counts">{{x | myFormat}}</li>
-</ul>
+</script>
+```
 
 
-允许跨域请求访问
-响应头添加客户端域名
-header('Access-Control-Allow-Origin:http://client.runoob.com');
-header('Access-Control-Allow-Origin:*');
+
 
 
 

@@ -64,6 +64,8 @@ pip install mkdocs-material
 pip install pymdown-extensions
 ```
 
+[MkDocs PDF Export Plugin](https://github.com/zhaoterryy/mkdocs-pdf-export-plugin)
+
 ### 修改配置
 
 ```yaml

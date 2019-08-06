@@ -1,4 +1,4 @@
-# adworld
+# web
 
 ## 0x01 查看源代码
 
@@ -82,7 +82,7 @@ for i in slist:
 # 786OsErtk12
 ```
 
-## xff_referer
+## 0x08_xff_referer
 
 - X-Forwarded-For: 123.123.123.123, 简称XFF, 在通过http代理或负载均衡服务器时, 添加该项代表客户端真实IP.
 - Referer: https://www.google.com, 请求链接所属页面地址.
