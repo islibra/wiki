@@ -36,6 +36,7 @@
 - [sublime-style-column-selection](https://atom.io/packages/sublime-style-column-selection): 列选择
 - [atom-beautify](https://atom.io/packages/atom-beautify): 代码格式化
     - 选中代码 - `Ctrl + Shift + p` - `beautify language`
+- [markdown-pdf](https://atom.io/packages/markdown-pdf): MD转化为PDF
 
 ### 安装插件
 
