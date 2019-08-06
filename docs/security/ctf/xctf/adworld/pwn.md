@@ -20,7 +20,7 @@
     Partial RELRO   No canary found   NX enabled    No PIE          No RPATH   No RUNPATH   68 Symbols     No       0               0       ../../adworld/pwn/get_shell
     ```
 
-1. 运行程序
+1. 运行程序, 表示服务器上运行的程序可以让我们拿到shell!
 
     ```bash
     $ ./get_shell
@@ -28,3 +28,5 @@
     sh-4.3# id
     uid=0(root) gid=0(root) groups=0(root)
     ```
+
+1. 连接服务器
