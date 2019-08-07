@@ -1,5 +1,17 @@
 # compare
 
+## 运行环境
+
+```bash tab="C"
+# 确认已安装GNU的C编译器
+$ gcc -v
+```
+
+```bash tab="C++"
+# 确认已安装GNU的C++编译器
+$ g++ -v
+```
+
 ## shebang
 
 python为脚本语言，会在第一行写shebang，而go没有。
@@ -8,11 +20,17 @@ python为脚本语言，会在第一行写shebang，而go没有。
 #!/usr/bin/python
 ```
 
+## namespace
+
+```c++ tab="C++"
+using namespace std;
+```
+
 ## main
 
 go必须要有main方法作为程序入口，而python没有。
 
-```go
+```go tab="go"
 package main
 
 func main() {
@@ -20,6 +38,13 @@ func main() {
 }
 ```
 
+```c tab="C/C++"
+int main()
+{
+    // ...
+    return 0;
+}
+```
 
 ## 注释
 
@@ -39,6 +64,12 @@ func main() {
 // 注释
 ```
 
+```c tab="C/C++"
+// 单行注释
+/*
+多行注释
+*/
+```
 
 ## 打印输出
 
@@ -58,6 +89,13 @@ fmt.Println(a, b, c, d, e)
 fmt.Printf("the %d ele is %d\n", i, v)
 ```
 
+```c tab="C"
+printf("Hello World!\n");
+```
+
+```c++ tab="C++"
+cout << "Hello World!" << endl;
+```
 
 ## 运行
 
@@ -69,6 +107,17 @@ python xxx.py
 go run xxx.go
 ```
 
+```bash tab="C"
+$ gcc helloc.c
+$ ./a.out
+Hello World!
+```
+
+```bash tab="C++"
+$ g++ helloworld.cpp
+$ ./a.out
+Hello World!
+```
 
 ## 数据类型
 
@@ -94,6 +143,39 @@ int.from_bytes(xxx, byteorder='big')
 xxxint = int(xxxstr)
 ```
 
+```c tab="C"
+// 只在Windows平台有效
+//itoa(a, str, 10);  // 整型, 字符串, 进制
+char astr[20] = {0};
+sprintf(astr, "%d", a);
+printf("a %d to astr is %s\n", a, astr);
+```
+
+## 常量
+
+```c tab="C" hl_lines="10 17 20"
+// 方法一:
+#define HELLOWORLD "Hello World!\n"
+
+// 方法二:
+const LEN = 5;
+
+int a = 1;
+int b = 2;
+// 声明指针为const
+const int *pa = &a;
+printf("a is %d\n", *pa);
+// 修改a的值
+a = 3;
+printf("a is %d\n", *pa);
+// 无法修改指针指向的a的值
+// error: assignment of read-only location ‘*pa’
+*pa = 4;
+printf("a is %d\n", *pa);
+// 可以修改指针指向的地址
+pa = &b;
+printf("b is %d\n", *pa);
+```
 
 ## 变量赋值
 
@@ -107,6 +189,15 @@ a, b = 0, 1
 var c, d int [= 1, 2]  //赋值
 // 简洁赋值，只能用在函数内部
 e := 3
+```
+
+## 数组
+
+```c tab="C"
+// 声明数组并初始化
+// 数组长度必须是常量
+int ages[3] = {1, 2, 3};
+printf("ages[0] is %d\n", ages[0]);
 ```
 
 
@@ -191,11 +282,14 @@ import (
 rand.xxx()
 ```
 
-```c tab="c"
+```c tab="C"
 #include <stdio.h>
 #include <stdlib.h>
 ```
 
+```c++ tab="C++"
+#include <iostream>
+```
 
 ## 类
 
@@ -214,28 +308,150 @@ user = User('alice', 'Admin@123')
 print('{user.name}, {user.password}'.format(user=user))
 ```
 
+```c++ tab="C++"
+#include <iostream>
+using namespace std;
+
+class Printer {
+public:
+    // 构造函数声明
+    Printer();
+    // 析构函数声明
+    ~Printer();
+
+    void displayMsg() {
+        cout << "Welcome! size is " << size << endl;
+    }
+
+private:
+    int size;
+    char *msg;
+};  // 注意最后的分号
+
+// 构造函数定义
+Printer::Printer() {
+    size = 0;
+    msg = NULL;
+}
+
+// 析构函数定义
+Printer::~Printer() {
+}
+
+int main()
+{
+    Printer p;
+    p.displayMsg();
+
+    return 0;
+}
+```
+
 ## 结构体
 
-```c tab="c"
+```c tab="C"
+// 定义结构体
 struct Point
 {
     // 属性默认公有
     float x, y;
 };
+
+// 结构体作为参数
+void testStruct(struct Point p) {
+    printf("p is %f, %f\n", p.x, p.y);
+}
+
+int main()
+{
+    // 声明结构体
+    struct Point p = {1.1, 2.2};
+    testStruct(p);
+}
 ```
 
-## 指针
+## 指针 & 动态内存
 
-```c tab="c"
+```c tab="C"
 Point* position = NULL;
 
 position->x
 position->y
+
+//////
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    printf("Hello World!\n");
+
+    // 声明指针类型
+    char *str;
+    // 申请内存
+    str = (char *)malloc(15);
+    strcpy(str, "islibra");
+    // String is islibra, Address is 17400864
+    printf("String is %s, Address is %u\n", str, str);
+
+    // 重新申请内存
+    str = (char *)realloc(str, 25);
+    strcat(str, " is good!");
+    // String is islibra is good!, Address is 17400864
+    printf("String is %s, Address is %u\n", str, str);
+
+    // 释放内存
+    if(str != NULL) {
+        free(str);
+    }
+
+    return 0;
+}
+```
+
+```c++ tab="C++"
+// 声明指针并初始化为NULL
+double *dp = NULL;
+// 申请动态内存
+dp = new double;
+// 赋值
+*dp = 1.23;
+cout << "dp is " << *dp << endl;
+// 释放内存
+delete dp;
+dp = NULL;
+
+// 指针指向字符数组
+char *pstr = NULL;
+pstr = new char[20];
+pstr[0] = 'a';
+cout << pstr << endl;
+delete [] pstr;
+pstr = NULL;
+
+// 指针指向指针数组
+int ROW = 2;
+int COL = 3;
+int **ppint = new int* [ROW];
+for(int i=0; i<ROW; i++) {
+    ppint[i] = new int[COL];
+    for(int j=0; j<COL; j++) {
+        ppint[i][j] = j;
+    }
+}
+cout << "ppint[1][2] is " << ppint[1][2] << endl;
+for(int i=0; i<ROW; i++) {
+    delete [] ppint[i];
+    ppint[i] = NULL;
+}
+delete [] ppint;
+ppint = NULL;
 ```
 
 ## 宏定义
 
-```c tab="c"
+```c tab="C"
 #if xxx
 #define XXX xxx(xxx)
 #else
@@ -284,6 +500,25 @@ import calendar
 print(calendar.month(2019, 7))
 ```
 
+```c tab="C"
+// 断言
+#include <assert.h>
+
+void myfunc(int i) {
+    assert(i == 5);
+    printf("success\n");
+}
+
+int main()
+{
+    printf("i == 5\n");
+    myfunc(5);
+    printf("i == 6\n");
+    // a.out: helloc.c:8: myfunc: Assertion `i == 5' failed.
+    // Aborted (core dumped)
+    myfunc(6);
+}
+```
 
 ## 规范
 
