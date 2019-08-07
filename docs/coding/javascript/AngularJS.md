@@ -45,15 +45,36 @@ latest: <https://angular.io/>
 
 ```html
 <div ng-app="" ng-init="myEmail = 'test@runoob.com'">
-    <form name="myForm">
-        Email:
-        <input type="email" name="myAddress" ng-model="myEmail" required>
-        <span ng-show="myForm.myAddress.$error.email">不是一个合法的邮箱地址</span>
-        <h1>状态</h1>
-        <h2>email格式错误$error.email: {{myForm.myAddress.$error.email}}</h2>
-        <h2>表单校验正确$valid: {{myForm.myAddress.$valid}}</h2>
-        <h2>修改过$dirty: {{myForm.myAddress.$dirty}}</h2>
+    <form name="myForm" novalidate>
+        <p>用户名:<br>
+            <input type="text" name="user" ng-model="user" required>
+            <span style="color:red" ng-show="myForm.user.$dirty && myForm.user.$invalid">
+                <span ng-show="myForm.user.$error.required">用户名是必须的。</span>
+            </span>
+        </p>
+        <p>邮箱:<br>
+            <input type="email" name="myAddress" ng-model="myEmail" required>
+            <span style="color:red" ng-show="myForm.myAddress.$dirty && myForm.myAddress.$invalid">
+                <span ng-show="myForm.myAddress.$error.required">邮箱是必须的。</span>
+                <span ng-show="myForm.myAddress.$error.email">不是一个合法的邮箱地址。</span>
+            </span>
+        </p>
+        <p>
+            <input type="submit"
+            ng-disabled="myForm.user.$dirty && myForm.user.$invalid ||
+            myForm.myAddress.$dirty && myForm.myAddress.$invalid">
+        </p>
+
+        <h1>状态</h1>        
         <h2>点击过$touched: {{myForm.myAddress.$touched}}</h2>
+        <h2>修改过$dirty: {{myForm.myAddress.$dirty}}</h2>
+        <h2>未修改过$pristine: {{myForm.myAddress.$pristine}}</h2>
+        <h2>校验正确$valid: {{myForm.myAddress.$valid}}</h2>
+        <h2>校验非法$invalid: {{myForm.myAddress.$invalid}}</h2>
+
+        <h1>错误</h1>
+        <h2>非空$error.required: {{myForm.myAddress.$error.required}}</h2>
+        <h2>email格式$error.email: {{myForm.myAddress.$error.email}}</h2>
     </form>
 </div>
 ```
@@ -74,9 +95,9 @@ latest: <https://angular.io/>
 
 ### ng-repeat
 
-> 重复元素.
+> 重复元素
 
-```html
+```html tab="列表"
 <div ng-app="" ng-init="firstName='John'; names=['Jani','Hege','Kai']">
     <p>姓名为 <span ng-bind="firstName"></span></p>
 
@@ -89,7 +110,96 @@ latest: <https://angular.io/>
 </div>
 ```
 
+```html tab="表格"
+<table>
+    <tr ng-repeat="x in names">
+        <td>{{ $index + 1 }}</td>
+        <td>{{ x.name }}</td>
+        <td>{{ x.country }}</td>
+    </tr>
+</table>
+<script>
+$scope.names = [
+    {
+        "name": "Emil",
+        "country": "India"
+    }, {
+        "name": "Tobias",
+        "country": "China"
+    }, {
+        "name": "Linus",
+        "country": "American"
+    }];
+</script>
+```
+
+### ng-options
+
+> 利用数组创建下拉列表
+
+```html tab="数组"
+<select ng-init="selectedName = companys[1]" ng-model="selectedName" ng-options="x for x in companys">
+</select>
+<script>
+$scope.companys = ["Google", "Runoob", "Taobao"];
+</script>
+```
+
+```html tab="对象数组"
+<select ng-model="selectedCry" ng-options="x.name for x in names">
+</select>
+<h1>你选择的是: {{selectedCry.name}}, 国家为: {{selectedCry.country}}</h1>
+<script>
+$scope.names = [
+    {
+        "name": "Emil",
+        "country": "India"
+    }, {
+        "name": "Tobias",
+        "country": "China"
+    }, {
+        "name": "Linus",
+        "country": "American"
+    }];
+</script>
+```
+
+```html tab="对象"
+<select ng-model="selectedCar" ng-options="value.brand for (key, value) in cars">
+</select>
+<h1>你选择的是{{selectedCar.model}}</h1>
+<script>
+$scope.cars = {
+    car01 : {brand : "Ford", model : "Mustang", color : "red"},
+    car02 : {brand : "Fiat", model : "500", color : "white"},
+    car03 : {brand : "Volvo", model : "XC90", color : "black"}
+};
+</script>
+```
+
+### ng-disabled
+
+```html
+<div ng-app="myApp" ng-controller="myCtrl" ng-init="mySwitch = true">
+    <button ng-disabled="mySwitch">是否禁用: {{mySwitch}}</button>
+</div>
+```
+
 ### ng-show
+
+```html
+<div ng-app="myApp" ng-controller="myCtrl" ng-init="hour = 13">
+    <p ng-show="true">我是可见的。</p>
+    <p ng-hide="true">我是不可见的。</p>
+    <p ng-show="hour > 12">我是可见的, 因为hour is {{hour}}。</p>
+</div>
+```
+
+### ng-click
+
+```html
+<button ng-click="count = count + 1">点我+1, {{ count }}</button>
+```
 
 
 ## 表达式
@@ -439,109 +549,13 @@ app.filter('myFormat',['hexafy', function(hexafy) {
 ```
 
 
+## 定义模块依赖关系
 
-
-
-
-利用数组和ng-options创建下拉列表
-<div ng-app="myApp" ng-controller="myCtrl">
-
-<select ng-init="selectedName = names[0]" ng-model="selectedName" ng-options="x for x in names">
-</select>
-
-</div>
-
-<script>
-var app = angular.module('myApp', []);
-app.controller('myCtrl', function($scope) {
-    $scope.names = ["Google", "Runoob", "Taobao"];
-});
-</script>
-
-
-$scope.sites = [
-    {site : "Google", url : "http://www.google.com"},
-    {site : "Runoob", url : "http://www.runoob.com"},
-    {site : "Taobao", url : "http://www.taobao.com"}
-];
-<select ng-model="selectedSite" ng-options="x.site for x in sites">
-</select>
-
-<h1>你选择的是: {{selectedSite.site}}</h1>
-<p>网址为: {{selectedSite.url}}</p>
-
-对象作为数据源
-$scope.cars = {
-car01 : {brand : "Ford", model : "Mustang", color : "red"},
-car02 : {brand : "Fiat", model : "500", color : "white"},
-car03 : {brand : "Volvo", model : "XC90", color : "black"}
-};
-<select ng-model="selectedCar" ng-options="y.brand for (x, y) in cars">
-</select>
-
-
-
-
-表格
-<table>
-  <tr ng-repeat="x in names">
-<td>{{ $index + 1 }}</td>
-    <td>{{ x.Name }}</td>
-    <td>{{ x.Country }}</td>
-  </tr>
-</table>
-
-
-
-
-<button ng-disabled="mySwitch">点我!</button>
-
-<p ng-show="true">我是可见的。</p>
-<p ng-hide="true">我是不可见的。</p>
-<p ng-show="hour > 12">我是可见的。</p>
-
-
-<button ng-click="count = count + 1">点我！</button>
-
-<p>{{ count }}</p>
-
-
-定义模块依赖关系
+```javascript
 var app = angular.module("myApp", []);
+```
 
 
-表单验证
-<form  ng-app="myApp"  ng-controller="validateCtrl"
-name="myForm" novalidate>
-
-<p>用户名:<br>
-  <input type="text" name="user" ng-model="user" required>
-  <span style="color:red" ng-show="myForm.user.$dirty && myForm.user.$invalid">
-  <span ng-show="myForm.user.$error.required">用户名是必须的。</span>
-  </span>
-</p>
-
-<p>邮箱:<br>
-  <input type="email" name="email" ng-model="email" required>
-  <span style="color:red" ng-show="myForm.email.$dirty && myForm.email.$invalid">
-  <span ng-show="myForm.email.$error.required">邮箱是必须的。</span>
-  <span ng-show="myForm.email.$error.email">非法的邮箱。</span>
-  </span>
-</p>
-
-<p>
-  <input type="submit"
-  ng-disabled="myForm.user.$dirty && myForm.user.$invalid ||
-  myForm.email.$dirty && myForm.email.$invalid">
-</p>
-
-</form>
-
-属性描述
-$dirty表单有填写记录
-$valid字段内容合法的
-$invalid字段内容是非法的
-$pristine表单没有填写记录
 
 
 API
