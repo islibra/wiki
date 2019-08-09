@@ -62,6 +62,17 @@ pip install mkdocs-material
 
 ```bash
 pip install pymdown-extensions
+
+# 安装PDF导出插件
+# 1. 升级pip版本
+pip --proxy=http://l0025xxxx:pass%40word@proxy.xxx.com:8080 install --upgrade pip setuptools
+# 2. 安装WeasyPrint
+pip --proxy=http://l0025xxxx:pass%40word@proxy.xxx.com:8080 install WeasyPrint
+# 3. 查询python 32/64位
+python --version --version
+# 4. 下载安装gtk3-runtime-3.24.10-2019-08-05-ts-win64.exe: https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases
+# 5. 安装MkDocs PDF Export Plugin
+pip --proxy=http://l0025xxxx:pass%40word@proxy.xxx.com:8080 install mkdocs-pdf-export-plugin
 ```
 
 [MkDocs PDF Export Plugin](https://github.com/zhaoterryy/mkdocs-pdf-export-plugin)
@@ -100,6 +111,11 @@ extra_css:
 
 extra:
   disqus: 'islibra'  # 评论
+
+# PDF导出插件
+plugins:
+    - search
+    - pdf-export
 
 google_analytics:
   - 'UA-XXXXXXXX-X'
