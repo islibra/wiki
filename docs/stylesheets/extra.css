@@ -1,9 +1,21 @@
 h2 {
-  color: red;
+    color: red;
+}
+.md-typeset h2 {
+    font-size: 1.3rem;
 }
 h3 {
-  color: orange;
+    color: orange;
+}
+.md-typeset h3 {
+    font-size: 1.15rem;
 }
 h4 {
-  color: brown;
+    color: brown;
+}
+.md-typeset h4 {
+    font-size: 1rem;
+}
+.md-typeset h5, .md-typeset h6 {
+    font-size: .8rem;
 }
