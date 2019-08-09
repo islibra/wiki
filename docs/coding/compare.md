@@ -121,18 +121,56 @@ Hello World!
 
 ## 数据类型
 
-```python
+```python tab="python"
 # 布尔值
 isTrue = True
 isFalse = False
 ```
 
-```go
+```c tab="C"
+// 无符号整数类型，它是 sizeof 关键字的结果。
+#include <stdlib.h>
+size_t
 ```
 
- tab="python"
+```c++ tab="C++"
+// 字符串
 
- tab="go"
+// 形式一: 字符数组, 末尾带\0
+char greeting[] = "welcome";
+cout << greeting << endl;
+char str1[10];
+strcpy(str1, greeting);
+cout << str1 << endl;
+
+// 形式二: 字符串
+#include <string>
+string s1 = "hello";
+string s2 = "world";
+string s3;
+int len;
+s3 = s1;
+cout << s3 << endl;
+s3 = s1 + s2;
+cout << s3 << endl;
+len = s3.size();
+cout << len << endl;
+```
+
+??? example "C"
+
+    ??? example "整型"
+        类型 | 存储大小 | 值范围
+        --- | --- | ---
+        char | 1 byte | -128 到 127 或 0 到 255
+        unsigned char | 1 byte | 0 到 255
+        signed char | 1 byte | -128 到 127
+        int | 2 或 4 bytes | -32,768 到 32,767 或 -2,147,483,648 到 2,147,483,647
+        unsigned int | 2 或 4 bytes | 0 到 65,535 或 0 到 4,294,967,295
+        short | 2 bytes | -32,768 到 32,767
+        unsigned short | 2 bytes | 0 到 65,535
+        long | 4 bytes | -2,147,483,648 到 2,147,483,647
+        unsigned long | 4 bytes | 0 到 4,294,967,295
 
 ### 数据类型转换
 
@@ -144,11 +182,31 @@ xxxint = int(xxxstr)
 ```
 
 ```c tab="C"
-// 只在Windows平台有效
-//itoa(a, str, 10);  // 整型, 字符串, 进制
-char astr[20] = {0};
-sprintf(astr, "%d", a);
-printf("a %d to astr is %s\n", a, astr);
+// 整型转字符串
+//itoa(i, str, 10);  // 只在Windows平台有效, 整型, 字符串, 进制
+char str[20] = {0};
+sprintf(str, "%d", i);
+printf("i %d to str is %s\n", i, str);
+
+// 字符串转整型
+#include <stdlib.h>
+char *str2 = "thisisastring";
+int i = atoi(str2);
+// str2 is thisisastring, i is 0
+printf("str2 is %s, i is %d\n", str2, i);
+char *str3 = "123456789";
+int j = atoi(str3);
+// str3 is 123456789, j is 123456789
+printf("str3 is %s, j is %d\n", str3, j);
+```
+
+```c++ tab="C++"
+// string  -->  const char *
+cout << s3.c_str() << endl;
+// 如果想赋值给另一个char *, 必须使用strcpy
+char *ps3 = new char[s3.size() + 1];
+strcpy(ps3, s3.c_str());
+cout << ps3 << endl;
 ```
 
 ## 常量
@@ -191,6 +249,19 @@ var c, d int [= 1, 2]  //赋值
 e := 3
 ```
 
+## C 存储类
+
+> 修饰在变量类型之前
+
+- auto, 局部变量默认
+- register, 存储在寄存器而非RAM中的局部变量, 最大等于寄存器大小, 且无法取地址`&`, 通常用于快速访问, 如计数器
+- static
+    - 局部变量, 在每次函数被调用时保持其值
+    - 全局变量, 将作用于限制在声明它的文件内
+    - 类成员, 所有对象共享该成员
+- extern, 声明该全局变量或函数在其他文件中定义
+
+
 ## 数组
 
 ```c tab="C"
@@ -226,7 +297,7 @@ for i, v := range primes {
 
 // 循环
 for i := 0; i < 5; i++ {
-	fmt.Println(i)
+ | fmt.Println(i)
 }
 ```
 
@@ -239,7 +310,11 @@ def xxx(arg1, arg2):
     return xxx
 ```
 
-```c tab="c"
+```c tab="C"
+// 函数声明
+int add(int a, int b);
+
+// 函数定义
 int add(int a, int b)
 {
     return a + b;
@@ -289,6 +364,24 @@ rand.xxx()
 
 ```c++ tab="C++"
 #include <iostream>
+```
+
+### C 头文件
+
+> 包含常量, 宏定义, 全局变量, 函数原型声明, 引用头文件相当于复制头文件的内容
+
+- 编译器自带的头文件: `#include <file>`, 在系统目录的标准列表中搜索
+- 程序编写的头文件: `#include "file"`, 在当前目录中搜索
+
+> 放在条件编译中防止被重复引用:
+
+```c
+#ifndef HEADER_FILE
+#define HEADER_FILE
+
+// ...
+
+#endif
 ```
 
 ## 类
@@ -520,6 +613,16 @@ int main()
 }
 ```
 
+```c++ tab="C++"
+// 字符串拷贝
+#include <cstring>
+char greeting[] = "welcome";
+cout << greeting << endl;
+char str1[10];
+strcpy(str1, greeting);
+cout << str1 << endl;
+```
+
 ## 规范
 
 ### Python
@@ -529,3 +632,14 @@ int main()
 ### JavaScript
 
 1. 语句和`function(){};`后面带分号
+
+### C/C++
+
+1. 类/结构体定义右花括号后面带分号
+
+    ```c++
+    class Xxx {
+    };
+    struct Xxx {
+    };
+    ```
