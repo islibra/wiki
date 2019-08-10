@@ -157,6 +157,16 @@ len = s3.size();
 cout << len << endl;
 ```
 
+```php tab="php"
+// 被认为是FALSE的布尔值, 其他都被认为是TRUE
+1. 整型0, 浮点型0.0
+2. 空字符串或字符串"0"
+3. 不包含任何元素的数组
+4. NULL, 尚未赋值的变量
+5. 从空标记生成的SimpleXML对象
+```
+
+
 ??? example "C"
 
     ??? example "整型"
@@ -209,6 +219,20 @@ strcpy(ps3, s3.c_str());
 cout << ps3 << endl;
 ```
 
+```php tab="php"
+// 字符串转换为数值, 包含. e E转换为float, 否则转换为integer, 其他字母忽略.
+<?php
+$foo = 1 + "10.5";                // $foo is float (11.5)
+$foo = 1 + "-1.3e3";              // $foo is float (-1299)
+$foo = 1 + "bob-1.3e3";           // $foo is integer (1)
+$foo = 1 + "bob3";                // $foo is integer (1)
+$foo = 1 + "10 Small Pigs";       // $foo is integer (11)
+$foo = 4 + "10.2 Little Piggies"; // $foo is float (14.2)
+$foo = "10.0 pigs " + 1;          // $foo is float (11)
+$foo = "10.0 pigs " + 1.0;        // $foo is float (11)     
+?>
+```
+
 ## 常量
 
 ```c tab="C" hl_lines="10 17 20"
@@ -247,6 +271,14 @@ a, b = 0, 1
 var c, d int [= 1, 2]  //赋值
 // 简洁赋值，只能用在函数内部
 e := 3
+```
+
+```php tab="php"
+<?php
+$name = 'Bob';
+$company = 'Apple';
+echo "$name, $company";  // 输出 "Bob, Apple"
+?>
 ```
 
 ## C 存储类

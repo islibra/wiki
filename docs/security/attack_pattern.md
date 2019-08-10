@@ -85,7 +85,22 @@ $(document).ready(function(){
 
 ## SQL注入
 
-### JDBC
+### 注释
+
+- 通用单行注释: `-- `, {==注意后面跟一个空格==}, 如`flag' or 1=1 -- `
+- 通用多行注释: `/* ... */`
+- MySQL单行注释: `#`, 如`flag' or 1=1 #`
+
+### 常用POC
+
+- 查询全部数据`flag' or 1=1 #`或`flag' or 1=1 -- `
+- 猜解列数`flag' union select 1,2,3 #`, 返回的数据为1, 2, 3
+- 猜解数据库名, 表名`flag' and exist(select * from xxx) #`或`' and 0 union select 1,TABLE_SCHEMA,TABLE_NAME from INFORMATION_SCHEMA.COLUMNS #`, 使用`and 0`先将干扰数据清零, 再查询`INFORMATION_SCHEMA`库中的`COLUMNS`表获取数据库名和表名
+- 猜解列名, 数据类型`flag' and exist(select xxx from xxx) #`或`' and 0 union select 1,column_name,data_type from information_schema.columns where table_name='xxx'#`
+
+### 框架
+
+#### JDBC
 
 ```java tab="错误的做法"
 // 拼接SQL语句
@@ -106,9 +121,9 @@ ps.setString(1, name);
     **order by** 不能使用参数绑定，需要通过白名单过滤。
 
 
-### MyBatis
+#### MyBatis
 
-#### XML
+##### XML
 
 定义Mapper接口:
 
@@ -127,7 +142,7 @@ XML配置文件:
 </select>
 ```
 
-#### Annotation
+##### Annotation
 
 ```java
 @Mapper
@@ -231,7 +246,7 @@ public interface UserMapper {
         </select>
         ```
 
-### JPA & Hibernate
+#### JPA & Hibernate
 
 略
 

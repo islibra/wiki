@@ -17,6 +17,8 @@
 ### 字符串处理
 
 ```python
+# 获取字符串长度
+print(len("hello"))
 # 转换为字符串
 print('hello ' + str(99))
 print('hello2 ' + repr(50))
@@ -31,8 +33,9 @@ print('12'.zfill(5))  # 0填充
 ##### 0x00_%操作符
 
 ```python
-name = 'Alice'
-print('Hello, %s!' % name)  # Hello, Alice!
+name1 = 'Alice'
+name2 = 'Bob'
+print('Hello, %s and %s!' % (name1, name2))  # Hello, Alice and Bob!
 ```
 
 ##### 0x01_标准库string.Template[^template]
