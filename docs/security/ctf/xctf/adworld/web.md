@@ -184,3 +184,19 @@ URL中自动携带参数`id=1`, 将`id=1`改成`id=flag`, 自动跳回到`id=1`,
     1. 获取字段内容，得到flag: `python3 sqlmap.py -u "http://111.198.29.45:33537/index.php" --data "search=df" -D news -T secret_table -C fl4g --dump`
 
     参考链接: <https://github.com/sqlmapproject/sqlmap/wiki/Usage>
+
+## 003_mfw
+
+整个web没有输入, Cookies中无内容, 无robots.txt, 只在URL中有个page参数, 查看源码, 发现注释中存在`page=flag`但是被注释掉
+
+题目提示使用`Git`, `PHP`, `Bootstrap`, 访问`.git`存在源码泄露
+
+???+ success "工具"
+    [GitHack](https://github.com/lijiejie/GitHack): 利用.git源码泄露还原工程代码
+
+    ```bash
+    # 使用python 2执行
+    python /Users/lixiaolong/tools/GitHack/GitHack.py http://111.198.29.45:54372/.git/
+    ```
+
+审计源码发现`flag.php`为空, `index.php`中使用`strpos()`对`$page`校验`..`

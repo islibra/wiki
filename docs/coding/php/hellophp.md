@@ -5,6 +5,10 @@
 
 ## Start
 
+> macOS中已安装php
+
+下载[XAMPP](https://www.apachefriends.org/zh_cn/index.html)
+
 ```php
 <html>
  <head>
@@ -117,4 +121,11 @@ echo '
 // 语法高亮一个文件
 // 高亮显示当前文件的源码
 show_source(__FILE__);
+```
+
+### strpos
+
+```php
+// 查找字符串第一次出现的位置, 区分大小写, 如果未找到返回FALSE
+strpos(string, find, start)
 ```
