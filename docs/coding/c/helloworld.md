@@ -21,3 +21,17 @@ int main()
     return 0;
 }
 ```
+
+## 库函数
+
+### ioctl
+
+系统调用, 通过文件操作底层设备输入输出, 如终端
+
+```c
+#include <sys/ioctl.h>
+
+// fd: 文件描述符, request: 编码后的请求参数, ...: 未指定类型的指针
+// 成功返回0
+int ioctl(int fd, unsigned long request, ...);
+```
