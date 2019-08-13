@@ -236,7 +236,17 @@ disqus:空disable
 # H1
 ```
 1. 使用H1做title
-1. 自定义标签：<https://shields.io/>，如：`https://img.shields.io/badge/<LABEL>-<MESSAGE>-<COLOR>.svg`
+1. 自定义标签：<https://shields.io/>, 如: ![](https://img.shields.io/badge/label-message-brightgreen.svg)
+
+    ``` tab="格式"
+    https://img.shields.io/badge/<LABEL>-<MESSAGE>-<COLOR>.svg
+    ```
+
+    ``` tab="使用样例"
+    ![](https://img.shields.io/badge/attachment-assets-brightgreen.svg)
+    ![](https://img.shields.io/badge/style-tab-brightgreen.svg)
+    ```
+
 1. 文本修饰（带 ^^下划线^^ 的可修饰行内或段落）
     - 加粗`**bold**`, 高亮`==mark me==`
     - 下划线`^^Insert me^^`
@@ -261,6 +271,7 @@ disqus:空disable
         - sublist2
     - list2
     ```
+1. 提示块参见[Admonition](#admonition)
 1. 一级列表使用`-`，二级列表使用`*`，三级列表使用`+`，子级列表缩进 **4** 个空格  
 使用复选框：`- [x] item`  
 列表内容换行：==行尾2个空格==。
@@ -270,7 +281,6 @@ First Header | Second Header | Third Header
 :----------- |:-------------:| -----------:
 Left         | Center        | Right
 ```
-1. 提示块参见[Admonition](#admonition)
 1. 脚注`[^1]`，脚注可定义在任意位置，单行`[^1]: xxx`，多行每行开头4个空格，链接形式`https://xxx/#fn:1`
 
 
