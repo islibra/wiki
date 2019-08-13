@@ -7,16 +7,22 @@
 
 > macOS中已安装php
 
-下载[XAMPP](https://www.apachefriends.org/zh_cn/index.html)
+1. 下载安装[XAMPP](https://www.apachefriends.org/zh_cn/index.html)
+1. General - Start
+1. Volumes - Mount
+
+> phpMyAdmin: 管理MySQL.
 
 ```php
 <html>
- <head>
-  <title>PHP 测试</title>
- </head>
- <body>
- <?php echo '<p>Hello World</p>'; ?>
- </body>
+    <head>
+        <title>PHP</title>
+    </head>
+    <body>
+    <?php
+    echo '<p>Hello World</p>';
+    ?>
+    </body>
 </html>
 ```
 
