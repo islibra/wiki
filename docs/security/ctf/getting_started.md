@@ -45,6 +45,34 @@
     https://pentesterlab.com
     https://github.com/vulhub/vulhub
 
+    - AWD_2019Q1_WEB
+    - 2019-3-13 练习 baby_weak
+    - 2019-03-13:Spring Data REST
+    - 2019-3-7 练习
+    - tamuctf2019-1337 Secur1ty
+    - tamuctf2019-Science
+    - tamuctf2019-Bird Box Challe
+    - tamuctf2019-VeggieTales
+    - 2019-2.21 练习
+    - random
+    - phpbest
+    - upload
+    - global
+    - login
+    - Warm up~
+    - 4-10 buybuybuy
+    - 4-10 mysqli_real_escape_strir
+    - show me the ssrf
+    - show me the shell
+
+    .git
+    URL解码cookie为json
+    include php
+    路径跨越, 拼接用户名(反序列化出来的), 时间参数可以伪造绕过写限制
+    输出html转义, xxx=&xxx
+    halt_compile()
+    反弹shell
+
 
 ## 推荐工具
 
