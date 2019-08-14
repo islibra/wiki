@@ -28,10 +28,12 @@ int main()
 
 系统调用, 通过文件操作底层设备输入输出, 如终端
 
+> 这个是用户空间的方法, 在驱动程序中还有ioctl的实现
+
 ```c
 #include <sys/ioctl.h>
 
-// fd: 文件描述符, request: 编码后的请求参数, ...: 未指定类型的指针
+// fd: 文件描述符, request: 控制命令, ...: 可选*argp
 // 成功返回0
 int ioctl(int fd, unsigned long request, ...);
 ```
