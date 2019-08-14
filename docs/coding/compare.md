@@ -342,7 +342,7 @@ def xxx(arg1, arg2):
     return xxx
 ```
 
-```c tab="C"
+```c tab="C" hl_lines="10"
 // 函数声明
 int add(int a, int b);
 
@@ -350,6 +350,20 @@ int add(int a, int b);
 int add(int a, int b)
 {
     return a + b;
+}
+
+// C语言可以通过指针定义输入输出参数
+int testParam(int *input, int *output) {
+    *output = *input + 1;
+    return 0;
+}
+
+int main() {
+    int i = 0;
+    int j = 0;
+    testParam(&i, &j);
+    // i is 0, j is 1
+    printf("i is %d, j is %d\n", i, j);
 }
 ```
 
