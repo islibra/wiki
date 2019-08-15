@@ -6,6 +6,40 @@
     Docker官方版本从 {==1.13.x==} 开始，一跃到 {==17.03==}。  
     之后每月发布一个edge版本，如17.03, 17.04, 17.05...，每三个月发布一个stable版本，如17.03, 17.06, 17.09...
 
+## 下载安装
+
+1. 使用Docker ID登录[Docker Hub](https://hub.docker.com/editions/community/docker-ce-desktop-mac)
+1. 下载[Docker Desktop for Mac](https://download.docker.com/mac/stable/Docker.dmg)
+
+???+ quote "参考链接"
+    [Install Docker Desktop for Mac](https://docs.docker.com/docker-for-mac/install/)
+
+## Docker Compose
+
+多容器应用
+
+- Dockerfile
+- docker-compose.yml
+
+    ```yml
+    version: '2'
+    services:
+      jaivyweb1:
+        image: andreisamuilik/php5.5.9-apache2.4-mysql5.5
+        build: ./jaivyweb1/
+        ports:
+          - "0.0.0.0:11027:80"
+        links:
+          - getshell
+      getshell:
+        image: ubuntu:16.04
+        build: ./jaivyweb2/
+        tty:
+          true
+      ```
+
+- 应用文件
+
 ## uid
 
 ???+ warning

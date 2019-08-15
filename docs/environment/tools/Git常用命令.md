@@ -54,6 +54,35 @@ git push origin branchname #将本地修改的文件提交到远程个人仓
 发起merge，从远程个人仓merge到远程主干仓
 
 
-## 0x03_其他
+## 0x03_拉取子目录
+
+```bash
+[root@vm_test backup]# mkdir devops
+[root@vm_test backup]# cd devops/
+[root@vm_test devops]# git init    #初始化空库
+Initialized empty Git repository in /backup/devops/.git/
+[root@vm_test devops]# git remote add -f origin http://laijingli@192.168.1.1:90/scm/beeper/yunxxx_ops.git   #拉取remote的all objects信息
+Updating origin
+remote: Counting objects: 70, done.
+remote: Compressing objects: 100% (66/66), done.
+remote: Total 70 (delta 15), reused 0 (delta 0)
+Unpacking objects: 100% (70/70), done.
+From http://192.168.1.1:90/scm/beeper/yunxxx_ops
+ * [new branch]      master     -> origin/master
+[root@vm_test devops]# git config core.sparsecheckout true   #开启sparse clone
+[root@vm_test devops]# echo "devops" >> .git/info/sparse-checkout   #设置需要pull的目录，*表示所有，!表示匹配相反的
+[root@vm_test devops]# more .git/info/sparse-checkout
+devops
+[root@vm_test devops]# git pull origin master  #更新
+From http://192.168.1.1:90/scm/beeper/yunxxx_ops
+ * branch            master     -> FETCH_HEAD
+[root@vm_test devops]# ls
+devops
+[root@vm_test devops]# cd devops/
+[root@vm_test devops]# ls
+monitor_in_web  test.1
+```
+
+## 0x04_其他
 
 撤销并丢弃本地修改：`git checkout .`
