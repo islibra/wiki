@@ -24,7 +24,7 @@ def findmd5(sss):    # 输入范围 里面会进行md5测试
     result = 0
     for i in range(start, end):
         # print(md5(i)[md5start:md5length])
-        if md5(i)[0:5] == keymd5:            # 拿到加密字符串
+        if md5(i)[md5start:md5length] == keymd5:            # 拿到加密字符串
             result = i
             print(result)    # 打印
             break
