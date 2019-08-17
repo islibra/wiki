@@ -11,6 +11,15 @@
 1. 使用Docker ID登录[Docker Hub](https://hub.docker.com/editions/community/docker-ce-desktop-mac)
 1. 下载[Docker Desktop for Mac](https://download.docker.com/mac/stable/Docker.dmg)
 
+```bash
+$ docker --version
+Docker version 19.03.1, build 74b1e89
+$ docker-compose --version
+docker-compose version 1.24.1, build 4667896b
+$ docker-machine --version
+docker-machine version 0.16.1, build cce350d7
+```
+
 ???+ quote "参考链接"
     [Install Docker Desktop for Mac](https://docs.docker.com/docker-for-mac/install/)
 
@@ -39,6 +48,8 @@
       ```
 
 - 应用文件
+
+启动容器: `docker-compose up`
 
 ## uid
 
@@ -227,6 +238,7 @@ user:[4026531837]
 
 ???+ note "OPTIONS"
     - `-d, --detach`, 后台运行容器并打印容器ID。
+    - `-p 9090:80`, HOST port:container port
     - `--rm`, 容器退出时自动删除。
     - `-u, --user`, 指定运行容器的Username或UID ^容器和host共用一套UID^，格式：`<name|uid>[:<group|gid>]`
     - `--ulimit <type>=<soft limit>[:<hard limit>]`, 如`$ docker run --ulimit nofile=1024:1024 --rm ubuntu sh -c "ulimit -n"`, 限制打开文件数。
