@@ -18,9 +18,11 @@
 
 ```bash
 # 方式一
-service xxx restart
-# 方式二
 systemctl restart xxx.service
+# 方式二
+service xxx restart
+# 开机启动
+systemctl enable xxx
 ```
 
 
