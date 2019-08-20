@@ -54,6 +54,26 @@ docker export b91d9ad83efa > file.tar  #将容器导出
 docker import file.tar  #将容器导入
 ```
 
+### docker run
+
+命令格式：`docker run [OPTIONS] IMAGE [COMMAND] [ARG...]`
+
+???+ note "OPTIONS"
+    - `-d, --detach`, 后台运行容器并打印容器ID。
+    - `-p 9090:80`, HOST port:container port
+    - `--rm`, 容器退出时自动删除。
+    - `-u, --user`, 指定运行容器的Username或UID ^容器和host共用一套UID^，格式：`<name|uid>[:<group|gid>]`
+    - `--ulimit <type>=<soft limit>[:<hard limit>]`, 如`$ docker run --ulimit nofile=1024:1024 --rm ubuntu sh -c "ulimit -n"`, 限制打开文件数。
+        - 如果未设置`hard limit`, 以`soft limit`为准。
+        - **如果未设置，继承自daemon默认值。** 配置文件路径：`/etc/sysconfig/docker`
+        - docker对设置值不做任何转换，直接传递给linux系统调用。
+
+    ???+ warning "nproc"
+        使用`--ulimit nproc` {==针对的是用户==} 设置最大进程数，而非容器。
+
+???+ quote "参考链接"
+    [docker docs](https://docs.docker.com/engine/reference/commandline/run/)
+
 
 ## Docker Compose
 
@@ -262,27 +282,6 @@ user:[4026531837]
 
 ???+ quote "参考链接"
     [隔离 docker 容器中的用户](https://www.cnblogs.com/sparkdev/p/9614326.html)
-
-
-## docker run
-
-命令格式：`docker run [OPTIONS] IMAGE [COMMAND] [ARG...]`
-
-???+ note "OPTIONS"
-    - `-d, --detach`, 后台运行容器并打印容器ID。
-    - `-p 9090:80`, HOST port:container port
-    - `--rm`, 容器退出时自动删除。
-    - `-u, --user`, 指定运行容器的Username或UID ^容器和host共用一套UID^，格式：`<name|uid>[:<group|gid>]`
-    - `--ulimit <type>=<soft limit>[:<hard limit>]`, 如`$ docker run --ulimit nofile=1024:1024 --rm ubuntu sh -c "ulimit -n"`, 限制打开文件数。
-        - 如果未设置`hard limit`, 以`soft limit`为准。
-        - **如果未设置，继承自daemon默认值。** 配置文件路径：`/etc/sysconfig/docker`
-        - docker对设置值不做任何转换，直接传递给linux系统调用。
-
-    ???+ warning "nproc"
-        使用`--ulimit nproc` {==针对的是用户==} 设置最大进程数，而非容器。
-
-???+ quote "参考链接"
-    [docker docs](https://docs.docker.com/engine/reference/commandline/run/)
 
 
 ---

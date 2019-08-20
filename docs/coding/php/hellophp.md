@@ -135,3 +135,26 @@ show_source(__FILE__);
 // 查找字符串第一次出现的位置, 区分大小写, 如果未找到返回FALSE
 strpos(string, find, start)
 ```
+
+### addslashes
+
+```php
+<?php
+// 在每个单引号, 双引号, 反斜杠, NULL前添加反斜杠
+$str = addslashes('Shanghai is the "biggest" city in China.');
+// Shanghai is the \"biggest\" city in China.
+echo($str);
+?>
+```
+
+### ord
+
+```php
+<?php
+// 返回首个字符的ASCII
+// 83
+echo ord("S")."<br>";
+// 83
+echo ord("Shanghai")."<br>";
+?>
+```
