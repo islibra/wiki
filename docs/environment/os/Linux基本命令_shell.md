@@ -8,6 +8,8 @@
 
 ## Shell
 
+[SHELL输出颜色和闪烁控制](https://www.jianshu.com/p/ba1b8aded634)
+
 ```bash
 #!/bin/bash
 
