@@ -23,6 +23,38 @@ docker-machine version 0.16.1, build cce350d7
 ???+ quote "参考链接"
     [Install Docker Desktop for Mac](https://docs.docker.com/docker-for-mac/install/)
 
+## 设置代理
+
+```bash
+$ mkdir -p /etc/systemd/system/docker.service.d
+$ vim http-proxy.conf
+[Service]
+Environment="HTTP_PROXY=http://l0025xxxx:pass%40word@proxy.xxx.com:8080/" "NO_PROXY=localhost,127.0.0.1"
+$ systemctl daemon-reload
+$ systemctl show --property=Environment docker
+$ systemctl restart docker
+```
+
+## 常用命令
+
+```bash
+# 在当前目录由Dockerfile构建镜像
+docker build -t xxxname:v1.0 .
+
+docker cp file.xxx ced60ce33136:/opt/xxx  #将host上的文件拷贝到容器
+
+docker images  #查看已存在的镜像
+docker save b0f6bcd0a2a0 > file.tar  #将镜像导出为文件
+docker rmi b0f6bcd0a2a0  #删除已存在的镜像
+docker load < file.tar  #镜像导入
+docker tag b0f6bcd0a2a0 euleros:2.2.5  #为导入的镜像打标签
+
+docker ps  #查看正在运行的容器
+docker export b91d9ad83efa > file.tar  #将容器导出
+docker import file.tar  #将容器导入
+```
+
+
 ## Docker Compose
 
 多容器应用
@@ -253,35 +285,17 @@ user:[4026531837]
     [docker docs](https://docs.docker.com/engine/reference/commandline/run/)
 
 
-## 常用命令
+---
+以下未整理
+---
 
 - 查看容器进程ID
     1. 使用`docker ps`获取`CONTAINER ID`
     1. 使用`docker top {CONTAINER ID}`获取`PID, PPID`
     1. 使用`ps -efw | grep -v grep | grep {PID}`查看进程。
 
-
----
-以下未整理
----
-
 !!! info
     - Docker Daemon以 {==root==} 权限运行。
     - 相比于VM需要在hostOS上安装hypervisor和guestOS，Docker Engine直接运行在hostOS上，其上跑APP。
     - 存在未namespaces隔离资源，如`/proc, /sys, top, free, root, /dev, 内核...`
     - 所有运行的容器 {==共享==} host内核，通过容器内系统崩溃 --> 内核崩溃 --> 其他容器崩溃。
-
-
-```bash
-docker cp file.xxx ced60ce33136:/opt/xxx  #将host上的文件拷贝到容器
-
-docker images  #查看已存在的镜像
-docker save b0f6bcd0a2a0 > file.tar  #将镜像导出为文件
-docker rmi b0f6bcd0a2a0  #删除已存在的镜像
-docker load < file.tar  #镜像导入
-docker tag b0f6bcd0a2a0 euleros:2.2.5  #为导入的镜像打标签
-
-docker ps  #查看正在运行的容器
-docker export b91d9ad83efa > file.tar  #将容器导出
-docker import file.tar  #将容器导入
-```
