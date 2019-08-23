@@ -1,5 +1,7 @@
 # kafka
 
+!!! abstract "官方网站: <http://kafka.apache.org/>"
+
 对标产品：
 
 - kafka
@@ -13,8 +15,7 @@
 - broker, kafka集群，保存消息
 - consumer订阅topic，从broker主动pull消息进行消费
 
-!!! tip
-    消息持久化到本地磁盘。
+!!! tip "消息持久化到本地磁盘。"
 
 ## zookeeper在kafka中的应用
 
