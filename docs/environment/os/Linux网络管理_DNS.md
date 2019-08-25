@@ -18,6 +18,8 @@ $ vim /etc/resolv.conf
 nameserver x.x.x.x
 ```
 
+!!! tip "Google提供的免费DNS服务器地址: 8.8.8.8, 8.8.4.4"
+
 ### 0x02_网卡配置文件
 
 > 在网卡配置文件配置了DNS，重启网络服务后，会在`/etc/resolv.conf`中自动生成DNS。
