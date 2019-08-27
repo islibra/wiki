@@ -24,6 +24,16 @@ Python 3.7.2
 ```  
 Done!
 
+## 配置pip源
+
+```bash
+$ vim ~/.pip/pip.conf
+[global]
+index-url = http://mirrors.aliyun.com/pypi/simple/
+[install]
+trusted-host=mirrors.aliyun.com
+```
+
 ## Start
 
 - 解释型语言
