@@ -106,6 +106,33 @@ $ tar zcvf FileName.tar.tgz FileName  #压缩
 ```bash
 $ unzip FileName.zip  #解压
 $ zip FileName.zip -r DirName  #压缩
+
+# 将当前目录下的文件压缩并设置密码
+$ ll
+total 30208
+drwxr-xr-x  2 root root     4096 Aug 28 11:50 ./
+drwxr-xr-x 10 root root     4096 Aug 28 11:48 ../
+-rw-r--r--  1 root root 30883840 Aug 28 11:50 br.tar
+-rw-r--r--  1 root root      876 Aug 28 11:49 run.sh
+$ zip scan.zip -re ./*
+Enter password:
+Verify password:
+  adding: br.tar (deflated 92%)
+  adding: run.sh (deflated 52%)
+$ ll
+total 32536
+drwxr-xr-x  2 root root     4096 Aug 28 13:49 ./
+drwxr-xr-x 10 root root     4096 Aug 28 11:48 ../
+-rw-r--r--  1 root root 30883840 Aug 28 11:50 br.tar
+-rw-r--r--  1 root root      876 Aug 28 11:49 run.sh
+-rw-r--r--  1 root root  2379589 Aug 28 13:49 scan.zip
+$ vim scan.zip
+" zip.vim version v27
+" Browsing zipfile /home/islibra/scan.zip
+" Select a file with cursor and press ENTER
+
+br.tar
+run.sh
 ```
 
 ### 13. lha
