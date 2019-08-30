@@ -74,7 +74,7 @@ IP地址段，一个network有多个subnet。
 
 ### local network
 
-> 不会与宿主机任何物理网卡相连, 只可在连接到相同bridge的instance之间通信
+> 不会与宿主机任何物理网卡相连, 只可在 {==同一节点上==} 连接到 {==相同bridge==} 的instance之间通信
 
 ![](assets/markdown-img-paste-20190830211012718.png)
 
@@ -92,6 +92,8 @@ IP地址段，一个network有多个subnet。
         - [创建第一个 local network（I） - 每天5分钟玩转 OpenStack（80）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587643&idx=1&sn=7ad568889d9f44c77d7c8e45a8fb33ff&chksm=8d3080a2ba4709b4d4f26cf38f65fda3a250f2b3eebc4bb1b7d50828107f9c80cc67055cce1a&scene=21#wechat_redirect)
 
 1. 查看linux bridge状态: `{==brctl show==}`, 已创建brqXXX和tapXXX(DHCP interface)
+1. 将instance连接到local network, 查看subnet中新增一个port(IP, MAC), 并将port attach到instance
+1. VM启动时, 宿主机上的neutron-linuxbridge-agent根据port信息创建tap设备, 并连接到local bridge上, 同时该tap映射成VM的虚拟网卡VIF
 
 
 !!! quote "已读"
@@ -99,3 +101,5 @@ IP地址段，一个network有多个subnet。
     - [实践 Neutron 前的两个准备工作 - 每天5分钟玩转 OpenStack（78）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587656&idx=1&sn=b84065f7d5dd1ae32eacf2aad4b93156&chksm=8d3080d1ba4709c7030032a386e1ffe7d0eedd377c2fa90a1b4584832c35932f5893339ec3c5&scene=21#wechat_redirect)
     - [在 ML2 中 enable local network - 每天5分钟玩转 OpenStack（79）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587652&idx=1&sn=ba29d242fe90a328e3fb6011548e15bb&chksm=8d3080ddba4709cb44947f2b9cd85658e37cb21803f8e05bb844de6275e0513a457596c878e2&scene=21#wechat_redirect)
     - [创建第一个 local network（II）- 每天5分钟玩转 OpenStack（81）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587642&idx=1&sn=26090fbdeea9a3814574f35229715050&chksm=8d3080a3ba4709b5ef186bd45dca532beae37d4a75d8cdaef0c6cd31fbaf34bb2f76fdb3b953&scene=21#wechat_redirect)
+    - [将 instance 连接到 first_local_net - 每天5分钟玩转 OpenStack（82）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587630&idx=1&sn=4c9495f74f3360c5ef81e73af5122eec&chksm=8d3080b7ba4709a13f4f78247c8ba23b6bd17963b99bf0a7165f195b36c19d3e09baa8dd8853&scene=21#wechat_redirect)
+    - [连接第二个 insance 到 first_local_net - 每天5分钟玩转 OpenStack（83）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587628&idx=1&sn=b9777c3c831bde12fe95cc9932750069&chksm=8d3080b5ba4709a35ecc0a291a9daaee86addf4822e38340abd7d92f27a9ca860eed0b5abacf&scene=21#wechat_redirect)
