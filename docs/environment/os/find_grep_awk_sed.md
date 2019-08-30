@@ -22,17 +22,29 @@
 
 ## grep
 
-在每个FILE或标准输入中查找PATTERN.
+在每个file或标准输入中查找pattern
 
-!!! example "Demo"
-    ```bash
-    grep -i 'hello world' first.java second.properties
-    ```
+```bash
+# 基本用法
+cat filename.xxx | grep xxx
+grep xxx filename.xxx
 
-    !!! note "参数"
-        - -e --regexp=PATTERN 使用正则表达式
-        - -i --ignore-case 忽略大小写
-        - -v --invert-match 查找不匹配的行
+# -i --ignore-case 忽略大小写
+# -C 显示上下文number行
+# 查找多个文件
+grep -i 'hello world' -C number first.java second.properties
+
+# 查找多个关键词
+cat filename.xxx | grep -E '123|abc'
+cat filename.xxx | egrep '123|abc'
+
+# 过滤关键词 -v --invert-match 查找不匹配的行
+ps -efw | grep -v grep | grep java
+
+# -e --regexp=PATTERN 使用正则表达式
+cat filename.xxx | grep -e 'xxx.*yyy'
+```
+
 
 ## awk
 
