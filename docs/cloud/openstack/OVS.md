@@ -14,6 +14,14 @@ Open vSwitch
 
 !!! todo "图先欠着(2)"
 
+![](assets/markdown-img-paste-20190830201849722.png)
+
+![](assets/markdown-img-paste-20190830201914743.png)
+
+![](assets/markdown-img-paste-20190830201937207.png)
+
+![](assets/markdown-img-paste-20190830201948286.png)
+
 - 控制面: OpenFlow controller, 管理OVS中的流表, 通过向OVS下发流表规则控制数据流向
 - 数据面(转发模块):
     - 用户态: 守护进程ovs-vswitchd, 轻量级数据库服务ovsdb-server
