@@ -28,6 +28,23 @@ rpm -ivh xxx.rpm
 ```bash
 $ tar xvf FileName.tar  #解包
 $ tar cvf FileName.tar DirName  #打包（注：tar是打包，不是压缩！）
+
+# 解压到指定目录
+# 0. 已存在文件
+$ cat /etc/hackpasswd
+important file
+# 1. 创建文件
+root@SZX1000451827:/home/hacker# vim hackpasswd
+you are hacked!
+# 2. 将文件打包
+root@SZX1000451827:/home/hacker# tar -cvf hack.tar hackpasswd
+hackpasswd
+# 3. 解压到指定目录
+root@SZX1000451827:/home/hacker# tar -C /etc -xvf hack.tar
+hackpasswd
+# 4. 查看原文件已被替换
+root@SZX1000451827:/home/hacker# cat /etc/hackpasswd
+you are hacked!
 ```
 
 ### 2. gz
