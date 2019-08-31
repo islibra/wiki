@@ -12,6 +12,14 @@ $ gcc -v
 $ g++ -v
 ```
 
+```bash tab="Java"
+$ java -version
+java version "1.8.0_171"
+Java(TM) SE Runtime Environment (build 1.8.0_171-b11)
+Java HotSpot(TM) 64-Bit Server VM (build 25.171-b11, mixed mode)
+```
+
+
 ## shebang
 
 python为脚本语言，会在第一行写shebang，而go没有。
@@ -28,7 +36,7 @@ using namespace std;
 
 ## main
 
-go必须要有main方法作为程序入口，而python没有。
+> go必须要有main方法作为程序入口，而python没有。
 
 ```go tab="go"
 package main
@@ -45,6 +53,18 @@ int main()
     return 0;
 }
 ```
+
+```java tab="Java"
+// Demo.java, 文件名必须与类名一致, 首字母大写
+public class Demo {
+
+    public static void main(String[] args) {
+        // ...
+    }
+
+}
+```
+
 
 ## 注释
 
@@ -70,6 +90,11 @@ int main()
 多行注释
 */
 ```
+
+```java tab="Java"
+// 注释
+```
+
 
 ## 打印输出
 
@@ -97,6 +122,11 @@ printf("Hello World!\n");
 cout << "Hello World!" << endl;
 ```
 
+```java tab="Java"
+System.out.println("Hello Java!");
+```
+
+
 ## 运行
 
 ```bash tab="python"
@@ -118,6 +148,19 @@ $ g++ helloworld.cpp
 $ ./a.out
 Hello World!
 ```
+
+```bash tab="Java"
+$ javac Demo.java
+$ ll
+total 32
+drwxr-xr-x 2 root root  4096 Aug 31 14:42 ./
+drwxr-xr-x 4 root root  4096 Aug 31 11:15 ../
+-rw-r--r-- 1 root root   411 Aug 31 14:42 Demo.class
+-rw-r--r-- 1 root root   306 Aug 31 14:42 Demo.java
+$ java Demo
+Hello Java!
+```
+
 
 ## 数据类型
 
