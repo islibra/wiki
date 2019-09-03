@@ -101,7 +101,12 @@ Open vSwitch
 ![](assets/markdown-img-paste-20190830201948286.png)
 
 1. datapath接收到某个eth/vnet发来的数据包, 提取源/目的IP, MAC, 端口
-1. 匹配流表
+1. 匹配快速流表
+1. 如果不命中, 通过netlink upcall发给ovs-vswitchd处理
+1. 匹配精确流表和模糊流表, 如果不命中, 通过Open Flow协议发给控制器处理
+    - 模糊命中: 刷新用户态精确流表和内核态精确流表
+    - 精确命中: 刷新内核态流表
+1. 重新把数据包注入到datapath查询流表发起选路
 
 
 !!! quote "参考链接"
