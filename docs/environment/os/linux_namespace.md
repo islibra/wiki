@@ -222,3 +222,8 @@ root@SZX1000451827:/proc# cat /proc/$$/uid_map
 
 ???+ quote "参考链接"
     [Linux Namespace : UTS](https://www.cnblogs.com/sparkdev/p/9377072.html)
+
+## Network
+
+- 查看网络命名空间: `ip netns`
+- 在指定命名空间中执行命令: `ip netns exec [id] ip a`

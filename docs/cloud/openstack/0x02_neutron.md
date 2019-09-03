@@ -86,7 +86,11 @@ IP地址段，一个network有多个subnet。
 1. 重启Neutron服务
 1. 通过Web GUI创建local network
     - Project - Network - Networks
-    - Admin - Networks
+    - Admin - Networks, 通过admin创建network可以指定:
+        - 所属project
+        - network type
+        - 是否与其他project共享
+        - 是否为external network
 
     !!! todo "在环境中实操"
         - [创建第一个 local network（I） - 每天5分钟玩转 OpenStack（80）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587643&idx=1&sn=7ad568889d9f44c77d7c8e45a8fb33ff&chksm=8d3080a2ba4709b4d4f26cf38f65fda3a250f2b3eebc4bb1b7d50828107f9c80cc67055cce1a&scene=21#wechat_redirect)
@@ -103,3 +107,70 @@ IP地址段，一个network有多个subnet。
     - [创建第一个 local network（II）- 每天5分钟玩转 OpenStack（81）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587642&idx=1&sn=26090fbdeea9a3814574f35229715050&chksm=8d3080a3ba4709b5ef186bd45dca532beae37d4a75d8cdaef0c6cd31fbaf34bb2f76fdb3b953&scene=21#wechat_redirect)
     - [将 instance 连接到 first_local_net - 每天5分钟玩转 OpenStack（82）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587630&idx=1&sn=4c9495f74f3360c5ef81e73af5122eec&chksm=8d3080b7ba4709a13f4f78247c8ba23b6bd17963b99bf0a7165f195b36c19d3e09baa8dd8853&scene=21#wechat_redirect)
     - [连接第二个 insance 到 first_local_net - 每天5分钟玩转 OpenStack（83）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587628&idx=1&sn=b9777c3c831bde12fe95cc9932750069&chksm=8d3080b5ba4709a35ecc0a291a9daaee86addf4822e38340abd7d92f27a9ca860eed0b5abacf&scene=21#wechat_redirect)
+    - [创建第二个 local network - 每天5分钟玩转 OpenStack（84）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587624&idx=1&sn=66b9ce938085f8553809d3a22a91eac2&chksm=8d3080b1ba4709a75948b8955e019c292383d48200568d4d68e6fc684e0dfe65b76dc9936ce9&scene=21#wechat_redirect)
+    - [将 instance 连接到 second_local_net - 每天5分钟玩转 OpenStack（85）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587620&idx=1&sn=70df7f16556e3463476a3ddd0134eb1b&chksm=8d3080bdba4709abe01f33aecf317a8e14b750342a17264966f59c6ab38e58a2b1e46d2cf50c&scene=21#wechat_redirect)
+
+
+## Open vSwitch
+
+1. 安装Open vSwitch agent
+
+    ```bash
+    $ vim local.conf
+    Q_AGENT=openvswitch
+    ```
+
+    重新运行`./stack`
+
+1. 配置ML2使用openvswitch mechanism driver:
+
+    ```bash
+    $ vim /etc/neutron/plugins/ml2/ml2_conf.ini
+    mechanism_drivers = openvswitch
+    ```
+
+    > 控制节点和计算节点都要配置
+
+1. 重启Neutron服务, 查看agent运行状态: `{==neutron agent-list==}`
+
+### 初始网络状态
+
+??? info "Linux Bridge初始没有br"
+    参考[实践 Neutron 前的两个准备工作 - 每天5分钟玩转 OpenStack（78）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587656&idx=1&sn=b84065f7d5dd1ae32eacf2aad4b93156&chksm=8d3080d1ba4709c7030032a386e1ffe7d0eedd377c2fa90a1b4584832c35932f5893339ec3c5&scene=21#wechat_redirect)
+
+- br-ex: 连接外部(external)网络
+- br-int: 集成(integration)网桥, 连接所有instance的虚拟网卡
+- br-tun: 隧道(tunnel)网桥, VxLAN和GRE网络使用
+
+使用`{==ovs-vsctl show==}`查看
+
+### 网络设备
+
+- tap interface: tapXXX
+- linux bridge: qbrXXX
+- veth pair: qvbXXX, qvoXXX
+- OVS integration bridge: br-int
+- OVS patch ports: int-br-ethX, phy-br-ethX
+- OVS provider bridge: br-ethX
+- 物理interface: ethX
+- OVS tunnel bridge: br-tun
+
+### local network
+
+1. 通过Web GUI创建local network
+1. 查看Open vSwitch的状态: `{==ovs-vsctl show==}`, 已创建tapXXX(DHCP interface)并挂载到br-int上
+1. 将instance连接到local network, 查看subnet中新增一个port(IP, MAC), 并将port attach到instance
+1. VM启动时, 宿主机上的neutron-openvswitch-agent根据port信息创建tap设备, 并 **创建Linux Bridge设备qbrXXX和veth pair连接br-int(qvoXXX)和qbrXXX(qvbXXX), tap连接到qbrXXX上,** 同时该tap映射成VM的虚拟网卡VIF
+
+    > 为了支持iptables规则实现Security Group功能
+
+!!! tip "使用`ethtool -S qvbXXX`查看statistics显示peer_ifindex"
+
+![](assets/markdown-img-paste-20190903231616513.png)
+
+
+!!! quote "已读"
+    - [启用 Open vSwitch - 每天5分钟玩转 OpenStack（127）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587478&idx=1&sn=46ab66e055b542780e09fff83b1e9431&chksm=8d30800fba4709191b8d686375df191cc59776b0ed516bf15c8ab13fccb9e99094203428e1f5&scene=21#wechat_redirect)
+    - [OVS 中的各种网络设备 - 每天5分钟玩转 OpenStack（128）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587472&idx=1&sn=fd2522441a678b25387da1f965b897d7&chksm=8d308009ba47091f8dd101b84d41567b00292fea43edda1a03dac67e2680e225b766e83b1b88&scene=21#wechat_redirect)
+    - [创建 OVS Local Network - 每天5分钟玩转 OpenStack（129）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587469&idx=1&sn=0efe77289bd315522bdcc1618db635b2&chksm=8d308014ba47090278b9f132432c11155e1b817f1105bb196bb12aef04abb5f4f2ee309be043&scene=21#wechat_redirect)
+    - [将 instance 部署到 OVS Local Network - 每天5分钟玩转 OpenStack（130）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587458&idx=1&sn=df59107c4820d575ea02b049513c56a3&chksm=8d30801bba47090d62d0cac15bbd0cdc149e8c10a694ce199215cdad498194e00b7b40cb8b01&scene=21#wechat_redirect)
