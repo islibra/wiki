@@ -1,5 +1,7 @@
 # zookeeper
 
+![](https://img.shields.io/badge/language-Java-brightgreen.svg)
+
 !!! abstract "官方网站: <https://zookeeper.apache.org/>"
 
 分布式协调服务，在分布式系统中共享配置，协调锁资源，提供命名服务。
