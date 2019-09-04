@@ -261,6 +261,37 @@ printf("%llX\n", lla);
 
 ### 申请内存前对大小校验, 防止为0, 负, 过多申请
 
+!!! info "申请0, 负都不会导致程序崩溃, 但要注意是否引用空指针"
+    ```c
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    // 测试两个无符号数相加赋值给有符号数, 申请内存
+    int main() {
+        // unsigned int x = 2147483647;
+        unsigned int x = 4294967295;
+        unsigned int y = 1;
+        int z = (int)(x+y);
+        // z is -2147483648
+        // z is 0
+        printf("z is %d\n", z);
+        // 负数申请不到内存, 返回NULL
+        // 0申请成功
+        char *str = (char *)malloc(z);
+        if(str != NULL){
+            printf("success\n");
+        }
+        // str is (null)
+        // str is
+        printf("str is %s\n", str);
+        if(str != NULL){
+            printf("str is not NULL");
+            free(str);
+        }
+        return 0;
+    }
+    ```
+
 ### 判断内存申请是否成功
 
 ## 文件
