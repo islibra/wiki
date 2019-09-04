@@ -164,17 +164,36 @@ Hello Java!
 
 ## 数据类型
 
+### python
+
 ```python tab="python"
 # 布尔值
 isTrue = True
 isFalse = False
 ```
 
+### C
+
 ```c tab="C"
 // 无符号整数类型，它是 sizeof 关键字的结果。
 #include <stdlib.h>
 size_t
 ```
+
+??? abstract "整型"
+    类型 | 存储大小 | 值范围
+    --- | --- | ---
+    char | 1 byte | -128 到 127 或 0 到 255
+    unsigned char | 1 byte | 0 到 255
+    signed char | 1 byte | -128 到 127
+    int | 2 或 4 bytes | -32,768 到 32,767 或 -2,147,483,648 到 2,147,483,647
+    unsigned int | 2 或 4 bytes | 0 到 65,535 或 0 到 4,294,967,295
+    short | 2 bytes | -32,768 到 32,767
+    unsigned short | 2 bytes | 0 到 65,535
+    long | 4 bytes | -2,147,483,648 到 2,147,483,647
+    unsigned long | 4 bytes | 0 到 4,294,967,295
+
+### C++
 
 ```c++ tab="C++"
 // 字符串
@@ -200,6 +219,8 @@ len = s3.size();
 cout << len << endl;
 ```
 
+### php
+
 ```php tab="php"
 // 被认为是FALSE的布尔值, 其他都被认为是TRUE
 1. 整型0, 浮点型0.0
@@ -208,22 +229,6 @@ cout << len << endl;
 4. NULL, 尚未赋值的变量
 5. 从空标记生成的SimpleXML对象
 ```
-
-
-??? example "C"
-
-    ??? example "整型"
-        类型 | 存储大小 | 值范围
-        --- | --- | ---
-        char | 1 byte | -128 到 127 或 0 到 255
-        unsigned char | 1 byte | 0 到 255
-        signed char | 1 byte | -128 到 127
-        int | 2 或 4 bytes | -32,768 到 32,767 或 -2,147,483,648 到 2,147,483,647
-        unsigned int | 2 或 4 bytes | 0 到 65,535 或 0 到 4,294,967,295
-        short | 2 bytes | -32,768 到 32,767
-        unsigned short | 2 bytes | 0 到 65,535
-        long | 4 bytes | -2,147,483,648 到 2,147,483,647
-        unsigned long | 4 bytes | 0 到 4,294,967,295
 
 ### 数据类型转换
 
