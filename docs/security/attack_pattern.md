@@ -293,9 +293,41 @@ public interface UserMapper {
 
 ## 命令注入
 
+### Java
+
+```java
+import java.io.IOException;
+
+public class OSi {
+    public static void main(String args[])
+    {
+        System.out.println("Start");
+
+        String cmd = "mkdir ddd;id>hack.txt";
+        //String[] cmds = cmd.split(" ");
+        try {
+            // 关注cmd是否 {==完全可控==}
+            // Runtime.getRuntime().exec(cmd);
+            // 关注String[] {==第一个元素==} 是否可控或为 {==/bin/sh==}
+            Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", cmd});
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+
+        System.out.println("End");
+    }
+}
+```
+
+!!! success "如果传入String[]且第一个元素不是`/bin/sh`, 则不存在命令注入"
+
 ### Python格式化字符串漏洞
 
-参见: [格式化字符串](../../coding/python/0x01_datatype/#_3)
+!!! quote "[格式化字符串](../../coding/python/0x01_datatype/#_3)"
+
+### Go
+
+!!! quote "[OS命令注入](../../coding/go/go%E8%AF%AD%E8%A8%80%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B/#os)"
 
 
 ## DoS
