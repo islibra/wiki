@@ -150,6 +150,7 @@ Hello World!
 ```
 
 ```bash tab="Java"
+# 单个类编译运行
 $ javac Demo.java
 $ ll
 total 32
@@ -160,6 +161,8 @@ drwxr-xr-x 4 root root  4096 Aug 31 11:15 ../
 $ java Demo
 Hello Java!
 ```
+
+!!! quote "带package或依赖参见[编译运行](../java/0x01_编译运行/)"
 
 
 ## 数据类型
