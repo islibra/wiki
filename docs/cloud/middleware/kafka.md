@@ -142,6 +142,123 @@
     <http://kafka.apache.org/quickstart>
 
 
+## 安全特性
+
+1. 使用 {==SSL==} 或 {==SASL==} 进行clients(producers, consumers), other brokers, tools到brokers连接的认证
+    - SASL/GSSAPI(Kerberos)
+    - SASL/PLAIN
+    - SASL/SCRAM-SHA-256, SASL/SCRAM-SHA-512
+    - SASL/OAUTHBEARER
+
+1. brokers到ZooKeeper之间的认证
+1. 使用 {==SSL==} 对brokers到clients, other brokers, tools之间的传输通道加密
+1. clients读写操作授权
+1. 外部授权服务通过插件方式集成
+
+### 客户端配置SSL
+
+```bash tab="配置"
+$ vim client-ssl.properties
+security.protocol=SASL_SSL
+sasl.mechanism=PLAIN
+ssl.truststore.location=/var/private/ssl/client.truststore.jks
+ssl.truststore.password=test1234
+# 可选参数
+ssl.provider
+ssl.cipher.suites
+ssl.enabled.protocols=TLSv1.2,TLSv1.1,TLSv1
+ssl.truststore.type=JKS
+ssl.keystore.type=JKS
+```
+
+```bash tab="使用"
+$ kafka-console-producer.sh --broker-list localhost:9093 --topic test --producer.config client-ssl.properties
+$ kafka-console-consumer.sh --bootstrap-server localhost:9093 --topic test --consumer.config client-ssl.properties
+```
+
+### SASL
+
+#### JAAS(Java Authentication and Authorization Service)
+
+##### 客户端配置JAAS
+
+1. sasl.jaas.config
+
+    ```bash
+    $ vim client-ssl.properties
+    sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="alice" password="alice-secret";
+    ```
+
+1. static JAAS config file, java.security.auth.login.config
+
+    ```bash
+    $ vim /etc/kafka/kafka_client_jaas.conf
+    KafkaClient {
+        com.sun.security.auth.module.Krb5LoginModule required
+        useKeyTab=true
+        storeKey=true
+        keyTab="/etc/security/keytabs/kafka_client.keytab"
+        principal="kafka-client-1@EXAMPLE.COM";
+    };
+    ```
+
+    增加JVM参数: `-Djava.security.auth.login.config=/etc/kafka/kafka_client_jaas.conf`
+
+
+!!! quote "参考链接"
+    <https://kafka.apache.org/documentation/#security>
+
+
+### Java实现
+
+```java
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.serialization.StringSerializer;
+
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
+public class KafkaPublisher {
+
+    public static void main(String args[])
+    {
+        System.out.println("Start");
+
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "127.0.0.1:9092,127.0.0.1:9093,127.0.0.1:9094");
+        props.put("acks", "all");
+        props.put("retries", 0);
+        props.put("linger.ms", 1);
+        props.put("transaction.timeout.ms", 15000);
+        props.put("request.timeout.ms", 15000);
+        props.put("key.serializer", StringSerializer.class);
+        props.put("value.serializer", StringSerializer.class);
+        props.put("security.protocol", "SASL_SSL");
+        props.put("sasl.mechanism", "PLAIN");
+        props.put("ssl.truststore.location", "/home/xxx/client.truststore.jks");
+        props.put("ssl.truststore.password", "xxx");
+        props.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"alice\" password=\"alice-secret\";");
+        props.put("ssl.endpoint.identification.algorithm", "");
+
+        Producer<String, String> producer = new KafkaProducer(props);
+        String msg = "hello";
+        try {
+            producer.send(new ProducerRecord("mytopic", msg)).get();
+        } catch (InterruptedException e) {
+            System.out.println(e);
+        } catch (ExecutionException e) {
+            System.out.println(e);
+        }
+        producer.flush();
+
+        System.out.println("End");
+    }
+}
+```
+
+
 ## 概念
 
 - topic消息的分类
