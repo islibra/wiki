@@ -1,4 +1,4 @@
-# 常用命令
+# openstack常用命令
 
 ## 查看版本
 
@@ -43,3 +43,9 @@ $ cat /etc/*version
 - 更改服务配置项:
     - `cps template-params-update --service nova nova-api --parameter key=value`
     - `cps commit`
+
+
+## 命令行
+
+
+!!! quote "[Command-Line Tools](https://docs.openstack.org/operations-guide/ops-lay-of-the-land.html#command-line-tools)"

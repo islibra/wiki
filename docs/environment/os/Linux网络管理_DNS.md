@@ -1,5 +1,12 @@
 # Linux网络管理_DNS
 
+```bash
+# 显示所有网络接口及IP
+$ ip a
+# 显示网关, 网段
+$ ip r
+```
+
 ## 设置DNS
 
 ### 0x00_本地hosts

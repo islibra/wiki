@@ -11,6 +11,7 @@
 
 - 显示空格，TAB，换行符：`File - Settings - Editor`，勾选`Show Invisibles`。  
 - 更改Tab转换的空格数量：`File - Settings - Editor`，修改`Tab Length`为4。  
+- 自动换行: `Atom - Preferences - Settings - Editor`, 勾选`Soft Wrap`和`Soft Wrap At Preferred Line Length`, 设置`Preferred Line Length`为80
 - 关闭自动补齐：`File - Settings - Packages - Core Packages - autocomplete-plus - Settings`，取消勾选`Show Suggestions On Keystroke`。  
 - 更改主题：`File - Settings - 主题`。  
 
