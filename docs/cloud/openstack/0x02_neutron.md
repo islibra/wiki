@@ -268,9 +268,33 @@ ns-d6de222a-99
 
 ![](assets/markdown-img-paste-20190907204212100.png)
 
+1. 查看网络列表: `{==neutron net-list==}`
+1. 列出所有namespace: `{==ip netns list==}`
+1. 查看namespace中的网络配置: `{==ip netns exec xxxnamespace ip a==}`
+
+    ![](assets/markdown-img-paste-20190909214855717.png)
+
+!!! tip "在不同的namespace下, 使用veth pair连接DHCP的tap(brq)和ns-xxx(qdhcp-xxx)"
+    ![](assets/markdown-img-paste-20190909214635779.png)
+
+### 获取DHCP IP
+
+1. 创建instance时, neutron为其新增port(MAC, IP), 同时更新dnsmasq的host文件, nova-compute设置VM VIF的MAC地址
+
+    ![](assets/markdown-img-paste-20190909220452142.png)
+
+1. VM启动, 发出 **DHCPDISCOVER** 消息在flat_net中广播
+1. veth tap(DHCP)接收到消息, 传送给ns-xxx, dnsmasq检查其host文件, 发送 **DHCPOFFER(IP, mask, 租期)** 给VM
+1. VM发送 **DHCPREQUEST** 消息确认接收此DHCPOFFER
+1. dnsmasq发送确认消息 **DHCPPACK**
+
+> dnsmasq日志: `/var/log/syslog`
+
 
 !!! quote "已读"
     - [配置 DHCP 服务 - 每天5分钟玩转 OpenStack（89）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587607&idx=1&sn=6eaeb88edd1f82fe03c69c78ca4d4455&chksm=8d30808eba470998dcdd9e8f66b492215ec054d89dcbf0b43e52064aa54d0b9ac83c36cce5ff&scene=21#wechat_redirect)
+    - [用 namspace 隔离 DHCP 服务 - 每天5分钟玩转 OpenStack（90）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587603&idx=1&sn=f3155546cc93e1ebc245b5dd900c9b66&chksm=8d30808aba47099c78a675d4c07efeec08043cf7e08f56c02f3c95250a1422e39431b7d30222&scene=21#wechat_redirect)
+    - [获取 dhcp IP 过程分析 - 每天5分钟玩转 OpenStack（91）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587599&idx=1&sn=d6172afe9207edeebfe1f9c354cf431b&chksm=8d308096ba47098009461d7e0accf2c8212d703d28f0b750f10a64a29cda1e31c908057ddb3f&scene=21#wechat_redirect)
 
 
 ## Open vSwitch
@@ -328,7 +352,10 @@ ns-d6de222a-99
 
 !!! tip "使用`ethtool -S qvbXXX`查看statistics显示peer_ifindex"
 
-![](assets/markdown-img-paste-20190903231616513.png)
+![](assets/markdown-img-paste-20190909203857736.png)
+
+!!! note "OVS在br-int上划分VLAN对不同的local network进行隔离"
+    ![](assets/markdown-img-paste-20190909203842227.png)
 
 
 !!! quote "已读"
@@ -336,3 +363,43 @@ ns-d6de222a-99
     - [OVS 中的各种网络设备 - 每天5分钟玩转 OpenStack（128）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587472&idx=1&sn=fd2522441a678b25387da1f965b897d7&chksm=8d308009ba47091f8dd101b84d41567b00292fea43edda1a03dac67e2680e225b766e83b1b88&scene=21#wechat_redirect)
     - [创建 OVS Local Network - 每天5分钟玩转 OpenStack（129）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587469&idx=1&sn=0efe77289bd315522bdcc1618db635b2&chksm=8d308014ba47090278b9f132432c11155e1b817f1105bb196bb12aef04abb5f4f2ee309be043&scene=21#wechat_redirect)
     - [将 instance 部署到 OVS Local Network - 每天5分钟玩转 OpenStack（130）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587458&idx=1&sn=df59107c4820d575ea02b049513c56a3&chksm=8d30801bba47090d62d0cac15bbd0cdc149e8c10a694ce199215cdad498194e00b7b40cb8b01&scene=21#wechat_redirect)
+    - [部署cirros_vm2 和second_local_net - 每天5分钟玩转 OpenStack（131）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587452&idx=1&sn=63ddb86a1b2f04b9265561edcab2215a&chksm=8d308fe5ba4706f3876d6dca8471bf985c79307ec92e56bcd9090176832e1053e36ee03417e3&scene=21#wechat_redirect)
+    - [OVS local network 连通性分析 - 每天5分钟玩转 OpenStack（132）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587445&idx=1&sn=4b0d8bd351e1473b14a527ba0cd16b56&chksm=8d308fecba4706fa3075812748e7ffb56b5f993c22c30bd9e9ec1be0d82639638792aa5ef0fc&scene=21#wechat_redirect)
+
+
+### flat network
+
+1. 创建ovs bridge br-eth1, 并将物理网卡eth1桥接在br-eth1上:
+
+    ![](assets/markdown-img-paste-20190909205550754.png)
+
+1. 指定flat与物理网络的对应关系: `/etc/neutron/plugins/ml2/ml2_conf.ini`
+
+    ![](assets/markdown-img-paste-20190909205753223.png)
+
+    ![](assets/markdown-img-paste-20190909205818599.png)
+
+    ![](assets/markdown-img-paste-20190909205828151.png)
+
+> 控制节点和计算节点相同配置, 重启Neutron服务
+
+新增`patch`类型的`int-br-eth1`和`phy-br-eth1`, 分别通过`peer`指向对方
+
+![](assets/markdown-img-paste-20190909210326444.png)
+
+![](assets/markdown-img-paste-20190909210350837.png)
+
+> patch port: OVS特有类型
+
+!!! todo "实践: [创建 OVS flat network - 每天5分钟玩转 OpenStack（134）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587436&idx=1&sn=8e21f80ef6f980e4a0b3a525fe4f2f43&chksm=8d308ff5ba4706e356ea6ed28abe274170ebd50d6270e4e02934849156b418bcba31d923b2c0&scene=21#wechat_redirect)"
+
+1. 通过Web GUI创建flat network
+1. 查看Open vSwitch的状态: `{==ovs-vsctl show==}`, 已创建tapXXX(DHCP interface)并挂载到br-int上
+1. 将instance连接到flat network, **创建Linux Bridge设备qbrXXX和veth pair连接br-int(qvoXXX)和qbrXXX(qvbXXX), tap连接到qbrXXX上,** 同时该tap映射成VM的虚拟网卡VIF
+
+    ![](assets/markdown-img-paste-20190909212001679.png)
+
+
+!!! quote "已读"
+    - [在 ML2 中配置 OVS flat network - 每天5分钟玩转 OpenStack（133）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587441&idx=1&sn=07c374282798e5736fdd34a8b07f871e&chksm=8d308fe8ba4706fe448452964a8dcfe3b2613a85e5a519a8be2625df5e98a3e3075bc06e8191&scene=21#wechat_redirect)
+    - [部署 instance 到 OVS flat network - 每天5分钟玩转 OpenStack（135）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587433&idx=1&sn=783d9b6dc86dd25f6cdc39e74cdd463b&chksm=8d308ff0ba4706e69819902df1bc2f38e738cc886c19330fd9311e5b572d9f72c1ab284fed9a&scene=21#wechat_redirect)
