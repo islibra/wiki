@@ -222,6 +222,43 @@ IP地址段，一个network有多个subnet。
     - [将 instance 连接到 flat_net - 每天5分钟玩转 OpenStack（88）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587611&idx=1&sn=1ef6ccab139e541ffc65d1c3a0c6ec11&chksm=8d308082ba47099463fcf359c0f315dccf41e4d165644f58192b3eed9255d04296862f5312e3&scene=21#wechat_redirect)
 
 
+### vlan network
+
+![](assets/markdown-img-paste-20190910202753854.png)
+
+!!! info "与eth1相连的物理交换机要设置成trunk口"
+
+1. 指定租户创建的VLAN ID的范围: `/etc/neutron/plugins/ml2/ml2_conf.ini`
+
+    ![](assets/markdown-img-paste-2019091020364500.png)
+
+    ![](assets/markdown-img-paste-20190910203656507.png)
+
+    > admin可以创建的范围为1~4094
+
+1. 指定VLAN与物理网卡的对应关系:
+
+    ![](assets/markdown-img-paste-20190910203933552.png)
+
+1. 重启neutron服务
+1. 通过Web GUI创建vlan network
+
+    !!! todo "[创建第一个 vlan network "vlan100" - 每天5分钟玩转 OpenStack（94）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587586&idx=1&sn=a1ff8cb71db1f0a30cdaad5064ac85c9&chksm=8d30809bba47098d817148b72bc24c11aae7ed89091c3407e7f54b9d5b61ee1fcdc48ce75a80&scene=21#wechat_redirect)"
+
+    1. 设置Segmentation ID(VLAN ID)为100
+
+1. 查看linux bridge状态: `{==brctl show==}`, 已创建brqXXX和tapXXX(DHCP interface), 并挂载 **eth1.100**
+1. launch新的instance VM1到vlan100, 创建tap并连接到brq
+
+
+!!! quote "已读"
+    - [Neutron Vlan Network 原理- 每天5分钟玩转 OpenStack（92）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587595&idx=1&sn=cd0ff4a2323bb9f65834ed06c5553188&chksm=8d308092ba470984e9815952cab4bfedfd1d264ed6b5ca54d403bb675f82ca5244ce2a2ca638&scene=21#wechat_redirect)
+    - [在 ML2 中配置 Vlan Network- 每天5分钟玩转 OpenStack（93）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587591&idx=1&sn=9b5ebb0f7df1da373ad9b98fb3a46306&chksm=8d30809eba470988e1c64866f1744ab1440d09fe253ccc3a72b5bffa717b02d281c829b9a7d1&scene=21#wechat_redirect)
+    - [将 instance 连接到 vlan100 - 每天5分钟玩转 OpenStack（95）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587582&idx=1&sn=6a77496d39cbbe8915b9fc0e38c504be&chksm=8d308067ba470971d85e02e513f703dec40b957fc7a069d1361f64da1d33f14a49e25e0cd5c9&scene=21#wechat_redirect)
+    - [创建第二个 vlan network "vlan101" - 每天5分钟玩转 OpenStack（96）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587578&idx=1&sn=6721332ab7a4dfe351ad7e0e1add72b9&chksm=8d308063ba470975a3017252c468c5a349cbc45e71d37600154d17bd596e814bc4abd9773e44&scene=21#wechat_redirect)
+    - [将 instance 连接到 vlan101 - 每天5分钟玩转 OpenStack（97）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587577&idx=1&sn=b90e048c6161db19266d1d3d0791d6c5&chksm=8d308060ba47097626aa4c69c6001cc983ca82d401661d762ab32ef40632b3b40a8edc761183&scene=21#wechat_redirect)
+
+
 ## DHCP
 
 配置文件: `/etc/neutron/dhcp_agent.ini`
@@ -403,3 +440,70 @@ ns-d6de222a-99
 !!! quote "已读"
     - [在 ML2 中配置 OVS flat network - 每天5分钟玩转 OpenStack（133）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587441&idx=1&sn=07c374282798e5736fdd34a8b07f871e&chksm=8d308fe8ba4706fe448452964a8dcfe3b2613a85e5a519a8be2625df5e98a3e3075bc06e8191&scene=21#wechat_redirect)
     - [部署 instance 到 OVS flat network - 每天5分钟玩转 OpenStack（135）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587433&idx=1&sn=783d9b6dc86dd25f6cdc39e74cdd463b&chksm=8d308ff0ba4706e69819902df1bc2f38e738cc886c19330fd9311e5b572d9f72c1ab284fed9a&scene=21#wechat_redirect)
+
+
+### vlan network
+
+!!! info "与eth1相连的物理交换机要设置成trunk口"
+
+1. 指定租户创建的VLAN ID的范围: `/etc/neutron/plugins/ml2/ml2_conf.ini`
+
+    ![](assets/markdown-img-paste-20190910211614370.png)
+
+    ![](assets/markdown-img-paste-20190910211624592.png)
+
+    > admin可以创建的范围为1~4094
+
+1. 创建ovs bridge br-eth1, 并将物理网卡eth1桥接在br-eth1上:
+
+    ![](assets/markdown-img-paste-20190909205550754.png)
+
+1. 指定VLAN与物理网卡的对应关系:
+
+    ![](assets/markdown-img-paste-20190910211707261.png)
+
+1. 重启neutron服务
+1. 通过Web GUI创建vlan network
+
+    !!! todo "[创建 OVS vlan100 netwrok - 每天5分钟玩转 OpenStack（137）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587425&idx=1&sn=7296aac3972e9ea08442a52dca6bb56b&chksm=8d308ff8ba4706eee983b3473a5f51f3ace27d11c3c2928a46b030e890f4c7c26f0830c1b099&scene=21#wechat_redirect)"
+
+    1. 设置Segmentation ID(VLAN ID)为100
+
+    !!! success "同时创建了flow rule"
+
+1. 查看ovs bridge状态: `{==ovs-vsctl show==}`, 已将tapXXX(DHCP interface)挂载到br-int, 并创建br-eth1和patch port, 挂载eth1
+
+    ![](assets/markdown-img-paste-20190910212421325.png)
+
+1. launch新的instance VM1到vlan100, 创建brq和veth pair, 并挂载tap
+
+    ![](assets/markdown-img-paste-20190910213055547.png)
+
+    ![](assets/markdown-img-paste-20190910213103734.png)
+
+!!! tip "OVS通过flow rule指定如何对进出br-int的数据进行转发, 实现VLAN"
+
+1. 查看flow rule: `{==ovs-ofctl dump-flow {bridge}==}`
+    - priority: OVS应用规则的优先级
+    - in_port: OVS端口内部编号, 查看方式: `{==ovs-ofctl show {bridge}==}`
+
+        ![](assets/markdown-img-paste-20190910215849129.png)
+
+    - dl_vlan: 原始VLAN ID
+    - actions: 对数据包进行的操作
+
+    ```
+    # 从该网桥的phy-br-eth1(in_port=2)接收进来的包
+    # 如果VLAN ID是1, 将其改为100
+    priority=4,in_port=2,dl_vlan=1 actions=mod_vlan_vid:100,NORMAL
+    priority=4,in_port=2,dl_vlan=5 actions=mod_vlan_vid:101,NORMAL
+    ```
+
+    !!! abstact "内部的tag由phy-br-eth1通过br-eth1传出到eth1时, 转换为VLAN ID; 外部的VLAN ID由int-br-eth1通过br-int传入到qvo时, 转换为tag"
+
+
+!!! quote "已读"
+    - [在 ML2 中配置 OVS vlan network - 每天5分钟玩转 OpenStack（136）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587430&idx=1&sn=954fb4c3f47b5c47bc6bd0ca1a78d844&chksm=8d308fffba4706e955a23eec259e7a04ce68f8722bffa63d1825be20a91cff7e3e4daae7451b&scene=21#wechat_redirect)
+    - [部署 instance 到 OVS vlan100 - 每天5分钟玩转 OpenStack（138）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587415&idx=1&sn=d3005225a4b0609f6bf183e49c0a6cd7&chksm=8d308fceba4706d83401795aa257badf8f115762355ccd382cd5b0c0e6c8934efa126746def9&scene=21#wechat_redirect)
+    - [创建 OVS vlan101 并部署 instance - 每天5分钟玩转 OpenStack（139）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587406&idx=1&sn=2bb8bb839ff304502417a5a96db512af&chksm=8d308fd7ba4706c1e8e563a1d285010e7a9222f0621a78f1e06c06db54c2eebcf106afb47024&scene=21#wechat_redirect)
+    - [分析 OVS 如何实现 vlan 隔离 - 每天5分钟玩转 OpenStack（140）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587413&idx=1&sn=6d37c19f126980a25782aae6d0e75029&chksm=8d308fccba4706da8307f984beab0fb41d3dfdcfe8661bebd2a7764b4c05b2a35e8f032e0216&scene=21#wechat_redirect)

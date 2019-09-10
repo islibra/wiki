@@ -47,7 +47,7 @@ Open vSwitch
 - ovs-ofctl: 基于OpenFlow协议对OVS进行监控和管理
 
     ```bash
-    # 查询某个网桥上的端口信息(addr, speed...)
+    # 查询某个网桥上的端口内部编号信息(addr, speed...)
     $ ovs-ofctl show br-xxx
     # 查询某个网桥各端口的统计信息, 包括收发包, 丢包等
     $ ovs-ofctl dump-ports br-xxx
