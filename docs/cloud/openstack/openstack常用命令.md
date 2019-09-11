@@ -3,12 +3,17 @@
 ## 查看版本
 
 ```bash
+$ openstack --version
 $ cat /etc/*version
 ```
 
 ## 查看资源
 
-- CPU: `lscpu`, `Numactl -H`
+- CPU: `lscpu`, `numactl -H | --hard | --hardware`
+    - NUMA nodes: 物理CPU个数
+    - Cores per socket: 每个CPU核心数
+    - Thread per core: 每个core超线程数
+
 - 内存: `virsh capabilities`
 - 资源隔离: `cat /opt/fusionplatform/data/cps_config/res_info.json`
     - `cps hostcfg-add --type resgrp-define xxx`
