@@ -2,8 +2,12 @@
 
 Open vSwitch
 
-??? note "名词解释"
-    - NIC: 网卡
+???+ note "名词解释"
+    - NIC: 逻辑网卡
+    - eth: 物理网卡
+
+        > 查看nic与eth对应关系，eth属于哪个NUMA：`sudo cat /usr/bin/ports_info`
+
     - TAP/TUN: Linux内核实现的一对虚拟网络设备, TAP工作在二层, TUN工作在三层。虚拟机的vNIC与TAP相连, 相当于物理机NIC连接eth。
 
         > 当一个TAP设备被创建时, 在Linux设备文件目录下会生成一个对应的字符设备文件, 用户程序可以像打开普通文件一样对这个文件进行读写。
