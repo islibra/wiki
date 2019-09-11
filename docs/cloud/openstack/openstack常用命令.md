@@ -52,5 +52,8 @@ $ cat /etc/*version
 
 ## 命令行
 
+- 查看agent列表：`{==neutron agent-list==}`
+- 查看router列表：`{==neutron router-list==}`
+
 
 !!! quote "[Command-Line Tools](https://docs.openstack.org/operations-guide/ops-lay-of-the-land.html#command-line-tools)"
