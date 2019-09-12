@@ -336,3 +336,8 @@ public class OSi {
 
 1. 使用root制作高压缩比文件：`dd if=/dev/zero count=$((1024*1024)) bs=4096 > big.csv`
 1. 压缩：`zip -9 big.zip big.csv`
+
+### 正则表达式
+
+- 使用[REGEXPER](https://regexper.com/)解析，是否存在两层以上的循环。
+- <https://jex.im/regulex/>
