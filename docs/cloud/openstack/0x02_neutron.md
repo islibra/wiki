@@ -234,26 +234,75 @@ IP地址段，一个network有多个subnet。
 
     ![](assets/markdown-img-paste-20190910203656507.png)
 
+    ![](assets/markdown-img-paste-20190915180735233.png)
+
     > admin可以创建的范围为1~4094
 
 1. 指定VLAN与物理网卡的对应关系:
 
     ![](assets/markdown-img-paste-20190910203933552.png)
 
+    ![](assets/markdown-img-paste-20190915180846909.png)
+
 1. 重启neutron服务
 1. 通过Web GUI创建vlan network
 
-    !!! todo "[创建第一个 vlan network "vlan100" - 每天5分钟玩转 OpenStack（94）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587586&idx=1&sn=a1ff8cb71db1f0a30cdaad5064ac85c9&chksm=8d30809bba47098d817148b72bc24c11aae7ed89091c3407e7f54b9d5b61ee1fcdc48ce75a80&scene=21#wechat_redirect)"
-
     1. 设置Segmentation ID(VLAN ID)为100
 
+    ![](assets/markdown-img-paste-20190915181529170.png)
+
+    ![](assets/markdown-img-paste-20190915181741209.png)
+
 1. 查看linux bridge状态: `{==brctl show==}`, 已创建brqXXX和tapXXX(DHCP interface), 并挂载 **eth1.100**
+
+    ![](assets/markdown-img-paste-20190915181934398.png)
+
+    ```bash
+    $ brctl show
+    bridge name     bridge id               STP enabled     interfaces
+    brq79f0b942-92  8000.080027f23a45       no              enp0s8.100
+                                                            tap29389f61-ff
+    virbr0          8000.525400c2314c       yes             virbr0-nic
+    ```
+
 1. launch新的instance VM1到vlan100, 创建tap并连接到brq
+
+    ![](assets/markdown-img-paste-20190915182327811.png)
+
+    ```bash
+    $ brctl show
+    bridge name     bridge id               STP enabled     interfaces
+    brq79f0b942-92  8000.080027f23a45       no              enp0s8.100
+                                                            tap29389f61-ff
+                                                            tap5118ae25-b9
+    virbr0          8000.525400c2314c       yes             virbr0-nic
+    ```
+
+1. 使用项目 - 网络 - 网络创建VLAN 101, 后台自动创建子接口为3001-4000
+
+    ![](assets/markdown-img-paste-20190915183504157.png)
+
+    ```bash
+    $ brctl show
+    bridge name     bridge id               STP enabled     interfaces
+    brq79f0b942-92  8000.080027f23a45       no              enp0s8.100
+                                                            tap1f82ab4e-dd
+                                                            tap29389f61-ff
+                                                            tap5118ae25-b9
+    brq98e34498-29  8000.080027f23a45       no              enp0s8.3041
+                                                            tap44694333-91
+    virbr0          8000.525400c2314c       yes             virbr0-nic
+    ```
+
+1. lanch instance到VLAN 101
+
+    ![](assets/markdown-img-paste-20190915183823316.png)
 
 
 !!! quote "已读"
     - [Neutron Vlan Network 原理- 每天5分钟玩转 OpenStack（92）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587595&idx=1&sn=cd0ff4a2323bb9f65834ed06c5553188&chksm=8d308092ba470984e9815952cab4bfedfd1d264ed6b5ca54d403bb675f82ca5244ce2a2ca638&scene=21#wechat_redirect)
     - [在 ML2 中配置 Vlan Network- 每天5分钟玩转 OpenStack（93）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587591&idx=1&sn=9b5ebb0f7df1da373ad9b98fb3a46306&chksm=8d30809eba470988e1c64866f1744ab1440d09fe253ccc3a72b5bffa717b02d281c829b9a7d1&scene=21#wechat_redirect)
+    - [创建第一个 vlan network "vlan100" - 每天5分钟玩转 OpenStack（94）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587586&idx=1&sn=a1ff8cb71db1f0a30cdaad5064ac85c9&chksm=8d30809bba47098d817148b72bc24c11aae7ed89091c3407e7f54b9d5b61ee1fcdc48ce75a80&scene=21#wechat_redirect)
     - [将 instance 连接到 vlan100 - 每天5分钟玩转 OpenStack（95）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587582&idx=1&sn=6a77496d39cbbe8915b9fc0e38c504be&chksm=8d308067ba470971d85e02e513f703dec40b957fc7a069d1361f64da1d33f14a49e25e0cd5c9&scene=21#wechat_redirect)
     - [创建第二个 vlan network "vlan101" - 每天5分钟玩转 OpenStack（96）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587578&idx=1&sn=6721332ab7a4dfe351ad7e0e1add72b9&chksm=8d308063ba470975a3017252c468c5a349cbc45e71d37600154d17bd596e814bc4abd9773e44&scene=21#wechat_redirect)
     - [将 instance 连接到 vlan101 - 每天5分钟玩转 OpenStack（97）](https://mp.weixin.qq.com/s?__biz=MzIwMTM5MjUwMg==&mid=2653587577&idx=1&sn=b90e048c6161db19266d1d3d0791d6c5&chksm=8d308060ba47097626aa4c69c6001cc983ca82d401661d762ab32ef40632b3b40a8edc761183&scene=21#wechat_redirect)
