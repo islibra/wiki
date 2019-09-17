@@ -1,5 +1,7 @@
 # Linux网络_ip_ifconfig_route_DNS
 
+## ip
+
 ```bash
 # 显示所有网络接口及IP
 $ ip a
@@ -86,6 +88,21 @@ sysctl -p
 ```
 
 
+## iptables
+
+```bash
+# 查看SNAT规则
+$ iptables -t nat -S
+
+# 设置某IP禁止访问
+$ iptables -A INPUT -s 10.0.0.1/32 -j DROP  #增加防火墙规则
+$ iptables -A OUTPUT -d 10.0.0.1/32 -j DROP
+$ iptables -L INPUT -n --line-numbers  #带行号显示防火墙INPUT规则
+$ iptables -D INPUT 2  #通过行号删除防火墙规则
+$ iptables -D OUTPUT 3
+```
+
+
 ## 设置DNS
 
 ### 0x00_本地hosts
@@ -135,14 +152,3 @@ service network restart
 
 ???+ tip "系统解析优先级"
     本地hosts  >  网卡配置  >  系统DNS配置
-
-
-## 设置某IP禁止访问
-
-```bash
-iptables -A INPUT -s 10.0.0.1/32 -j DROP  #增加防火墙规则
-iptables -A OUTPUT -d 10.0.0.1/32 -j DROP
-iptables -L INPUT -n --line-numbers  #带行号显示防火墙INPUT规则
-iptables -D INPUT 2  #通过行号删除防火墙规则
-iptables -D OUTPUT 3
-```
