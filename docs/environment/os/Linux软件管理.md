@@ -21,6 +21,40 @@ rpm -ivh xxx.rpm
 ```
 
 
+## Ubuntu下安装deb包命令
+
+```bash
+#Ubuntu配置国内镜像站点/etc/apt/sources.list
+deb http://mirrors.163.com/ubuntu/ trusty main restricted universe multiverse
+deb http://mirrors.163.com/ubuntu/ trusty-security main restricted universe multiverse
+deb http://mirrors.163.com/ubuntu/ trusty-updates main restricted universe multiverse
+deb http://mirrors.163.com/ubuntu/ trusty-proposed main restricted universe multiverse
+deb http://mirrors.163.com/ubuntu/ trusty-backports main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ trusty main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ trusty-security main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ trusty-updates main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ trusty-proposed main restricted universe multiverse
+deb-src http://mirrors.163.com/ubuntu/ trusty-backports main restricted universe multiverse
+
+#Ubuntu安装软件
+sudo apt-get install xxx
+
+#Ubuntu更新安装包
+apt update
+
+dpkg -l | grep xxx  #查看已安装的软件
+dpkg -L | grep xxx  #查看已安装的软件路径
+dpkg -i package.deb  #安装
+dpkg -c package.deb  #查看deb包中的内容
+dpkg -L package  #列出deb包安装的所有文件清单
+dpkg -I package.deb  #从deb包中提取信息
+dpkg -s package  #显示已安装包的信息
+dpkg -r package  #移除已安装的deb包
+dpkg -P package  #彻底删除已安装的deb包和配置文件
+dpkg-reconfigure package  #重新配置已安装的包
+```
+
+
 ## 压缩解压文件
 
 ### 1. tar
@@ -198,37 +232,3 @@ export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
 ```
 1. 执行`source /etc/profile`，使环境变量生效
 1. 输入`java -version`命令查看java是否安装成功
-
-
-# Ubuntu下安装deb包命令
-
-```bash
-#Ubuntu配置国内镜像站点/etc/apt/sources.list
-deb http://mirrors.163.com/ubuntu/ trusty main restricted universe multiverse
-deb http://mirrors.163.com/ubuntu/ trusty-security main restricted universe multiverse
-deb http://mirrors.163.com/ubuntu/ trusty-updates main restricted universe multiverse
-deb http://mirrors.163.com/ubuntu/ trusty-proposed main restricted universe multiverse
-deb http://mirrors.163.com/ubuntu/ trusty-backports main restricted universe multiverse
-deb-src http://mirrors.163.com/ubuntu/ trusty main restricted universe multiverse
-deb-src http://mirrors.163.com/ubuntu/ trusty-security main restricted universe multiverse
-deb-src http://mirrors.163.com/ubuntu/ trusty-updates main restricted universe multiverse
-deb-src http://mirrors.163.com/ubuntu/ trusty-proposed main restricted universe multiverse
-deb-src http://mirrors.163.com/ubuntu/ trusty-backports main restricted universe multiverse
-
-#Ubuntu安装软件
-sudo apt-get install xxx
-
-#Ubuntu更新安装包
-apt update
-
-dpkg -l | grep xxx  #查看已安装的软件
-dpkg -L | grep xxx  #查看已安装的软件路径
-dpkg -i package.deb  #安装
-dpkg -c package.deb  #查看deb包中的内容
-dpkg -L package  #列出deb包安装的所有文件清单
-dpkg -I package.deb  #从deb包中提取信息
-dpkg -s package  #显示已安装包的信息
-dpkg -r package  #移除已安装的deb包
-dpkg -P package  #彻底删除已安装的deb包和配置文件
-dpkg-reconfigure package  #重新配置已安装的包
-```
