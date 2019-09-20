@@ -45,8 +45,10 @@ $ ifconfig eth1 hw ether xx:xx:xx:xx:xx:xx
 ## route
 
 ```bash
-# 查看路由表
+# Linux查看路由表
 $ route
+# macOS查看路由表
+$ netstat -nr
 # 跟踪路由
 $ traceroute x.x.x.x
 # 添加默认路由
