@@ -39,7 +39,7 @@
     global #全局属性
         daemon  #以daemon方式在后台运行
         maxconn 256  #最大同时256连接
-        pidfile /home/ha/haproxy/conf/haproxy.pid  #指定保存HAProxy进程号的文件
+        pidfile /opt/haproxy/conf/haproxy.pid  #指定保存HAProxy进程号的文件
 
     defaults #默认参数
         mode http  #http模式
@@ -53,6 +53,77 @@
 
     backend servers #后端服务servers
         server server1 127.0.0.1:8000 maxconn 32  #backend servers中只有一个后端服务，名字叫server1，起在本机的8000端口，HAProxy同时最多向这个服务发起32个连接
+    ```
+
+1. 将HAProxy注册为服务
+
+    ```bash
+    $ vim /etc/init.d/haproxy
+    #! /bin/sh
+    set -e
+
+    PATH=$PATH:/opt/haproxy/sbin
+    PROGDIR=/opt/haproxy
+    PROGNAME=haproxy
+    DAEMON=$PROGDIR/sbin/$PROGNAME
+    CONFIG=$PROGDIR/conf/$PROGNAME.cfg
+    PIDFILE=$PROGDIR/conf/$PROGNAME.pid
+    DESC="HAProxy daemon"
+    SCRIPTNAME=/etc/init.d/$PROGNAME
+
+    # Gracefully exit if the package has been removed.
+    test -x $DAEMON || exit 0
+
+    start()
+    {
+           echo -e "Starting $DESC: $PROGNAME\n"
+           $DAEMON -f $CONFIG
+           echo "."
+    }
+
+    stop()
+    {
+           echo -e "Stopping $DESC: $PROGNAME\n"
+           haproxy_pid="$(cat $PIDFILE)"
+           kill $haproxy_pid
+           echo "."
+    }
+
+    restart()
+    {
+           echo -e "Restarting $DESC: $PROGNAME\n"
+           $DAEMON -f $CONFIG -p $PIDFILE -sf $(cat $PIDFILE)
+           echo "."
+    }
+
+    case "$1" in
+     start)
+           start
+           ;;
+     stop)
+           stop
+           ;;
+     restart)
+           restart
+           ;;
+     *)
+           echo "Usage: $SCRIPTNAME {start|stop|restart}" >&2
+           exit 1
+           ;;
+    esac
+
+    exit 0
+    ```
+
+1. 启动, 停止, 重启服务
+
+    ```bash
+    $ cd /opt/haproxy/sbin
+    $ ./haproxy -f ../conf/haproxy.cfg
+
+    $ service haproxy start
+    $ service haproxy stop
+    $ service haproxy restart
     ```
 
 
