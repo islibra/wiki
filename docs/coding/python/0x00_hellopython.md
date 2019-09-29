@@ -41,7 +41,10 @@ trusted-host=mirrors.aliyun.com
 - 用缩进表示代码块
 - 复合赋值
 
-示例代码：  
+示例代码：
+
+!!! warning "文件命名不能与库中的类重名"
+
 ```python
 #!/usr/bin/python3
 print("hello world!")
