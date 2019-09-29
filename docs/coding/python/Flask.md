@@ -31,8 +31,7 @@
     > venv\Scripts\activate
     ```
 
-???+ note
-    已在Windows上验证通过.
+1. 取消激活: `$ deactivate`
 
 
 ## 安装
