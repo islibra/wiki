@@ -341,3 +341,7 @@ public class OSi {
 
 - 使用[REGEXPER](https://regexper.com/)解析，是否存在两层以上的循环。
 - <https://jex.im/regulex/>
+
+### json
+
+!!! quote "参考: [Fastjson](../cve/cve_catalog/#fastjson_1)"
