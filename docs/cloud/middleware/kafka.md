@@ -12,7 +12,11 @@
 
 1. 下载地址: <https://www.apache.org/dyn/closer.cgi?path=/kafka/2.3.0/kafka_2.12-2.3.0.tgz>, <http://ftp.cuhk.edu.hk/pub/packages/apache.org/kafka/2.3.0/kafka_2.12-2.3.0.tgz>
 1. 解压: `$ tar -zxvf kafka_2.12-2.3.0.tgz`
-1. 启动zookeeper: `$ bin/zookeeper-server-start.sh config/zookeeper.properties`, 端口号2181
+1. 启动zookeeper: `$ bin/zookeeper-server-start.sh config/zookeeper.properties`
+
+    > 端口号, clientPort=2181  
+    > 监听IP, clientPortAddress=x.x.x.x
+
 1. 启动kafka: `$ bin/kafka-server-start.sh config/server.properties`, 端口号9092
 1. 创建topic: `$ bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic hellokafka`
 1. 查询topic:
