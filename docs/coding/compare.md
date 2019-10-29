@@ -590,6 +590,41 @@ int main()
 }
 ```
 
+```perl tab="Perl"
+# filename: Person.pm
+package Person;
+
+# 构造函数, 名称可自定义
+sub new
+{
+  my $class = shift;
+  my $self = {
+    _firstName => shift,  # 注意这里是逗号
+    _lastName => shift,
+    _ssn => shift,
+  };
+
+  print("firstName is $self->{_firstName}\n");
+  print("lastName is $self->{_lastName}\n");
+  print("ssn is $self->{_ssn}\n");
+  # 构造对象
+  bless $self, $class;
+  return $self;
+}
+
+# 返回值
+1;
+
+
+# filename: helloperl.pl
+#!/usr/bin/perl
+
+use Person;
+
+$object = new Person("Jack", "John", 123);
+```
+
+
 ## 结构体
 
 ```c tab="C"
