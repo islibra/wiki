@@ -24,8 +24,12 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.171-b11, mixed mode)
 
 python为脚本语言，会在第一行写shebang，而go没有。
 
-```python
+```python tab="Python"
 #!/usr/bin/python
+```
+
+```perl tab="Perl"
+#!/usr/bin/perl
 ```
 
 ## namespace
@@ -95,6 +99,14 @@ public class Demo {
 // 注释
 ```
 
+```perl tab="Perl"
+# 单行注释
+
+=pod
+多行注释
+=cut
+```
+
 
 ## 打印输出
 
@@ -124,6 +136,11 @@ cout << "Hello World!" << endl;
 
 ```java tab="Java"
 System.out.println("Hello Java!");
+```
+
+```perl tab="Perl"
+print "Hello Perl!\n";
+print("Hello Perl!\n");
 ```
 
 
@@ -332,6 +349,34 @@ echo "$name, $company";  // 输出 "Bob, Apple"
 ?>
 ```
 
+```perl tab="Perl"
+# 使用 use strict; 让所有变量需要强制声明类型。
+$a = 10;
+print("a is $a\n");
+
+@arr = (1, 2, 3);
+print("arr is @arr\n");
+
+%h = ('a', 1, 'b', 2);
+print("h.a is $h{'a'}, h.b is $h{'b'}\n");
+
+# 默认所有变量都是全局变量, 使用my声明私有变量, 使用local临时改变全局变量值
+sub hellosub{
+    my $str = "i am a private var\n";
+    print($str);
+    local $str2 = "i am temp changed\n";
+    print($str2);
+}
+
+$str = "this is a global var\n";
+$str2 = "this is another\n";
+
+hellosub();
+print($str);
+print($str2);
+```
+
+
 ## C 存储类
 
 > 修饰在变量类型之前
@@ -415,6 +460,14 @@ int main() {
     testParam(&i, &j);
     // i is 0, j is 1
     printf("i is %d, j is %d\n", i, j);
+}
+```
+
+```perl tab="Perl"
+hellosub("hello", "subperl");
+
+sub hellosub{
+    print("arg 1 is @_[0], 2 is @_[1]\n");
 }
 ```
 
