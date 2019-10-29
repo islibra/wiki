@@ -1,5 +1,40 @@
 # Linux网络_ip_ifconfig_route_DNS
 
+## 开启/禁止ping
+
+### 方法一: 内核参数
+
+#### 临时修改
+
+```bash
+# 0 允许ping
+# 1 禁止ping
+$ echo 0 > /proc/sys/net/ipv4/icmp_echo_ignore_all
+```
+
+#### 永久修改
+
+```bash
+$ vim /etc/sysctl.conf
+net.ipv4.icmp_echo_ignore_all=1
+$ sysctl -p
+```
+
+### 方法二: iptables
+
+```bash
+# 禁止ping
+$ iptables -A INPUT -p icmp --icmp-type 8 -s 0/0 -j DROP
+
+# 允许ping
+$ iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
+$ iptables -A OUTPUT -p icmp --icmp-type echo-reply -j ACCEPT
+```
+
+
+!!! quote "参考链接: [Linux禁止ping以及开启ping的方法](https://www.cnblogs.com/chenshoubiao/p/4781016.html)"
+
+
 ## ip
 
 ```bash
