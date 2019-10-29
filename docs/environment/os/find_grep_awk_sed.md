@@ -17,6 +17,7 @@
     8. `find . -perm 700 |xargs chmod 777`, 查找出当前目录（及子目录）下所有权限为700的文件，并把其权限重设为777。
     9. `find . -type f |xargs ls -l`, 查找出文件并查看其详细信息。
     1. {==逻辑与`-a`，逻辑或`-o`==}，`find . -name "xxx" -o -name "yyy"`
+    1. {==逻辑非`!`==}, `find /etc/ssh -type f ! -user root -o ! -group root -o ! -perm 400 -name *key`, 查找用户不是root或用户组不是root或权限不是400的key文件。
     1. `find dir -path "dir/ignoredir" [-a] -prune -o -print`, 忽略ignoredir目录，意义为`if -path "test" then -prune else -print`。`find xxx \( -path xxx/iii1 -o -path xxx/iii2 \) -prune -o -print`, 忽略多个文件夹。`find xxx \( -path xxx/iii1 -o -path xxx/iii2 \) -prune -o -name "*.log" -print`, 忽略文件夹查找某类文件。
 
 
