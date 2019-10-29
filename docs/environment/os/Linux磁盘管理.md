@@ -1,12 +1,70 @@
 # Linux磁盘管理
 
-## 0x00_查看硬盘详细信息
+## 磁盘空间满的排查方法
 
-!!! example "fdisk -l"
-    ![fdisk -l](../../../img/fdisk.png)
+### 查看磁盘物理卷和逻辑卷详细信息
 
-    - Disk /dev/xxx，硬盘大小
-    - 设备 启动 起点 末尾 扇区 大小 Id 类型，硬盘分区信息
+```bash
+$ fdisk -l
+Disk /dev/sda: 64 GB  # 硬盘大小
+
+# 设备 是否启动分区 起点 末尾 扇区 大小 Id 类型
+Device Boot Start End Blocks Id System
+/dev/sda1 * 2048 2099199 1048576 83 Linux
+
+# 逻辑卷
+Disk /dev/mapper/vgxxx-lvxxx: 10.7 GB
+```
+
+![](../../../img/fdisk.png)
+
+### 查看逻辑卷组
+
+```bash
+$ vgdisplay
+--- Volume group ---
+VG Name    xxx
+VG Size    39.00 GB
+PE Size    4.00 MB
+Total PE   9984
+Alloc PE / Size    9984 / 39.00 GB
+Free PE / Size     0 / 0
+```
+
+### 查看磁盘挂载和使用情况
+
+```bash
+$ df -h
+Filesystem Size Used Avail Use% Mounted on
+/dev/sda1 1G 100M 900M 10% /boot
+/dev/mapper/vgxxx-lvxxx 20G 300M 1% /
+```
+
+### 查看哪个目录占用空间大
+
+```bash
+$ du -s /* | sort -nr
+# 逐层排查
+$ du -s /usr/* | sort -nr
+```
+
+### 查看当前目录下哪个目录/文件占用空间大
+
+```bash
+$ du -h --max-depth=1 | sort -nr
+```
+
+### 查看已删除文件进程仍占用, 重启进程
+
+```bash
+$ lsof | grep deleted
+COMMAND PID TID USER FD TYPE DEVICE SIZE/OFF NODE NAME
+```
+
+
+!!! quote "参考链接: [linux磁盘已满，查看哪个文件占用多](https://blog.csdn.net/a854517900/article/details/80824966)"
+
+
 
 
 ## 0x01_硬盘分区
@@ -52,11 +110,6 @@
         - 0 不要检验
         - 1 最早检验
         - 2 1级别检验完成后检验
-
-
-## 0x04_查看硬盘分区使用情况
-
-`df -h`
 
 
 ## 添加磁盘并开机自动挂载
