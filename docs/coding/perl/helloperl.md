@@ -137,3 +137,10 @@ l
 ```bash
 $ perl -e 'print "@INC"'
 ```
+
+## 库函数
+
+### chomp
+
+- chop, 删除最后一个字符
+- chomp, 删除最后的`\n`
