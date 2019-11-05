@@ -71,6 +71,12 @@ public class OgnlDemo {
         // 1. 创建一个Ognl上下文对象
         OgnlContext context = new OgnlContext();
 
+        // 存放数据
+        context.put("cn", "China");
+        // 获取数据
+        String value = (String)context.get("cn");
+        System.out.println(value);
+
         // 2. 创建ROOT对象
         Object rootObject = new Object();
 
@@ -80,7 +86,7 @@ public class OgnlDemo {
             Object expression = ognl.Ognl.parseExpression(exp);
 
             // 4. 获取表达式的值, 取根元素不用#号, 取非根元素要使用#
-            String value = Ognl.getValue(expression, context, rootObject).toString();
+            value = Ognl.getValue(expression, context, rootObject).toString();
         }catch (OgnlException e){
             e.printStackTrace();
         }
