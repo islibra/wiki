@@ -4,13 +4,6 @@
 
 时间复杂度: O(log~2~n)
 
-!!! note "时间复杂度: 大O表示法, O表示运行时间的{==增速==}，代表{==最糟情况下运行时间==}"
-    - O(1), 常量级
-    - O(logn), 对数级: 二分查找
-    - O(n), 线性级: 简单查找
-    - O(nlogn): 快速排序
-    - O(n^2^), 指数级: 选择排序
-    - O(n!), 阶乘级: 旅行商问题
 
 ## 代码示例
 
@@ -76,7 +69,7 @@ low=mid+1
 
 ## LeetCode
 
-```java
+```java tab="35. 搜索插入位置"
 import java.util.Scanner;
 
 /**
@@ -148,6 +141,97 @@ public class BinarySearch {
 
         BinarySearch bs = new BinarySearch();
         System.out.println(bs.binarySearch(sortedList, search));
+    }
+}
+```
+
+```java tab="29. 两数相除" hl_lines="66 67 68 73"
+package search;
+
+import java.util.Scanner;
+
+/**
+ * 29. 两数相除
+ * <p>
+ * 给定两个整数，被除数 dividend 和除数 divisor。将两数相除，要求不使用乘法、除法和 mod 运算符。
+ * <p>
+ * 返回被除数 dividend 除以除数 divisor 得到的商。
+ * <p>
+ * 示例 1:
+ * 输入: dividend = 10, divisor = 3
+ * 输出: 3
+ * <p>
+ * 示例 2:
+ * 输入: dividend = 7, divisor = -3
+ * 输出: -2
+ * <p>
+ * 示例 3:
+ * 输入: dividend = -2147483648, divisor = -1
+ * 输出: 2147483647
+ * <p>
+ * 示例 4:
+ * 输入: dividend = -2147483648, divisor = 1
+ * 输出: -2147483648
+ * <p>
+ * 示例 5:
+ * 输入: dividend = -2147483648, divisor = 2
+ * 输出: -1073741824
+ * <p>
+ * 说明:
+ * 被除数和除数均为 32 位有符号整数。
+ * 除数不为 0。
+ * 假设我们的环境只能存储 32 位有符号整数，其数值范围是 [−231,  231 − 1]。
+ * 本题中，如果除法结果溢出，则返回 231 − 1。
+ * <p>
+ * 链接：https://leetcode-cn.com/problems/divide-two-integers
+ */
+public class Divide {
+
+    /**
+     * 求商即求被除数中包含多少个除数
+     *
+     * @param dividend 被除数
+     * @param divisor  除数
+     * @return 商
+     */
+    public int divide(int dividend, int divisor) {
+        int result = 0;
+
+        // 特殊情况处理
+        if (dividend == 0) {
+            return 0;
+        }
+        if (Integer.MIN_VALUE == dividend && divisor == -1) {
+            return Integer.MAX_VALUE;
+        }
+
+        // 先去掉符号, 注意先转换类型再计算
+        long absDividend = Math.abs((long) dividend);
+        long absDivisor = Math.abs((long) divisor);
+
+        for (int i = 31; i >= 0; i--) {
+            // 除以2^n^, 结果大于等于除数, 说明至少包含2^n^个除数
+            if ((absDividend >> i) >= absDivisor) {
+                result += (1 << i);
+                absDividend -= (absDivisor << i);
+            }
+        }
+
+        // 使用按位异或计算两数符号是否相同
+        boolean negative = (dividend ^ divisor) < 0;
+        return negative ? -result : result;
+    }
+
+    public static void main(String args[]) {
+        Scanner cin = new Scanner(System.in, "utf-8");
+        String[] inputStrList = cin.nextLine().split(",");
+
+        int[] inputList = new int[2];
+        inputList[0] = Integer.parseInt(inputStrList[0]);
+        inputList[1] = Integer.parseInt(inputStrList[1]);
+
+        Divide d = new Divide();
+        System.out.println(d.divide(inputList[0], inputList[1]));
     }
 }
 ```
