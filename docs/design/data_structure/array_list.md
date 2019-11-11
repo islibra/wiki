@@ -24,7 +24,7 @@
 
 ## LeetCode
 
-```java
+```java tab="1. 两数之和"
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -73,5 +73,160 @@ public class TwoSum {
         TwoSum ts = new TwoSum();
         System.out.println(Arrays.toString(ts.twoSum(nums, target)));
     }
+}
+```
+
+```java tab="2. 两数相加"
+import java.util.Scanner;
+
+/**
+ * 2. 两数相加
+ * <p>
+ * 给出两个 非空 的链表用来表示两个非负的整数。
+ * 其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。
+ * <p>
+ * 如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。
+ * <p>
+ * 您可以假设除了数字 0 之外，这两个数都不会以 0 开头。
+ * <p>
+ * 示例：
+ * <p>
+ * 输入：(2 -> 4 -> 3) + (5 -> 6 -> 4)
+ * 输出：7 -> 0 -> 8
+ * 原因：342 + 465 = 807
+ * <p>
+ * 链接：https://leetcode-cn.com/problems/add-two-numbers
+ */
+public class TwoPlus {
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode result = null;
+        ListNode rflag = null;
+        // 进位标识
+        int flag = 0;
+
+        while (l1 != null && l2 != null) {
+            int sum = l1.val + l2.val + flag;
+            if (sum > 9) {
+                flag = 1;
+                sum -= 10;
+            } else {
+                flag = 0;
+            }
+            ListNode l = new ListNode(sum);
+            if (result == null) {
+                result = l;
+                rflag = l;
+            } else {
+                // 追加
+                rflag.next = l;
+                // 移动指针
+                rflag = l;
+            }
+            // 下一位
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+
+        // 如果进位已经为0, 则直接将后面的位连到结果链表上
+        if (flag == 0) {
+            if (l1 != null) {
+                rflag.next = l1;
+            }
+            if (l2 != null) {
+                rflag.next = l2;
+            }
+        } else if (flag == 1) {
+            while (l1 != null) {
+                int sum = l1.val + flag;
+                if (sum > 9) {
+                    flag = 1;
+                    sum -= 10;
+                } else {
+                    flag = 0;
+                }
+                ListNode l = new ListNode(sum);
+                rflag.next = l;
+                rflag = l;
+                l1 = l1.next;
+            }
+            while (l2 != null) {
+                int sum = l2.val + flag;
+                if (sum > 9) {
+                    flag = 1;
+                    sum -= 10;
+                } else {
+                    flag = 0;
+                }
+                ListNode l = new ListNode(sum);
+                rflag.next = l;
+                rflag = l;
+                l2 = l2.next;
+            }
+        }
+
+        // 进位不为0
+        if (flag == 1) {
+            ListNode l = new ListNode(1);
+            rflag.next = l;
+        }
+
+        return result;
+    }
+
+    public static void main(String args[]) {
+        ListNode first = null;
+        ListNode fflag = null;
+        System.out.println("first:");
+        Scanner cinone = new Scanner(System.in, "utf-8");
+        while (cinone.hasNextInt()) {
+            int one = cinone.nextInt();
+            ListNode ln = new ListNode(one);
+            if (first == null) {
+                first = ln;
+                fflag = first;
+            } else {
+                fflag.next = ln;
+                fflag = ln;
+            }
+        }
+
+        ListNode second = null;
+        ListNode sflag = null;
+        System.out.println("second:");
+        Scanner cintwo = new Scanner(System.in, "utf-8");
+        while (cintwo.hasNextInt()) {
+            int two = cintwo.nextInt();
+            ListNode ln = new ListNode(two);
+            if (second == null) {
+                second = ln;
+                sflag = second;
+            } else {
+                sflag.next = ln;
+                sflag = ln;
+            }
+        }
+
+        TwoPlus tp = new TwoPlus();
+        tp.printList(first);
+        tp.printList(second);
+        ListNode result = tp.addTwoNumbers(first, second);
+        tp.printList(result);
+    }
+
+    public void printList(ListNode l) {
+        while (l != null) {
+            System.out.print(l.val + " -> ");
+            l = l.next;
+        }
+        System.out.println();
+    }
+}
+
+public class ListNode {
+    int val;
+    ListNode next;
+
+    ListNode(int x) { val = x; }
 }
 ```
