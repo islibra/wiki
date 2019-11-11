@@ -127,7 +127,21 @@ sysctl -p
 
 ## iptables
 
+### 工作机制
+
+规则链名包括(也被称为五个钩子函数（hook functions）)：
+
+- **INPUT链** ：处理输入数据包。
+- **OUTPUT链** ：处理输出数据包。
+- **FORWARD链** ：处理转发数据包。
+- **PREROUTING链** ：用于目标地址转换（DNAT）。
+- **POSTOUTING链** ：用于源地址转换（SNAT）。
+
+
 ```bash
+# 查看防火墙规则
+$ iptables -nvL
+
 # 查看SNAT规则
 $ iptables -t nat -S
 
