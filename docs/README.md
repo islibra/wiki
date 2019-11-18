@@ -45,6 +45,10 @@
 - 廖新喜：<http://xxlegend.com/>
 - [SHODAN](https://www.shodan.io/): 搜索引擎, 搜索internet上的设备.
     - 如搜索使用了`Werkzeug`的服务器, 关键词: `"Server: Werkzeug"`, `"Server: Werkzeug" and "Set=Cookie: session="`
+- [NVD - National Vulnerability Database](https://nvd.nist.gov/): NIST - National Institute of Standards and Technology, U.S. Department of Commerce, 包含漏洞搜索和CVSS计算器
+- [CVE MITRE - Common Vulnerabilities and Exposures](https://cve.mitre.org/): 漏洞曝光
+- [FIRST - Forum of Incident Response and Security Teams](https://www.first.org/cvss/): 全球事件响应和安全论坛, 包含CVSS计算器
+
 
 ### 实用
 
