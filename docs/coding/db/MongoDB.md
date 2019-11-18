@@ -1,11 +1,64 @@
----
-title: MongoDB
-date: 2018-09-08 11:46:28
-categories: db
-tags:
----
+# MongoDB
 
-# NoSQL数据库分类
+## 命令行
+
+- 启动服务：`./mongod`
+- 管理：`./mongo`
+- 显示所有数据库：`show dbs`
+- 显示当前数据库：`db`
+- 连接到数据库：`use xxx`
+- 插入数据：`db.xxx.insert({x:10})`
+- 查找数据：`db.xxx.find()`
+- 删除数据库: `db.dropDatabase()`
+- 退出: `exit`
+
+## 使用perl连接
+
+```perl
+#!/usr/bin/perl
+
+use MongoDB;
+use Data::Dumper;
+
+$hashmongoconn='x.x.x.x';
+$hashmongopass='xxx';
+
+my $client = MongoDB::MongoClient->new(
+    host => "mongodb://user:$hashmongopass\@$hashmongoconn:27017",
+    auth_mechanism => 'SCRAM-SHA-1',
+    query_timeout => 10000000000,connect_timeout_ms=>10000000000,wtimeout=>10000
+);
+my $db = $client->get_database("database_name");
+my $collection = $db->get_collection("document");
+
+# 查询第一个
+my $row = $collection->find_one;
+print Dumper $row;
+
+# 查询所有
+my $row = $collection->find;
+while (my $r = $row->next) {
+    print Dumper $r;
+}
+```
+
+
+!!! quote "参考链接"
+    - [metacpan](https://metacpan.org/pod/MongoDB::Collection)
+    - [perl与MongoDB入门 - 简单的添加和更新操作](https://cn.perlmaven.com/getting-started-with-mongodb-using-perl-insert-and-update)
+
+
+## SCRAM(Salted Challenge Response Authentication Mechanism)
+
+- SCRAM-SHA-1
+- SCRAM-SHA-256, 4.0版本新增, 要求fcv(featureCompatibilityVersion) 4.0
+
+> 可修改迭代次数, 参见: [scramIterationCount](https://docs.mongodb.com/manual/reference/parameters/#param.scramIterationCount)
+
+!!! quote "参考链接: [mongoDB Documentation](https://docs.mongodb.com/manual/core/security-scram/)"
+
+
+## NoSQL数据库分类
 
 | 类型 | 部分代表 | 特点 |
 | --- | --- | --- |
@@ -17,17 +70,9 @@ tags:
 | xml数据库 | Berkeley DB XML, BaseX | 高效的存储XML数据，并支持XML的内部查询语法，比如XQuery,Xpath。 |
 
 
-# MongoDB常用命令
-
-启动服务：`./mongod`
-管理：`./mongo`
-显示所有数据库：`show dbs`
-显示当前数据库：`db`
-连接到数据库：`use local`
-插入数据：`db.runoob.insert({x:10})`
-查找数据：`db.runoob.find()`
+---
 
 
-# 使用Node.js连接MongoDB
+## 使用Node.js连接MongoDB
 
 [Quick Start](http://mongodb.github.io/node-mongodb-native/3.1/quick-start/quick-start/)
