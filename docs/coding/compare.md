@@ -349,14 +349,16 @@ echo "$name, $company";  // 输出 "Bob, Apple"
 ?>
 ```
 
-```perl tab="Perl"
+```perl tab="Perl" hl_lines="28"
 # 使用 use strict; 让所有变量需要强制声明类型。
 $a = 10;
 print("a is $a\n");
 
+# 列表/数组
 @arr = (1, 2, 3);
 print("arr is @arr\n");
 
+# Map/Hash
 %h = ('a', 1, 'b', 2);
 print("h.a is $h{'a'}, h.b is $h{'b'}\n");
 
@@ -374,6 +376,24 @@ $str2 = "this is another\n";
 hellosub();
 print($str);
 print($str2);
+
+# 特殊变量
+
+# $0: 正在执行的脚本文件名
+
+# $_: 默认输入和模式匹配内容
+foreach ('a', 'b', 'c') {
+  print("$_\n");
+}
+
+# $@: 命令eval的错误消息, 如果为空, 则表示上一次eval命令执行成功
+
+# $ARGV: 从默认的文件句柄中读取时的当前文件名
+
+# @ARGV: 传给脚本的命令行参数列表
+# perl xxx.pl arg1 arg2
+print("@ARGV\n");
+arg1 arg2
 ```
 
 
@@ -429,6 +449,31 @@ for i := 0; i < 5; i++ {
 }
 ```
 
+```perl tab="Perl"
+#!/user/bin/perl
+
+# 遍历列表
+@list = (1, 2, 3);
+# 1.
+print $_."\n" for @list;
+# 2.
+foreach $ele (@list) {
+  print("$ele\n");
+}
+
+# 遍历Hash
+%data = ('hello'=>1, 'perl'=>2, 'world'=>3);
+# 1.
+while(my ($key,$value) = each(%data)) {
+  print("$key $value\n");
+}
+# 2.
+print "$_ $data{$_}\n" for keys %data;
+print "$_\n" for values %data;
+# 3.
+print "$_ $data{$_}\n" foreach keys %data;
+```
+
 
 ## 函数
 
@@ -467,6 +512,7 @@ int main() {
 hellosub("hello", "subperl");
 
 sub hellosub{
+    # @_ 表示入参列表
     print("arg 1 is @_[0], 2 is @_[1]\n");
 }
 ```
