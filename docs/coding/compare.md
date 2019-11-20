@@ -301,6 +301,11 @@ $foo = "10.0 pigs " + 1.0;        // $foo is float (11)
 ?>
 ```
 
+```java tab="Java"
+// 字符串转字符数组
+char[] cArray = s.toCharArray();
+```
+
 ## 常量
 
 ```c tab="C" hl_lines="10 17 20"
