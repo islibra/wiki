@@ -1,21 +1,26 @@
-# recursive
+# recursive_divide_conquer
 
 ## 递归
 
 任何递归都可以与while循环相互转换
 
-> 使用循环, 性能更高; 使用递归, 更容易理解
+> 使用循环, 性能更高
+
+> 使用递归, 更容易理解
 
 !!! danger "关键结构"
-    1. 基线条件: {==跳出语句==}
-    1. 递归条件: **修正参数(更小规模)** 并调用自己
+    1. 基线条件: **跳出语句**  <--  {==最小规模==}
+    1. 递归条件: 修正参数(更小规模)并调用自己  <--  {==确定规模 n 与 n-1 之间的关系==}
 
-```java
+```java tab="Factorial"
+/**
+ * 求 n 的阶乘
+ */
 public class Factorial {
 
     public static int factorial(int i) {
         System.out.println(i);
-        // 1. 基线条件: 跳出循环
+        // 1. 基线条件: 跳出语句
         if (i == 1) {
             return 1;
         }
@@ -31,7 +36,33 @@ public class Factorial {
 }
 ```
 
-## LeetCode
+```java tab="DivideLand"
+/**
+ * 给定长width, 宽height的土地, 均匀的分成方块
+ * 求最大方块长度(即求最大公约数)
+ *
+ * 假设width >= height
+ */
+public class DivideLand {
+
+    private int divideLand(int width, int height) {
+        // 1. 基线条件: 跳出语句
+        if (width % height == 0) {
+            return height;
+        }
+        // 2. 递归条件: 修正参数(更小规模)并调用自己
+        return divideLand(height, width % height);
+    }
+
+    public static void main(String args[]) {
+        DivideLand dl = new DivideLand();
+        System.out.println(dl.divideLand(1680, 640));
+        System.out.println(dl.divideLand(108, 96));
+    }
+}
+```
+
+### LeetCode
 
 ```java
 public class TreeNode {
@@ -156,3 +187,14 @@ public class LongestUnivaluePath {
     }
 }
 ```
+
+
+## 分治
+
+!!! abstract "基于多项分支{==递归==}, 将复杂问题 {==拆分==} 为多个相似的子问题, 可以直接求解, 再将解 {==合并==}"
+
+### 典型应用
+
+- 快速排序
+- 归并排序
+- 傅立叶变换(快速傅立叶变换)
