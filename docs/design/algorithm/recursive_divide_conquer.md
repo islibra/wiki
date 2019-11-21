@@ -62,6 +62,34 @@ public class DivideLand {
 }
 ```
 
+```java tab="ArraySum"
+import java.util.Arrays;
+
+/**
+ * 使用递归进行数组求和
+ */
+public class ArraySum {
+
+    private int sum(int[] ary) {
+        int len = ary.length;
+        if (len == 0) {
+            return 0;
+        } else if (len == 1) {
+            return ary[len - 1];
+        } else {
+            return ary[len - 1] + sum(Arrays.copyOf(ary, len - 1));
+        }
+    }
+
+    public static void main(String args[]) {
+        ArraySum as = new ArraySum();
+
+        int[] ary = new int[]{9, 2, 5, 7, 4};
+        System.out.println(as.sum(ary));
+    }
+}
+```
+
 ### LeetCode
 
 ```java
@@ -195,6 +223,6 @@ public class LongestUnivaluePath {
 
 ### 典型应用
 
-- 快速排序
+- [快速排序](../sort/0x02_quick/)
 - 归并排序
 - 傅立叶变换(快速傅立叶变换)
