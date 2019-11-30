@@ -34,6 +34,12 @@ index-url = http://mirrors.aliyun.com/pypi/simple/
 trusted-host=mirrors.aliyun.com
 ```
 
+## 反编译
+
+[Easy Python Decompiler](https://sourceforge.net/projects/easypythondecompiler/)
+
+统一改名：`find ./ -name "*.pyc_dis" | awk -F "." '{print $2}' | xargs -i -t mv .{}.pyc_dis .{}.py`
+
 ## Start
 
 - 解释型语言
