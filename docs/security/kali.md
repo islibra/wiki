@@ -268,11 +268,5 @@ POC：
 #### token
 
 
-## 特征
-
-- BASE64：包含大小写字母数字+/，以%3D(==)结尾
-- SHA1：40位16进制字符串，每个16进制代表4位，40x4=160位
-
-
 !!! quote "参考链接"
     [Kali](http://mp.weixin.qq.com/mp/homepage?__biz=MzA4NDk5NTYwNw==&hid=11&sn=debd488756944bb3e22a10f608e13de6&scene=18#wechat_redirect)
