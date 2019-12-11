@@ -107,8 +107,14 @@ less file #滚动查看
 ### 计算文件值
 
 ```bash
+$ base64 xxx
+
 $ md5sum xxx
 c7c1d76b5c119aae6dc91b7417a46b01 xxx
 
-$ base64 xxx
+$ sha1sum xxx
+c03f6f6290aff09aa3c4b644dc31167477b8b759  xxx
+
+$ sha256sum xxx
+e7a41fef535a329073dfe013711b41cf8b0112f02fbac0e36470c477b66bff9e  xxx
 ```
