@@ -1,5 +1,7 @@
 # MongoDB
 
+DB --> collection --> document
+
 ## 命令行
 
 - 启动服务：`./mongod`
