@@ -36,9 +36,16 @@ trusted-host=mirrors.aliyun.com
 
 ## 反编译
 
-[Easy Python Decompiler](https://sourceforge.net/projects/easypythondecompiler/)
+### 方式一
 
-统一改名：`find ./ -name "*.pyc_dis" | awk -F "." '{print $2}' | xargs -i -t mv .{}.pyc_dis .{}.py`
+1. [Easy Python Decompiler](https://sourceforge.net/projects/easypythondecompiler/)
+1. 统一改名：`find ./ -name "*.pyc_dis" | awk -F "." '{print $2}' | xargs -i -t mv .{}.pyc_dis .{}.py`
+
+### 方式二
+
+1. `pip --proxy=http://l0025xxxx:pass%40word@proxy.xxx.com:8080 install uncompyle6`
+1. `uncompyle6 -o . func.pyc`
+
 
 ## Start
 
