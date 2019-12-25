@@ -1,22 +1,19 @@
----
-title: http响应头
----
+# http响应头
 
-# Content-Security-Policy
+## Content-Security-Policy
 
 CSP，通过白名单进行资源加载限制，防止XSS攻击。
 
-默认值Content-Security-Policy: default-src 'self'
+- 默认值Content-Security-Policy: default-src 'self'
+- 特殊值
+    - 'unsafe-inline'：允许执行页面内嵌的&lt;script>标签和事件监听函数
+    - 'unsafe-eval'：允许将字符串当作代码执行，比如使用eval、setTimeout、setInterval和Function等函数。
 
-特殊值  
-- 'unsafe-inline'：允许执行页面内嵌的&lt;script>标签和事件监听函数
-- 'unsafe-eval'：允许将字符串当作代码执行，比如使用eval、setTimeout、setInterval和Function等函数。
-
-## 示例代码
+### 示例代码
 
 在web.xml中增加filter：
 
-```xml
+```xml tab="web.xml"
     <filter>
         <filter-name>SecurityFilter</filter-name>
         <filter-class>com.test.filter.SecurityFilter</filter-class>
@@ -35,7 +32,7 @@ CSP，通过白名单进行资源加载限制，防止XSS攻击。
     </filter-mapping>
 ```
 
-```java
+```java tab="Filter"
 package com.test.filter;
 
 import java.io.IOException;
@@ -90,3 +87,17 @@ public class SecurityFilter implements Filter {
     }
 }
 ```
+
+
+## X-Frame-Options
+
+指示浏览器是否允许页面嵌套在`<frame>, <iframe>, <embed>, <object>`中, 从而避免clickjacking攻击
+
+> Content-Security-Policy HTTP 头中的 frame-ancestors 指令会替代这个非标准的 header。
+
+- X-Frame-Options: deny
+- X-Frame-Options: sameorigin
+- X-Frame-Options: allow-from https://example.com/
+
+
+!!! quote "参考链接: [MDN web docs](X-Frame-Options)"
