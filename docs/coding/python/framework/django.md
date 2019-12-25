@@ -29,6 +29,8 @@ mysite/
         views.py
 ```
 
+> 在mysite/settings.py中添加`ALLOWED_HOSTS = ['x.x.x.x']`
+
 ## 0x03 启动服务器
 
 `python manage.py runserver [ip:port]`
@@ -39,9 +41,9 @@ mysite/
 
 ## 0x05_URL
 
-```python tab="创建myapp/urls.py"
+```python tab="mysite/urls.py"
 from django.urls import path
-from . import views
+from myapp import views
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -68,7 +70,7 @@ urlpatterns = [
 
 ## 0x06 视图
 
-```python
+```python tab="myapp/views.py"
 from django.http import HttpResponse
 
 def index(request):
