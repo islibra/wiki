@@ -302,6 +302,8 @@ $foo = "10.0 pigs " + 1.0;        // $foo is float (11)
 ```
 
 ```java tab="Java"
+// char -> int
+int i = Character.getNumericValue(c);
 // 字符串转字符数组
 char[] cArray = s.toCharArray();
 ```
