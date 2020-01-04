@@ -62,6 +62,7 @@
 ## 名词解释
 
 - CRUD: Create, Retrieve, Update, Delete
+- IAM(Identity and Access Management): 认证(身份识别) + 鉴权(访问)
 - native: 原生的, 如native sql; cloud native
 
 
