@@ -37,6 +37,15 @@ $ systemctl restart docker
 
 ## 常用命令
 
+### 查看
+
+```bash
+# 查看正在运行的容器
+$ docker ps
+# 查看容器详细信息
+$ docker inspect 355b92f9c889
+```
+
 ```bash
 # 在当前目录由Dockerfile构建镜像
 docker build -t xxxname:v1.0 .
@@ -49,7 +58,6 @@ docker rmi b0f6bcd0a2a0  #删除已存在的镜像
 docker load < file.tar  #镜像导入
 docker tag b0f6bcd0a2a0 euleros:2.2.5  #为导入的镜像打标签
 
-docker ps  #查看正在运行的容器
 docker export b91d9ad83efa > file.tar  #将容器导出
 docker import file.tar  #将容器导入
 ```
