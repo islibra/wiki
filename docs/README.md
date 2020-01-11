@@ -63,7 +63,11 @@
 
 - CRUD: Create, Retrieve, Update, Delete
 - IAM(Identity and Access Management): 认证(身份识别) + 鉴权(访问)
-- native: 原生的, 如native sql; cloud native
+- native: 原生的, 如native sql
+    - Cloud Native: 在云环境下构建、运行、管理软件，充分利用云基础设施（IaaS）与平台服务（PaaS）。
+        - 架构特征：（微）服务化、弹性伸缩、分布式、高可用、多租户、自动化运维。
+        - 工程特征：DevOps研发模式、微服务持续交付、自动化工具链。
+        - 组织特征：全功能团队、AM架构团队、全栈工程师。
 
 
 ## 语录
