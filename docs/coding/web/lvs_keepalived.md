@@ -1,6 +1,11 @@
 # lvs_keepalived
 
-## 配置文件
+## 安装
+
+1. ipvsadm
+1. keepalived
+
+## keepalived配置文件
 
 ```
 global_defs {
