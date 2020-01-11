@@ -183,6 +183,117 @@ show Grants for 'kaka'@'10.155.123.55';
 + SCHEMATA 所有数据库及默认字符集
 
 
+## 日志
+
+### binlog
+
+记录所有表结构 **变更** 和数据 **修改** 的二进制日志，非SELECT SHOW
+
+- 索引: `.index`, 记录哪些日志文件正在被使用
+- 日志: `.00000*`, 记录所有非查询DDL和DML事件
+
+``` tab="my.cnf配置"
+log_bin：on  // 打开binlog日志
+log_bin_basename：/var/log/mysql/mysql-bin  // bin文件路径及名前缀, 如mysql-bin.000001
+log_bin_index：/var/log/mysql/mysql-bin.index  // bin文件index, 如mysql-bin.index
+
+// 刷盘配置
+binlog_cache_size: 二进制日志缓存部分的大小，默认值32k
+sync_binlog=[N]: 表示写缓冲（使用innodb表示事务提交）多少次，刷一次盘，默认值为0，由操作系统决定
+```
+
+#### 用途
+
+1. 删库后可以用来恢复
+2. master slave同步，主库有一个log dump线程，将binlog传给从库，从库有两个线程，一个I/O线程，一个SQL线程，I/O线程读取主库传过来的binlog内容并写入到relay log，SQL线程从relay log里面读取内容，写入从库的数据库。
+3. 审计
+
+#### 格式
+
+1. statement: 记录 **SQL语句**, 日志文件小，不准，如now(), uuid()
+    - 查看: `mysqlbinlog mysql-bin.000001`
+2. row: 推荐, 记录每行数据, 准，日志文件大
+    - 查看: `mysqlbinlog -vv mysql-bin.000001`
+3. mixed: 可能不一致
+
+
+---
+
+- error log: MySQL启停, 运行过程中的错误信息.
+- general log: 查询日志, 建立的客户端连接和执行的语句.
+- slow log: 执行时间超过long_query_time的查询和不使用索引的查询.
+- bin log: 所有更改数据的语句, 默认 **未启用**.
+    - ^^事务commit的时候, 1. 写入缓存中的日志^^, 记录与提交顺序有关.
+    - 先于redo log被记录.
+- relay log: 主从复制时使用的日志.
+
+!!! quote "参考链接"
+    - [研发应该懂的binlog知识（上）](https://mp.weixin.qq.com/s/al0twP0eF-_PHlAn0XjzMQ)
+    - [详细分析MySQL的日志(一)](https://www.cnblogs.com/f-ck-need-u/p/9001061.html)
+
+
+## InnoDB, 数据库引擎
+
+### 事务日志
+
+> InnoDB支持事务，MySQL自带的引擎MyISAM不支持事务
+
+crash-safe
+
+格式: id_logfile0, 固定大小, 如4个1GB, 循环写入
+
+> redo log和undo log都是用来恢复数据
+
+- redo log, 前滚, 记录数据库中每 **物理页** 的修改
+    - Write-Ahead Logging(WAL), 事务commit的时候, 向缓存中写入redo log prepare --> 提交动作 --> 写binlog --> redo log prepare fsync --> binlog fsync --> redo log commit
+    - 多个事务并发写入
+- undo log, 回滚
+
+???+ example "控制参数 innodb_flush_log_at_trx_commit"
+    - 1: 事务每次提交都会将log buffer中的日志写入os buffer并系统调用fsync()刷到log file on disk中.
+    - 0: 每秒将log buffer中的日志写入os buffer并系统调用fsync()刷到log file on disk中.
+    - 2: 每次提交将log buffer中的日志写入os buffer, 每秒系统调用fsync()刷到log file on disk中.
+
+???+ example "日志刷盘规则"
+    - commit
+    - 每秒
+    - log buffer已使用内存超过一半
+    - **checkpoint**: 会将buffer中的 **脏数据页** 和脏日志都刷到磁盘.
+
+!!! quote "参考链接: [MySQL 日志系统之 redo log 和 binlog](https://mp.weixin.qq.com/s/g-QHcctt_fOmJmQQI3ISOQ)"
+
+### LSN(log sequence number)
+
+8 Bytes, 存在于redo log和data page中, 通过两者比较, 恢复丢失数据.
+
+1. 修改data page buffer, 记录data_in_buffer_lsn
+1. 修改redo log buffer, 记录redo_log_in_buffer_lsn
+1. redo log file on disk, 记录redo_log_on_disk_lsn
+1. checkpoint脏页刷盘, 记录checkpoint_lsn, data_page_on_disk_lsn
+
+???+ quote "参考链接"
+    [详细分析MySQL事务日志(redo log和undo log)](https://juejin.im/entry/5ba0a254e51d450e735e4a1f)
+
+
+### 文件系统
+
+- datafile, 数据文件，划分为64个 **page**，默认非压缩表的page size为`16KB`，总共1M（一个Extent）。
+    - 主系统表空间文件`ibdata`。
+    - 用户创建表产生`ibd`文件，归属于独立的表空间tablespace（一般一个表空间一个文件）。
+
+- redo日志，默认以`512Bytes - 4KB`的 **block** 单位写入, `data`目录下`ib_logfile`开头的文件, 默认2个轮着写。
+    - log block header: 12 Bytes
+    - log block body: 492 Bytes
+    - log block tailer: 8 Bytes
+
+- undo tablespace文件。
+- 临时表空间ibtmp1。
+
+
+???+ quote "参考链接"
+    [MySQL · 引擎特性 · InnoDB 文件系统之文件物理结构](http://mysql.taobao.org/monthly/2016/02/01/)
+
+
 ## MySQL协议
 
 ### 基本数据类型
@@ -263,71 +374,3 @@ MySQL协议包被切分为最多2^24-1字节，每个分片携带包头。
 * sequence_id: 0x00
 * 命令类型：0x03
 * 命令：0x53 ...
-
-
-## 日志
-
-- error log: MySQL启停, 运行过程中的错误信息.
-- general log: 查询日志, 建立的客户端连接和执行的语句.
-- slow log: 执行时间超过long_query_time的查询和不使用索引的查询.
-- bin log: 所有更改数据的语句, 默认 **未启用**.
-    - ^^事务commit的时候, 1. 写入缓存中的日志^^, 记录与提交顺序有关.
-    - 先于redo log被记录.
-- relay log: 主从复制时使用的日志.
-
-???+ quote "参考链接"
-    [详细分析MySQL的日志(一)](https://www.cnblogs.com/f-ck-need-u/p/9001061.html)
-
-
-## InnoDB, 数据库引擎
-
-### 事务日志
-
-> 都是用来恢复数据.
-
-- redo log, 前滚, 记录数据库中每 **物理页** 的修改.
-    - ^^事务commit的时候, 2. 向缓存中写入redo log^^, 再执行提交动作.
-    - 多个事务并发写入.
-- undo log, 回滚
-
-???+ example "控制参数 innodb_flush_log_at_trx_commit"
-    - 1: 事务每次提交都会将log buffer中的日志写入os buffer并系统调用fsync()刷到log file on disk中.
-    - 0: 每秒将log buffer中的日志写入os buffer并系统调用fsync()刷到log file on disk中.
-    - 2: 每次提交将log buffer中的日志写入os buffer, 每秒系统调用fsync()刷到log file on disk中.
-
-???+ example "日志刷盘规则"
-    - commit
-    - 每秒
-    - log buffer已使用内存超过一半
-    - **checkpoint**: 会将buffer中的 **脏数据页** 和脏日志都刷到磁盘.
-
-### LSN(log sequence number)
-
-8 Bytes, 存在于redo log和data page中, 通过两者比较, 恢复丢失数据.
-
-1. 修改data page buffer, 记录data_in_buffer_lsn
-1. 修改redo log buffer, 记录redo_log_in_buffer_lsn
-1. redo log file on disk, 记录redo_log_on_disk_lsn
-1. checkpoint脏页刷盘, 记录checkpoint_lsn, data_page_on_disk_lsn
-
-???+ quote "参考链接"
-    [详细分析MySQL事务日志(redo log和undo log)](https://juejin.im/entry/5ba0a254e51d450e735e4a1f)
-
-
-### 文件系统
-
-- datafile, 数据文件，划分为64个 **page**，默认非压缩表的page size为`16KB`，总共1M（一个Extent）。
-    - 主系统表空间文件`ibdata`。
-    - 用户创建表产生`ibd`文件，归属于独立的表空间tablespace（一般一个表空间一个文件）。
-
-- redo日志，默认以`512Bytes - 4KB`的 **block** 单位写入, `data`目录下`ib_logfile`开头的文件, 默认2个轮着写。
-    - log block header: 12 Bytes
-    - log block body: 492 Bytes
-    - log block tailer: 8 Bytes
-
-- undo tablespace文件。
-- 临时表空间ibtmp1。
-
-
-???+ quote "参考链接"
-    [MySQL · 引擎特性 · InnoDB 文件系统之文件物理结构](http://mysql.taobao.org/monthly/2016/02/01/)
