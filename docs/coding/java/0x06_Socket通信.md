@@ -1,11 +1,6 @@
----
-title: NIO
-date: 2018-10-12 21:18:11
-categories: java
-tags:
----
+# 0x06_Socket通信
 
-# Socket通信
+## BIO
 
 示例代码（服务端）：
 
@@ -83,8 +78,7 @@ public class AaronClient {
 }
 ```
 
-
-# 多线程通信
+## 多线程
 
 示例代码（服务端）：
 
@@ -186,13 +180,11 @@ public class MyClient {
 ```
 
 
-# NIO
+## NIO
 
+### 核心要素
 
-## 核心要素
-
-
-### Buffer，缓冲区
+#### Buffer，缓冲区
 
 Buffer类型: Byte Char Int long short double float
 
@@ -214,7 +206,7 @@ Buffer类型: Byte Char Int long short double float
 > + clear()，清空缓冲区
 
 
-### Channel，通道
+#### Channel，通道
 
 chanel相对于input/outputstream流来说是双向的。
 
@@ -235,7 +227,7 @@ while(true){
 > 关闭ServerSocketChannel通道：`serverSocketChannel.close();`
 
 
-### Selector，选择器，通道管理器，选择器允许一个单独的线程来监视多个通道
+#### Selector，选择器，通道管理器，选择器允许一个单独的线程来监视多个通道
 
 > 创建并返回一个选择器实例：`Selector.open();`
 > 将通道与选择器绑定并注册一个OP_ACCEPT事件：`SelectionKey selectionKey = channel.register(selector,SelectionKey.OP_ACCEPT);`
@@ -288,11 +280,9 @@ selectionKey.attach(Object);
 Object anthorObj = selectionKey.attachment();
 ```
 
+### 示例代码
 
-## 示例代码
-
-
-### 服务端
+#### 服务端
 
 ```java
 import java.io.IOException;
@@ -386,8 +376,7 @@ public class MyNioServer {
 }
 ```
 
-
-### 客户端
+#### 客户端
 
 ```java
 import java.io.IOException;
@@ -460,4 +449,107 @@ public class MyNioClient {
 ```
 
 
-参考文献：[Java NIO详解](https://segmentfault.com/a/1190000012316621)
+!!! quote "参考链接：[Java NIO详解](https://segmentfault.com/a/1190000012316621)"
+
+
+## AIO
+
+!!! tip "AIO需要操作系统支持"
+
+### 核心类
+
++ AsynchronousChannelGroup
+
+    ```java
+    //使用线程池初始化AsynchronousChannelGroup
+    ExecutorService executorService = Executors.newFixedThreadPool(80);  //处理IO事件和触发CompletionHandler回调接口
+    AsynchronousChannelGroup channelGroup = AsynchronousChannelGroup.withThreadPool(executorService);
+    ```
+
++ AsynchronousServerSocketChannel
+
+    ```java
+    //使用group初始化server socket
+    AsynchronousServerSocketChannel serverChannel = AsynchronousServerSocketChannel.open(channelGroup);
+    setOption(SocketOption<T> name, T value)  //配置Socket参数
+    serverChannel.bind(new InetSocketAddress(ip, port), 100);  //backlog参数指定队列中挂起的连接的最大个数
+    ```
+
+    - 方法一、通过返回Future的get方法接收客户端请求
+
+        ```java
+        Future<AsynchronousSocketChannel> accept();
+        ```
+
+        ```java
+        while (true){
+            Future<AsynchronousSocketChannel> future = serverSocketChannel.accept();
+            AsynchronousSocketChannel socketChannel = null;
+            try {
+                socketChannel = future.get();
+                socketChannel.write(ByteBuffer.wrap("ssss".getBytes("UTF-8")));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        ```
+
+    - 方法二、通过回调方法接收客户端请求
+
+        ```java
+        <A> void accept(A attachment ,CompletionHandler<AsynchronousSocketChannel,? super A> handler)  
+        //CompletionHandler定义两个方法：
+        completed(V result , A attachment)  //参数：IO操作返回的对象AsynchronousSocketChannel， 发起IO操作时传入的附加参数
+        faild(Throwable exc, A attachment)  //参数：IO操作失败引发的异常或错误， 发起IO操作时传入的附加参数
+        ```
+
+        ```java
+        server.accept(null, new CompletionHandler<AsynchronousSocketChannel, Object>() {
+            final ByteBuffer buffer = ByteBuffer.allocate(1024);  
+
+            @Override  
+            public void completed(AsynchronousSocketChannel result, Object attachment) {  
+                System.out.println("waiting....");  
+                buffer.clear();  
+                try {  
+                    //把socket中的数据读取到buffer中  
+                    result.read(buffer).get();  
+                    buffer.flip();  
+                    System.out.println("Echo " + new String(buffer.array()).trim() + " to " + result);  
+
+                    //把收到的直接返回给客户端  
+                    result.write(buffer);  
+                    buffer.flip();  
+                } catch (InterruptedException e) {  
+                    e.printStackTrace();  
+                } catch (ExecutionException e) {  
+                    e.printStackTrace();  
+                } finally {  
+                    try {  
+                        //关闭处理完的socket，并重新调用accept等待新的连接  
+                        result.close();  
+                        server.accept(null, this);  
+                    } catch (IOException e) {  
+                        e.printStackTrace();  
+                    }  
+                }  
+            }  
+
+            @Override  
+            public void failed(Throwable exc, Object attachment) {  
+                System.out.print("Server failed...." + exc.getCause());  
+            }  
+        });
+        ```
+
++ AsynchronousSocketChannel
+    + connect()  用于连接到指定IP/端口的服务器
+    + read()
+    + write()
+
+
+## 框架
+
+!!! quote "参考链接"
+    - [再有人问你Netty是什么，就把这篇文章发给他](https://mp.weixin.qq.com/s?__biz=MzAxNjk4ODE4OQ==&mid=2247485182&idx=1&sn=f9e3fb858cd8dc6c91a7297aeab2c28a&chksm=9bed278cac9aae9ae2b6d80cb4a0adc4cc59888cdb9e4f6d9f5184787ac2cfb8149418f32a5b&scene=0&subscene=131&clicktime=1551314943&ascene=7&devicetype=android-26&version=2700033a&nettype=WIFI&abtest_cookie=BQABAAgACgALABIAEwAFAJ6GHgAjlx4AWpkeAMKZHgDZmR4AAAA%3D&lang=zh_CN&pass_ticket=OKuO82d079uqfErorTOpzk8hBVZcU%2FD07Zu1kqktASXD98Q6dc%2BBnDvT8sEUej0L&wx_header=1)
+    - [跟着狼哥学高性能框架Netty](https://mp.weixin.qq.com/s/nVqjSbocs4kFFz2pJqovhQ)

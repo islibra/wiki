@@ -1,4 +1,7 @@
-# Collection
+# 0x03_Collection
+
+![](assets/collection.jpg)
+
 
 - java.util.Collection<E>
     - AbstractCollection
@@ -24,7 +27,17 @@
 - Map
     - AbstractMap
         - HashMap: 根据键的hashCode存储数据, 应使用 **ConcurrentHashMap** 保证线程安全, 引入了分段锁, 并发 **优于Hashtable**
+            - **长度** 默认 **2的幂**(16)，key:hashcode() --> hash() --> indexFor(){ &len-1 } --> 存储下标，**按位与** 的时候分布均匀
             - LinkedHashMap
+            - HashMap采用链地址法解决哈希冲突
+                - JDK7
+                    - 使用了数组+链表的方式
+                    - 插入链表的头部，头插法
+                    - ReentrantLock + Segment + HashEntry
+                - JDK8
+                    - 使用了数组+链表+红黑树（超过8个）的方式
+                    - 插入链表的尾部，尾插法
+                    - synchronized + CAS + HashEntry + 红黑树
 
         - Hashtable: 遗留类, 继承自Dictionary, **线程安全**
         - TreeMap: 根据键 **排序**
@@ -42,4 +55,6 @@
 - Arrays
 
 
-!!! quote "参考链接: [Java集合List、Set、Map](https://mp.weixin.qq.com/s/he5d-RsifuqIN3dYc6yc9A)"
+!!! quote "参考链接"
+    - [Java集合List、Set、Map](https://mp.weixin.qq.com/s/he5d-RsifuqIN3dYc6yc9A)
+    - [HashMap和ConcurrentHashMap终于总结清楚了!](https://mp.weixin.qq.com/s/AX9ZgiAtJ88rPmE3qzt1tA)

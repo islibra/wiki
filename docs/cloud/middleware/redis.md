@@ -1,5 +1,61 @@
 # redis
 
+![](https://img.shields.io/badge/language-C-brightgreen.svg)
+
+- 内存+持久化
+- 读110000次/s, 写81000次/s
+- 原子型操作，支持事务
+
+## 安装启动
+
+启动: `redis-server /data/component/redis/redis-3.2.11/redis.conf`，需要改成daemonize
+
+授权登录:
+
+1. 连接的时候直接指定密码: `redis-cli -h 127.0.0.1 -p 6379 -a 123456`
+1. 连接后授权: `redis-cli -h 127.0.0.1 -p 6379`，`auth 123456`
+
+## 数据类型
+
+### String 512M
+
+SET GET MSET MGET SETEX生存时间 SETNX仅不存在时 INCR DECR INCRBY DECRBY
+
+### List
+
+LPUSH key value [value]添加到表头 LPUSHX LPOP RPUSH添加到表尾
+
+### Set
+
+SADD
+
+### SortedSet
+
+ZADD
+
+### Hash
+
+HSET key field value HGET HDEL HEXSITS HGETALL HKEYS HVALUES HLEN HMGET HMSET HINCRBY
+
+### Key
+
+## 事务
+
+!!! quote "参考链接"
+    - [Redis从入门到精通：初级篇](https://mp.weixin.qq.com/s/TrEcIW0DIgncpdQ00hAVSw)
+    - [Redis从入门到精通：中级篇](https://mp.weixin.qq.com/s/-qdjcKouRVfa5QtjCAZTMA)
+
+
+优化
+RDB dump
+save同步
+bgsave异步fork
+AOF binlog
+always fsync大于2秒AOF阻塞
+everysecond
+no
+https://mp.weixin.qq.com/s/ydFktr6TMmY3_BWjt3sIGQ
+
 Java客户端: [Jedis](https://github.com/xetorthio/jedis)
 
 ## Maven依赖

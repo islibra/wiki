@@ -32,6 +32,34 @@ Java应用 1:1 JVM实例 1:1 堆
 
 异常：OutOfMemoryError，堆中没有内存完成实例分配，并且堆无法再扩展。
 
+#### GC
+
+新生代(Eden8:From Survivor1:To Survivor1):老年代4
+
+##### 新生代
+
+频繁触发MinorGC
+
+- Eden
+- From Survivor: 上一次GC幸存者
+- To Survivor: 上一次MinorGC幸存者
+
+复制：
+
+1. eden,from复制到to，年龄+1
+1. 清空eden, from
+1. to->from
+
+##### 老年代
+
+年龄15->老年代
+
+MajorGC
+
+标记清除：扫描全量，回收没有标记的对象，产生碎片。
+
+大对象直接放入老年代，不足时OOM。
+
 ### 三、Java虚拟机栈
 
 Java **方法** 执行时，创建一个Stack Frame，用于存储 **局部变量** 、操作栈、动态链接、方法 **返回值** 等信息。
@@ -65,83 +93,71 @@ NIO中引入Channel和Buffer，可以使用Native函数库直接分配 **堆外�
     - [JVM调优：基本概念](https://mp.weixin.qq.com/s/iqgoKZOWz_RXxqclwoQlHg)
 
 
-# 对象访问
+## 对象访问
 
 ```java
 Object obj = new Object();
 ```
 
-如果在方法体中，`Object obj`在Java栈的本地变量表中，作为reference类型。
-`new Object()`在Java堆中形成一块存储Instance Data的结构化内存。
-在方法区中存放该对象 **类型数据** （对象类型、父类、实现的接口、方法等），在Java堆中包含能查找到这些对象类型数据的地址信息。
-+ 句柄方式：Java堆中划分出一块内存作为句柄池，reference中存储对象的句柄地址，句柄中包含对象 **实例数据** 和 **类型数据** 各自的地址。
-+ 指针方式：reference直接存储对象地址，在对象实例数据中包含对象 **类型数据** 的指针。
+如果在方法体中
+
+- `Object obj`在Java **栈** 的本地变量表中，作为reference类型。
+- `new Object()`在Java **堆** 中形成一块存储Instance Data的结构化内存。
+- 在方法区中存放该对象 **类型数据** （对象类型、父类、实现的接口、方法等），在Java堆中包含能查找到这些对象类型数据的地址信息。
+    + 句柄方式：Java堆中划分出一块内存作为句柄池，reference中存储对象的句柄地址，句柄中包含对象 **实例数据** 和 **类型数据** 各自的地址。
+    + 指针方式：reference直接存储对象地址，在对象实例数据中包含对象 **类型数据** 的指针。
 
 
-# JVM参数
+## JVM参数
 
-## 标准参数（-）
+### 标准参数（-）
 
--verbose:gc
--client 使用Client模式，启动速度快，运行时性能和内存管理效率低，用于开发调试
--server 使用Server模式，启动速度慢，运行时性能和内存管理效率高，用于生产环境
+- -verbose:gc
+- -client 使用Client模式，启动速度快，运行时性能和内存管理效率低，用于开发调试
+- -server 使用Server模式，启动速度慢，运行时性能和内存管理效率高，用于生产环境
 
+### 非标准参数（-X）
 
-## 非标准参数（-X）
+- -Xss128k 每个线程的栈大小。在相同的物理内存下，每个线程栈越小，可以生成更多线程，但受操作系统一个进程内的线程数限制。
+- -Xms20M Java堆初始值
+- -Xmx200M Java堆最大值（可以设置与-Xms相同，避免每次GC后重新分配内存）
+- -Xmn2g 新生代大小，推荐整个堆大小的3/8
 
--Xms20M Java堆初始值
--Xmx200M Java堆最大值（可以设置与-Xms相同，避免每次GC后重新分配内存）
--Xmn2g 新生代大小，推荐整个堆大小的3/8
--Xss128k 每个线程的栈大小。在相同的物理内存下，每个线程栈越小，可以生成更多线程，但受操作系统一个进程内的线程数限制。
+### 非稳定参数（-XX）
 
-
-## 非稳定参数（-XX）
-
--XX:NewSize=1024m 新生代初始值
--XX:MaxNewSize=1024m 新生代最大值
--XX:NewRatio=4 新生代（1个Eden、1个from Survivor和1个to Survivor）与老年代的比值为1:4
--XX:SurvivorRatio=4 新生代中2个Survivor和Eden的比值为2:4
--XX:PermSize=10M 方法区初始值
--XX:MaxPermSize=10M 方法区最大值
--XX:MaxDirectMemorySize=10M 直接内存
--XX:+UseParNewGC 设置新生代为并发收集
--XX:+UseConcMarkSweepGC CMS收集，即老年代为并发收集
--XX:ParallelGCThreads=20 并发收集线程数，建议与CPU（核）数相等
--XX:+HeapDumpOnOutOfMemoryError 内存溢出时dump内存快照。
--XX:HeapDumpPath=./java_pid.hprof Dump堆内存路径
--XX:+PrintGCDetails 每次GC时打印详细信息
+- -XX:NewSize=1024m 新生代初始值
+- -XX:MaxNewSize=1024m 新生代最大值
+- -XX:NewRatio=4 新生代（1个Eden、1个from Survivor和1个to Survivor）与老年代的比值为1:4
+- -XX:SurvivorRatio=4 新生代中2个Survivor和Eden的比值为2:4
+- -XX:PermSize=10M 方法区初始值
+- -XX:MaxPermSize=10M 方法区最大值
+- -XX:MaxDirectMemorySize=10M 直接内存
+- -XX:+UseParNewGC 设置新生代为并发收集
+- -XX:+UseConcMarkSweepGC CMS收集，即老年代为并发收集
+- -XX:ParallelGCThreads=20 并发收集线程数，建议与CPU（核）数相等
+- -XX:+HeapDumpOnOutOfMemoryError 内存溢出时dump内存快照。
+- -XX:HeapDumpPath=./java_pid.hprof Dump堆内存路径
+- -XX:+PrintGCDetails 每次GC时打印详细信息
 
 
+## 垃圾回收算法
+
+### 判断方法
+
+1. 引用计数: 主流JVM未使用, 无法处理循环引用
+1. 可达性分析: 以GCroot(虚拟机栈中，类静态变量，常量，JNI Native方法引用的对象)作为起始点, 无任何引用链
+
+### 垃圾收集算法
+
+1. 标记清除
+1. 复制
+1. 标记整理
+1. 分代收集
 
 
-GC
-堆(8:1:1):4
-新生代（Eden频繁触发minorGC, from survivor上一次GC幸存者, to survivor上一次minorGC幸存者）
-复制：eden,from复制到to，年龄+1，to->from
-年龄15->老年代
-老年代MajorGC
-标记清除：扫描全量，回收没有标记的对象，产生碎片。
-大对象直接放入老年代，不足时OOM。
-方法区
-永久区->本地内存，非JVM
-
-
-
-
-概念
-https://mp.weixin.qq.com/s/eJSkeDh9JXXJz8_4uMwnRw
-内存区
-https://mp.weixin.qq.com/s/R8ihNFGZmKtiBxIO8oTdQw
-算法
-引用计数：无法处理循环引用
-可达性分析：到GCroot(栈中，类静态变量，常量，JNI Native方法引用的对象)
-垃圾收集算法
-标记清除
-复制
-标记整理
-分代收集
-https://mp.weixin.qq.com/s/1H-rPnSj8oagZ_0CYyqXwg
-垃圾收集器
-https://mp.weixin.qq.com/s/Et-iAwf6L8zx6R8-ILutJg
-实战
-https://mp.weixin.qq.com/s/eRPTr7AazXbJ0bg78uKwGg
+!!! quote "参考链接"
+    - [JVM概念简介](https://mp.weixin.qq.com/s/eJSkeDh9JXXJz8_4uMwnRw)
+    - [JVM运行时内存](https://mp.weixin.qq.com/s/R8ihNFGZmKtiBxIO8oTdQw)
+    - [JVM算法简介](https://mp.weixin.qq.com/s/1H-rPnSj8oagZ_0CYyqXwg)
+    - [JVM垃圾收集器](https://mp.weixin.qq.com/s/Et-iAwf6L8zx6R8-ILutJg)
+    - [JVM调优实战](https://mp.weixin.qq.com/s/eRPTr7AazXbJ0bg78uKwGg)
