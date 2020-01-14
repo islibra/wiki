@@ -4,6 +4,11 @@
 
 - 内存+持久化
 - 读110000次/s, 写81000次/s
+
+    > RDS, 16U32G, 纯读40322QPS, 读写21756QPS
+
+    > DDM, 16U16G, 纯读40000QPS, 读写20000QPS
+
 - 原子型操作，支持事务
 
 ## 安装启动
@@ -41,20 +46,45 @@ HSET key field value HGET HDEL HEXSITS HGETALL HKEYS HVALUES HLEN HMGET HMSET HI
 
 ## 事务
 
+1. MULTI: 标记事务块开始
+1. EXEC: 执行所有事务块内的命令
+
+    > 如果key被WATCH, 且被改动, 则EXEC事务被打断
+
+1. DISCARD: 取消事务
+1. WATCH: 监视key
+1. UNWATCH: 取消WATCH
+
+## 持久化
+
+### RDB
+
+dump快照
+
+1. save, 同步操作, 阻塞redis
+1. bgsave, 调用Linux fork(), 异步操作
+1. 自动保存
+
+### AOF
+
+binlog, 每个请求记录日志
+
+1. always, 每条命令都写入缓冲区, 再fsync()写入硬盘, fsync()大于2秒AOF阻塞
+1. everysecond, 每秒进行一次fsync()
+1. no, 由操作系统决定什么时候刷新硬盘
+
+AOF重写减小文件体积
+
+- bgrewriteaof(类似bgsave)
+- AOF重写配置(类似RDB自动保存)
+
+通过读取服务器当前数据库状态实现
+
 !!! quote "参考链接"
     - [Redis从入门到精通：初级篇](https://mp.weixin.qq.com/s/TrEcIW0DIgncpdQ00hAVSw)
     - [Redis从入门到精通：中级篇](https://mp.weixin.qq.com/s/-qdjcKouRVfa5QtjCAZTMA)
+    - [Redis 高性能缓存解密](https://mp.weixin.qq.com/s/ydFktr6TMmY3_BWjt3sIGQ)
 
-
-优化
-RDB dump
-save同步
-bgsave异步fork
-AOF binlog
-always fsync大于2秒AOF阻塞
-everysecond
-no
-https://mp.weixin.qq.com/s/ydFktr6TMmY3_BWjt3sIGQ
 
 Java客户端: [Jedis](https://github.com/xetorthio/jedis)
 
