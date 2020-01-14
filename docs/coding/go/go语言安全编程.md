@@ -322,15 +322,181 @@ f, err := os.OpenFile("/opt/limit.txt", os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0600
 
 ### 文件路径验证前标准化
 
-参见[上传下载](../../../../paas/icsl/%E5%B8%B8%E7%94%A8%E6%94%BB%E5%87%BB%E5%91%BD%E4%BB%A4/#_12)
+!!! example "go语言校验方法绕过"
+    ```go
+    //测试使用strings.HasSuffix库方法判断文件类型
+    fmt.Println(strings.HasSuffix("hello.zip", ".zip"))  //true
+    fmt.Println(strings.HasSuffix("hello.zip.sh", ".zip"))  //false
+    fmt.Println(strings.HasSuffix("hello.sh;x.zip", ".zip"))  //true绕过
+    fmt.Println(strings.HasSuffix("hello.sh%00x.zip", ".zip"))  //true绕过
+    ```
+
+!!! example "go语言代码示例"
+    ```go tab="拼接目录路径"
+    //获取当前目录路径
+    pwd, _ := os.Getwd()
+    fmt.Println(pwd)
+    //拼接目录路径
+    userDir := filepath.Join(pwd, "tmp/upload", "userId")
+    fmt.Println(userDir)
+    ```
+
+    ```go tab="标准化文件路径"
+    import (
+        "path/filepath"
+    )
+
+    //返回绝对路径，删除目录跨越，当前目录/home/xxx/go/src
+    fmt.Println(filepath.Abs("/home/xxx/go/src/../../main.go"))  ///home/xxx/main.go
+    fmt.Println(filepath.Abs("../../main.go"))  ///home/xxx/main.go
+
+    //测试使用filepath.Clean库方法标准化文件路径
+    fmt.Println(filepath.Clean("../../hello.txt"))  //..\..\hello.txt
+    fmt.Println(filepath.Clean("/tmp/upload/dir/../../hello.txt"))  //\tmp\hello.txt
+    ```
+
+    ```go tab="验证是否在安全目录下"
+    import (
+        "regexp"
+    )
+
+    //验证是否在安全目录下（文件及其所有上层目录属主为当前用户或root，且其他用户无写权限）
+    pattern := `^/home/xxx`  //正则表达式
+    reg := regexp.MustCompile(pattern)
+    fmt.Println(reg.MatchString("/home/xxx/test1.sh"))  //true
+    fmt.Println(reg.MatchString("/tmp/test2.sh"))  //false
+    ```
 
 ### 避免在共享目录操作文件
 
-参见[上传下载](../../../../paas/icsl/%E5%B8%B8%E7%94%A8%E6%94%BB%E5%87%BB%E5%91%BD%E4%BB%A4/#_12)
+!!! example "推荐的做法"
+    1. 文件路径标准化
+    1. 验证是否在安全目录下
+    1. 判断是否为符号链接
+    ```go
+    import (
+        "fmt"
+        "os"
+    )
+
+    //获取文件的FileInfo
+    finfo, err := os.Lstat("/home/islibra/go/src/linktry")
+    if err != nil {
+        fmt.Println("err")
+        return
+    }
+    if finfo.Mode()&os.ModeSymlink != 0 {  //判断是否为符号链接
+        fmt.Println("soft link!")
+        return
+    }
+    //操作文件
+    f, err := os.Open("/home/islibra/go/src/realtry")
+    if err != nil {
+        fmt.Println("err")
+        return
+    }
+    defer f.Close()
+    ```
 
 ### 安全解压
 
-参见[上传下载](../../../../paas/icsl/%E5%B8%B8%E7%94%A8%E6%94%BB%E5%87%BB%E5%91%BD%E4%BB%A4/#_12)
+!!! example "go语言代码示例"
+    ```go tab="错误的做法"
+    import (
+        "archive/zip"
+    )
+
+    //打开压缩包
+    rc, err := zip.OpenReader(zipfile)
+    //...
+    //遍历压缩包内的目录和文件
+    for _, file := range rc.File {
+        irc, err := file.Open()
+        //...
+        //拼装解压路径
+        var targetpath = filepath.Join(destpath, file.Name)
+
+        //如果是目录则创建，如果是文件则复制
+        if file.FileInfo().IsDir() {
+            os.MkdirAll(targetpath, file.Mode())  //错误1：直接将拼装路径传给MkdirAll()
+        } else {
+            f, err := os.OpenFile(targetpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, file.Mode())
+            //...
+            wt, err := io.Copy(f, irc)  //错误2：直接拷贝流中数据
+            //...
+        }
+    }
+    ```
+
+    ```go tab="推荐的做法"
+    import (
+        "archive/zip"
+    )
+
+    const TOO_MANY_FILE int = 1024
+    const BUFSIZE int = 1024
+    const TOOBIG int = 0x6400000  //100M
+
+    //打开压缩包
+    rc, err := zip.OpenReader(zipfile)
+    //...
+    //校验1：文件数量超过1024
+    if len(rc.File) > TOO_MANY_FILE {
+        return
+    }
+    //遍历压缩包内的目录和文件
+    for _, file := range rc.File {
+        irc, err := file.Open()
+        //...
+        //拼装解压路径
+        var targetpath = filepath.Join(destpath, file.Name)
+
+        //如果是目录则创建，如果是文件则复制
+        if file.FileInfo().IsDir() {
+            os.MkdirAll(targetpath, file.Mode())  //校验2：这里应该校验目录名是否为..
+        } else {
+            f, err := os.OpenFile(targetpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, file.Mode())
+            //...
+            wt, err := bufferCopy(f, irc)  //校验3：通过缓冲区拷贝文件
+            //...
+            //校验4：这里还要校验总的文件大小，防止将大文件分割为小文件
+        }
+    }
+
+    func bufferCopy(dst io.Writer, src io.Reader) (written int64, err error) {
+        buf := make([]byte, BUFSIZE)
+        for {
+            nr, er := src.Read(buf)
+            if nr > 0 {
+                //校验3：判断文件大小是否超限
+                if written > TOOBIG {
+                    err = error.New("too big!")
+                    break
+                }
+                nw, ew := dst.Write(buf[0:nr])
+                if nw > 0 {
+                    written += int64(nw)  //记录已写入数据量
+                }
+                if ew != nil {
+                    err = ew
+                    break
+                }
+                if nr != nil {
+                    err = io.ErrShortWrite
+                    break
+                }
+            }
+            if er == io.EOF {
+                break
+            }
+            if er != nil {
+                err = er
+                break
+            }
+        }
+        return written, err
+    }
+    ```
 
 ## 序列化和反序列化
 
