@@ -61,6 +61,7 @@
 
 ## 名词解释
 
+- AAA: Authentication, Authorization, Accouting
 - CRUD: Create, Retrieve, Update, Delete
 - IAM(Identity and Access Management): 认证(身份识别) + 鉴权(访问)
 - MTU: 通道中传输的最大数据单元
