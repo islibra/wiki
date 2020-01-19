@@ -68,7 +68,7 @@ print(book["milk"])
 
 ## LeetCode
 
-```java
+```java tab="136. 只出现一次的数字"
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -116,6 +116,64 @@ public class OnlyOneNum {
         int[] nums = {4, 1, 2, 1, 2};
         OnlyOneNum oon = new OnlyOneNum();
         System.out.println(oon.singleNumber(nums));
+    }
+}
+```
+
+```java tab="202. 快乐数"
+import java.util.HashSet;
+
+/**
+ * 202. 快乐数
+ * 编写一个算法来判断一个数是不是“快乐数”。
+ * 一个“快乐数”定义为：对于一个正整数，每一次将该数替换为它每个位置上的数字的平方和，然后重复这个过程直到这个数变为 1，也可能是无限循环但始终变不到 1。如果可以变为 1，那么这个数就是快乐数。
+ *
+ * 示例: 
+ * 输入: 19
+ * 输出: true
+ *
+ * 解释:
+ * 12 + 92 = 82
+ * 82 + 22 = 68
+ * 62 + 82 = 100
+ * 12 + 02 + 02 = 1
+ *
+ * 来源：力扣（LeetCode）
+ * 链接：https://leetcode-cn.com/problems/happy-number
+ * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+ */
+public class HappyNum {
+
+    public int compute(int input) {
+        int result = 0;
+        // 将数字转换成字符串
+        String s = String.valueOf(input);
+        // 将字符串拆分成字符数组
+        char[] cArray = s.toCharArray();
+        // 将字符数组转换回数字
+        for (char c : cArray) {
+            int i = Character.getNumericValue(c);
+            result += Math.pow(i, 2);
+        }
+        return result;
+    }
+
+    public boolean isHappy(int n) {
+        HashSet set = new HashSet();
+        int result = compute(n);
+        while (result != 1) {
+            if (set.contains(result)) {
+                return false;
+            }
+            set.add(result);
+            result = compute(result);
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        HappyNum happyNum = new HappyNum();
+        System.out.println(happyNum.isHappy(19));
     }
 }
 ```
