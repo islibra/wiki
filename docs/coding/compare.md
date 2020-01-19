@@ -304,6 +304,8 @@ $foo = "10.0 pigs " + 1.0;        // $foo is float (11)
 ```java tab="Java"
 // char -> int
 int i = Character.getNumericValue(c);
+// int -> String
+String s = String.valueOf(i);
 // 字符串转字符数组
 char[] cArray = s.toCharArray();
 ```
@@ -859,6 +861,11 @@ cout << greeting << endl;
 char str1[10];
 strcpy(str1, greeting);
 cout << str1 << endl;
+```
+
+```java tab="Java"
+// 求平方
+int result = Math.pow(i, 2);
 ```
 
 ## 规范
