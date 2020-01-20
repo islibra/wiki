@@ -52,6 +52,7 @@
 
 ### 实用
 
+- [Java 8 API](https://docs.oracle.com/javase/8/docs/api/index.html)
 - kindle传书：<https://mp.weixin.qq.com/s/Sag8vLmmLbAs47aIVF3rnQ>
 
 ### 大咖
