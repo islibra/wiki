@@ -18,3 +18,70 @@
 - 队列中的元素为链表，连接到起点
 
 !!! note "时间复杂度为 **O(V+E)**"
+
+```java
+package search;
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+/**
+ * 101. 对称二叉树
+ *
+ * [9,-42,-42,null,76,76,null,null,13,null,13]
+ * false
+ */
+public class SymmetricBinTree {
+
+    public boolean isSymmetric(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        // 方法一、递归
+        // return isMirror(root.left, root.right);
+        // 方法二、BFS
+        // 将左右孩子加入队列
+        Queue queue = new LinkedList();
+        queue.add(root.left);
+        queue.add(root.right);
+        while (!queue.isEmpty()) {
+            // 获取2个元素
+            TreeNode f = (TreeNode) queue.poll();
+            TreeNode s = (TreeNode) queue.poll();
+            if (f == null && s == null) {
+                return true;
+            }
+            if (f == null || s == null || f.val != s.val) {
+                return false;
+            }
+            queue.offer(f.left);
+            queue.offer(s.right);
+            queue.offer(f.right);
+            queue.offer(s.left);
+        }
+        return true;
+    }
+
+    public boolean isMirror(TreeNode left, TreeNode right) {
+        if (left == null && right == null) {
+            return true;
+        }
+        if (left == null || right == null) {
+            return false;
+        }
+        return left.val == right.val && isMirror(left.left, right.right) && isMirror(left.right, right.left);
+    }
+
+    public static void main(String args[]) {
+        TreeNode root = new TreeNode(1);
+        root.left = new TreeNode(2);
+        root.right = new TreeNode(2);
+        root.left.left = new TreeNode(3);
+        root.left.right = new TreeNode(4);
+        root.right.left = new TreeNode(4);
+        root.right.right = new TreeNode(3);
+        SymmetricBinTree sbt = new SymmetricBinTree();
+        System.out.println(sbt.isSymmetric(root));
+    }
+}
+```
