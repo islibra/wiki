@@ -5,11 +5,11 @@
 - 顶点vertice
 - 边edge
 
-使用 **散列表** 存储，key为所有顶点，value为该顶点所有邻居的数组。
+使用 **散列表** 存储，key为所有顶点，value为该顶点所有邻居的 **数组**。
 
 ## 广度优先搜索
 
-!!! abstract "breadth-first search(BFS), 解决 **无权图** 的最短路径问题, 计算A到B有几跳"
+!!! abstract "breadth-first search(BFS), 解决 **无权图** 的最短路径问题, 计算A到B有几跳, **最少换乘**"
 
 使用 **队列** 广度优先搜索，先将第一层放入队列，弹出第一个元素判断，再将该顶点所有邻居放入队列，若队列为空，即未找到元素。
 
@@ -28,8 +28,31 @@ import java.util.Queue;
 /**
  * 101. 对称二叉树
  *
- * [9,-42,-42,null,76,76,null,null,13,null,13]
- * false
+ * 给定一个二叉树，检查它是否是镜像对称的。
+ * 例如，二叉树 [1,2,2,3,4,4,3] 是对称的。
+ *
+ *     1
+ *    / \
+ *   2   2
+ *  / \ / \
+ * 3  4 4  3
+ *
+ * 但是下面这个 [1,2,2,null,3,null,3] 则不是镜像对称的:
+ *
+ *     1
+ *    / \
+ *   2   2
+ *    \   \
+ *    3    3
+ *
+ * [9,-42,-42,null,76,76,null,null,13,null,13] >> false
+ *
+ * 说明:
+ * 如果你可以运用递归和迭代两种方法解决这个问题，会很加分。
+ *
+ * 来源：力扣（LeetCode）
+ * 链接：https://leetcode-cn.com/problems/symmetric-tree
+ * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
  */
 public class SymmetricBinTree {
 
@@ -49,7 +72,7 @@ public class SymmetricBinTree {
             TreeNode f = (TreeNode) queue.poll();
             TreeNode s = (TreeNode) queue.poll();
             if (f == null && s == null) {
-                return true;
+                continue;
             }
             if (f == null || s == null || f.val != s.val) {
                 return false;
