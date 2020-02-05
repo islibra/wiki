@@ -103,6 +103,27 @@ echo $TMOUT  #查看是否生效
 
 参考：[https://www.cnblogs.com/enjoycode/p/5022607.html](https://www.cnblogs.com/enjoycode/p/5022607.html)
 
+### 使用ssh证书登录
+
+1. 客户端生成证书和私钥`ssh-keygen -t rsa`, 私钥设置口令, 生成路径: `C:\Users\xxx\.ssh\id_rsa, id_rsa.pub`
+1. 将公钥上传到服务器
+1. 配置sshd_config
+
+    ```
+    # 开启证书登录
+    RSAAuthentication yes
+    PubkeyAuthentication yes
+    # 将id_rsa.pub内容拷贝到authorized_keys
+    AuthorizedKeysFile %h/.ssh/authorized_keys
+    # 禁用密码登录
+    PasswordAuthentication no
+    ```
+
+1. 重启SSH: `/etc/init.d/ssh restart`
+1. 客户端登录: `ssh -i /xxx/.ssh/id_rsa xxx@<ssh_server_ip>`
+
+!!! quote "参考链接: [id_rsa id_pub 公钥与私钥](https://blog.csdn.net/diyxiaoshitou/article/details/52471097)"
+
 
 ## sftp
 
