@@ -72,6 +72,22 @@
         - 工程特征：DevOps研发模式、微服务持续交付、自动化工具链。
         - 组织特征：全功能团队、AM架构团队、全栈工程师。
 
+- Underlay: 传统单层网络, 所有转发行为由控制器决定, 通过OpenFlow协议或BGP协议将转发表项下发给转发器
+- Overlay: 在Underlay网络上叠加逻辑网络, 转发器不支持OpenFlow或BGP协议, 需要使用隧道技术, 在传统网络上通过路由协议打通各节点, 但是在服务器接入点, 采用隧道技术将数据报文进行封装或解封装
+
+    > 具有独立的控制平面和转发平面
+
+    - 网络Overlay
+        - Transparent Interconnection of Lots of Links(TRILL)
+        - Network Virtualization using Generic Routing Encapsulation(NVGRE)
+        - Stateless Transport Tunneling Protocol(STT)
+        - Virtual eXtensible LAN(VxLAN)
+        
+    - 主机Overlay
+    - 混合Overlay
+
+!!! quote "参考链接: [数据中心网络里的Underlay和Overlay](https://mp.weixin.qq.com/s?src=3&timestamp=1581759978&ver=1&signature=mFSxihVY3mTo7V4YJDaCGTIL0x7hCNcYJkO8qSuYCXsSSrSSMlYzC21wbq5FDBZ7EvO2wU*ITrx60MI7pX7BxSCpHY2h1fJmeg*mpK9EUepQFtg7mDINnwCQxZLF9IuKi37xcEpGED0i7z9m9zhFG65C6VQuW*l3SZvTBXFbcmo=)"
+
 
 ## 语录
 
