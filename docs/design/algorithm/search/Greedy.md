@@ -31,7 +31,6 @@
 - KTHREE: OR, NV, CA
 - KFOUR: NV, UT
 - KFIVE: CA, AZ
-- ...
 
 每个广播台覆盖的区域可能重叠，如何找出覆盖所有集合(**限制条件**)的最少(**期望**)广播台。
 
@@ -39,12 +38,88 @@
 
 每次查找与 **剩余集合** {==交集最多==}的 **广播台**(**局部最优解**)
 
-- states_needed = set[]
-- stations = {station["kone"] = set[], station["ktwo"] = set[]}
-- final_stations = set[]
-- while states_needed is not empty
-    - for stations
-        - best_station, states_covered = MAX(states_needed & states_instation)
+```java
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+public class Greedy {
+
+    public static void main(String[] args) {
+        // 要覆盖的所有州
+        Set<String> statesNeeded = new HashSet<>();
+        statesNeeded.add("mt");
+        statesNeeded.add("wa");
+        statesNeeded.add("or");
+        statesNeeded.add("id");
+        statesNeeded.add("nv");
+        statesNeeded.add("ut");
+        statesNeeded.add("ca");
+        statesNeeded.add("az");
+        System.out.println(statesNeeded);
+
+        // 广播台的覆盖能力
+        Map<String, Set<String>> stations = new HashMap<>();
+        Set<String> kone = new HashSet<>();
+        kone.add("id");
+        kone.add("nv");
+        kone.add("ut");
+        stations.put("kone", kone);
+        Set<String> ktwo = new HashSet<>();
+        ktwo.add("wa");
+        ktwo.add("id");
+        ktwo.add("mt");
+        stations.put("ktwo", ktwo);
+        Set<String> kthree = new HashSet<>();
+        kthree.add("or");
+        kthree.add("nv");
+        kthree.add("ca");
+        stations.put("kthree", kthree);
+        Set<String> kfour = new HashSet<>();
+        kfour.add("nv");
+        kfour.add("ut");
+        stations.put("kfour", kfour);
+        Set<String> kfive = new HashSet<>();
+        kfive.add("ca");
+        kfive.add("az");
+        stations.put("kfive", kfive);
+
+        // 最终选择的广播台
+        Set<String> finalStations = new HashSet<>();
+
+        // 贪婪算法
+        while (!statesNeeded.isEmpty()) {
+            String maxStation = null;
+            Set<String> statesCovered = new HashSet<>();
+
+            // 遍历所有剩余广播台
+            Set<String> keys = stations.keySet();
+            for (String key : keys) {
+                Set<String> states = stations.get(key);
+
+                // 获取交集
+                Set<String> mixed = new HashSet<>();
+                mixed.addAll(statesNeeded);
+                mixed.retainAll(states);
+
+                // 找到覆盖更多的广播台
+                if (mixed.size() > statesCovered.size()) {
+                    maxStation = key;
+                    statesCovered.clear();
+                    statesCovered.addAll(mixed);
+                }
+            }
+
+            finalStations.add(maxStation);
+            stations.remove(maxStation);
+            statesNeeded.removeAll(statesCovered);
+        }
+
+        System.out.println(finalStations);
+    }
+}
+```
 
 ## 0-1背包问题
 
