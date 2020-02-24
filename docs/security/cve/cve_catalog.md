@@ -1,5 +1,12 @@
 # cve_catalog
 
+## Apache Tomcat
+
+### Apache Tomcat服务器存在文件包含和读取漏洞
+
+1. 启动Tomcat, 开启8009端口: <https://github.com/0nise/CVE-2020-1938>
+1. 使用Python2.7执行poc: <https://github.com/YDHCUI/CNVD-2020-10487-Tomcat-Ajp-lfi>
+
 ## Fastjson
 
 ### 【漏洞预警】Fastjson远程拒绝服务漏洞安全预警通告
