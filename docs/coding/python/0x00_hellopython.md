@@ -2,6 +2,18 @@
 
 ## 安装
 
+### Windows
+
+1. 安装Python3
+1. 修改`C:\Users\xxx\AppData\Local\Programs\Python\Python37`下的python.exe为python3.exe, 修改`\Scripts`下的pip.exe为pip_bak.exe
+1. 将两个路径添加到path
+1. 安装Python2
+1. 修改`C:\Python27`下的python.exe为python2.exe, 修改`\Scripts`下的pip.exe为pip_bak.exe
+1. 将两个路径添加到path
+1. 打开cmd, `python2 -V`, `python3 -V`
+
+### Linux
+
 下载[源码包](https://www.python.org/ftp/python/3.7.2/Python-3.7.2.tgz)，解压，执行  
 ```bash
 ./configure
