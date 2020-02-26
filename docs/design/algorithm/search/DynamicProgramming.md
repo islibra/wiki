@@ -116,6 +116,60 @@ public class DynamicProgramming {
 
 !!! tip "最终答案不一定在右下角, 因此需要记录最长值"
 
+```java
+public class LongestCommonSubstring {
+
+    public static void main(String args[]) {
+        String srcStr = "FISH";
+        //String dstStr = "HISH";
+        //String dstStr = "VISTA";
+        String dstStr = "HSHEL";
+        char[] srcChars = srcStr.toCharArray();
+        char[] dstChars = dstStr.toCharArray();
+
+        // 创建表格
+        int column = srcStr.length();
+        int row = dstStr.length();
+        int[][] table = new int[row][column];
+
+        int maxi = 0;
+        int maxj = 0;
+        int maxValue = 0;
+
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
+
+                table[i][j] = 0;
+
+                // 字符相同
+                if (dstChars[i] == srcChars[j]) {
+                    // 第一行或第一列
+                    if (i == 0 || j == 0) {
+                        table[i][j] = 1;
+                    } else {
+                        table[i][j] = table[i - 1][j - 1] + 1;
+                    }
+
+                    if (table[i][j] > maxValue) {
+                        maxValue = table[i][j];
+                        maxi = i;
+                        maxj = j;
+                    }
+                }
+            }
+        }
+
+        System.out.println(maxi);
+        System.out.println(maxj);
+        System.out.println(maxValue);
+        for (int k = maxValue - 1; k >= 0; k--) {
+            System.out.print(srcChars[maxj - k]);
+        }
+        System.out.println();
+    }
+}
+```
+
 ## LongestCommonSequence最长公共子序列（不连续）
 
 行列值不同为上左取最大，相同为`cell[i-1][j-1] + 1`
