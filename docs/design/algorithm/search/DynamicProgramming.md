@@ -172,6 +172,9 @@ public class LongestCommonSubstring {
 
 ## LongestCommonSequence最长公共子序列（不连续）
 
-行列值不同为上左取最大，相同为`cell[i-1][j-1] + 1`
+- FOSH <> FISH = FSH
+- FOSH <> FORT = FO
+
+公式: 行列值不同为上左取最大，相同为`cell[i-1][j-1] + 1`
 
 应用：DNA测序，git diff，论文查重
