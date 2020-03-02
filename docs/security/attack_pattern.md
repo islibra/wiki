@@ -207,9 +207,9 @@ if(token != null && token.equals(req_token)) {
     - SOAP接口, 如Apache CXF或axis实现的WebService接口
 
 1. 是否存在漏洞
-    
+   
 - 检查poi-x.x.jar是否为3.10.1之前的版本
-    
+  
 1. 本地启动 **http服务**: `python -m http.server 8888 --bind 192.168.1.1`
 1. 使用WinRAR打开xlsx文件, 编辑[Content_Types].xml
     1. 是否支持解析内部实体(未报错)
@@ -709,6 +709,7 @@ public class OSi {
 
 1. 调用`eval()`, 验证POC: `__import__(%27os%27).system(%27touch%20/tmp/hackkk.sh%27)`
 1. 自定义模块路径`sys.path.append("xxx")`可控, 导入模块名称`__import__("xxx")`可控
+1. tar --to-command
 
 ##### 格式化字符串漏洞
 
