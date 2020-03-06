@@ -708,6 +708,7 @@ public class OSi {
 #### Python
 
 1. 调用`eval()`, 验证POC: `__import__(%27os%27).system(%27touch%20/tmp/hackkk.sh%27)`
+1. subprocess.Popen(cmd, shell=True, ...)
 1. 自定义模块路径`sys.path.append("xxx")`可控, 导入模块名称`__import__("xxx")`可控
 1. tar --to-command
 
