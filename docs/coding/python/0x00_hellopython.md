@@ -38,13 +38,25 @@ Done!
 
 ## 配置pip源
 
+### Windows
+
+在`C:\Users\xxx`创建`pip\pip.ini`
+
+```
+[global]
+trusted-host=xxx
+index-url=xxx
+```
+
+### Linux
+
 ```bash
 $ vim ~/.pip/pip.conf
 [global]
-index-url = http://mirrors.aliyun.com/pypi/simple/
-[install]
 trusted-host=mirrors.aliyun.com
+index-url = http://mirrors.aliyun.com/pypi/simple/
 ```
+
 
 ## 反编译
 
