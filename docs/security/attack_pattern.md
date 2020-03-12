@@ -1,5 +1,7 @@
 # attack_pattern
 
+!!! abstract "[OWASP 测试指南 4.0](https://kennel209.gitbooks.io/owasp-testing-guide-v4/content/zh/index.html)"
+
 ## 特征
 
 - BASE64：包含大小写字母数字+/，以%3D(==)结尾
@@ -207,9 +209,9 @@ if(token != null && token.equals(req_token)) {
     - SOAP接口, 如Apache CXF或axis实现的WebService接口
 
 1. 是否存在漏洞
-   
+
 - 检查poi-x.x.jar是否为3.10.1之前的版本
-  
+
 1. 本地启动 **http服务**: `python -m http.server 8888 --bind 192.168.1.1`
 1. 使用WinRAR打开xlsx文件, 编辑[Content_Types].xml
     1. 是否支持解析内部实体(未报错)
@@ -483,7 +485,7 @@ public interface UserMapper {
         ```java tab="Java"
         List<User> getUserListSortBy(@Param("sortBy") String sortBy);
         ```
-    
+
         ```xml tab="xml"
         <select id="getUserListSortBy" resultMap="org.example.User">
             select * from user
@@ -492,7 +494,7 @@ public interface UserMapper {
             </if>
         </select>
         ```
-    
+
         ```xml tab="带默认值的情况"
         <select id="getUserListSortBy" resultMap="org.example.User">
             select * from user
@@ -506,39 +508,39 @@ public interface UserMapper {
             </choose>
         </select>
         ```
-    
+
     - **like** 需要使用通配符`%`和`_`
         - 方法一: 在Java中参数值两边拼接`%`, 再使用`#{}`
         - 方法二: 在xml中使用`bind`标签构造新参数, 再使用`#{}`
-    
+
             ```java tab="Java"
             List<User> getUserListLike(@Param("name") String name);
             ```
-    
+
             ```xml tab="xml"
             <select id="getUserListLike" resultType="org.example.User">
                 <bind name="pattern" value="'%' + name + '%'" />
                     SELECT * FROM user WHERE name LIKE #{pattern}
             </select>
             ```
-    
+
         - 方法三: 在xml中使用SQL语法`concat()`函数
-    
+
             ```xml
             <select id="getUserListLikeConcat" resultType="org.example.User">
                 SELECT * FROM user WHERE name LIKE concat ('%', #{name}, '%')
             </select>
             ```
-    
+
     ???+ danger
         需要对用户输入进行过滤, 防止在大数据量情况下输入`{==%%==}`导致{==DOS==}。
-    
+
     - **in**, 使用`<foreach>`和`#{}`
-    
+
         ```java tab="Java"
         List<User> getUserListIn(@Param("nameList") List<String> nameList);
         ```
-    
+
         ```xml tab="xml"
         <select id="selectUserIn" resultType="com.example.User">
             SELECT * FROM user WHERE name in
@@ -547,13 +549,13 @@ public interface UserMapper {
             </foreach>
         </select>
         ```
-    
+
     - **limit**, 使用`#{}`
-    
+
         ```java tab="Java"
         List<User> getUserListLimit(@Param("offset") int offset, @Param("limit") int limit);
         ```
-    
+
         ```xml tab="xml"
         <select id="getUserListLimit" resultType="org.example.User">
             SELECT * FROM user limit #{offset}, #{limit}
