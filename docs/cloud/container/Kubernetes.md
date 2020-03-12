@@ -46,9 +46,12 @@
 kubectl --> API Server --> Controller Manager --> Scheduler --> kubelet
 
 
-
+## 常用命令
 
 ```bash
+# 查看版本
+$ kubectl version
+
 kubectl get namespace/ns  #查看namespace
 kubectl get node -nmynamespace  #查看指定namespace节点状态
 kubectl get node --all-namespaces  #查看所有namespace节点状态
