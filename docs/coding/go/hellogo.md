@@ -9,14 +9,14 @@
 提取安装包到指定目录：`tar -C /usr/local/ -zxf go1.12.5.linux-amd64.tar.gz`
 
 !!! info "linux添加环境变量"
-	1. 执行`vim /etc/profile`
-	1. 添加`export PATH=$PATH:/usr/local/go/bin`
-	1. 执行`source /etc/profile`
-	1. 查看go版本`go version`
+    1. 执行`vim /etc/profile`
+    1. 添加`export PATH=$PATH:/usr/local/go/bin`
+    1. 执行`source /etc/profile`
+    1. 查看go版本`go version`
 
 !!! info "windows设置环境变量"
-	1. 添加`GOPATH`，指向自定义workspace，在workspace下建立目录src，并创建main.go和package。使用`go get`也会将库默认下载到该目录下。
-	1. 使用GoLand导入工程 {>>一般是包含src的目录<<} 后，File - Settings - Go - GOPATH - Project GOPATH，添加工程目录 {>>包含src的目录<<}，在GoLand中才能找到依赖。
+    1. 添加`GOPATH`，指向自定义workspace，在workspace下建立目录src，并创建main.go和package。使用`go get`也会将库默认下载到该目录下。
+    1. 使用GoLand导入工程 {==一般是包含src的目录==} 后，File - Settings - Go - GOPATH - Project GOPATH，添加工程目录 {==包含src的目录==}，在GoLand中才能找到依赖。
 
 ## demo
 
@@ -385,7 +385,6 @@ fmt.Println(time.Now())
 
 time.Sleep(time.Millisecond)
 ```
-
 
 ---
 以下未整理
