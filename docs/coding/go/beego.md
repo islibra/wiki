@@ -114,3 +114,9 @@ beego.InsertFilter(pattern string, position int, filter FilterFunc, params ...bo
     - SetData: 设置Input中Data的值，方便用户在Filter中传递数据到Controller
     - GetData
 - Output: 封装response
+
+## 参数配置
+
+默认配置文件路径: 应用同目录下的`conf/app.conf`
+
+!!! quote "参考链接: [参数配置](https://beego.me/docs/mvc/controller/config.md)"
