@@ -578,3 +578,7 @@ cache := new(bytes.Buffer)
 encoder := gob.NewEncoder(cache)
 err := encoder.Encode(mycredit)
 ```
+
+## ReDoS
+
+搜索`regexp`
