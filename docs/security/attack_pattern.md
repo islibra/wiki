@@ -780,8 +780,8 @@ public class OSi {
 
 ### 正则表达式
 
-- 使用[REGEXPER](https://regexper.com/)解析，是否存在两层以上的循环。
-- <https://jex.im/regulex/>
+- 使用[Regulex](https://jex.im/regulex/)解析，是否存在两层以上的循环。
+- [REGEXPER](https://regexper.com/)
 
 ### json
 
