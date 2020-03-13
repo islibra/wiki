@@ -24,23 +24,22 @@
 
 ## LeetCode
 
-```java tab="1. 两数之和"
+### 1. 两数之和
+
+```java
 import java.util.Arrays;
 import java.util.Scanner;
 
 /**
  * 1. 两数之和
  * 给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。
- * <p>
  * 你可以假设每种输入只会对应一个答案。但是，你不能重复利用这个数组中同样的元素。
- * <p>
+ *
  * 示例:
- * <p>
  * 给定 nums = [2, 7, 11, 15], target = 9
- * <p>
  * 因为 nums[0] + nums[1] = 2 + 7 = 9
  * 所以返回 [0, 1]
- * <p>
+ *
  * 链接：https://leetcode-cn.com/problems/two-sum
  */
 public class TwoSum {
@@ -76,25 +75,23 @@ public class TwoSum {
 }
 ```
 
-```java tab="2. 两数相加"
+### 2. 两数相加
+
+```java
 import java.util.Scanner;
 
 /**
  * 2. 两数相加
- * <p>
  * 给出两个 非空 的链表用来表示两个非负的整数。
  * 其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。
- * <p>
  * 如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。
- * <p>
  * 您可以假设除了数字 0 之外，这两个数都不会以 0 开头。
- * <p>
+ *
  * 示例：
- * <p>
  * 输入：(2 -> 4 -> 3) + (5 -> 6 -> 4)
  * 输出：7 -> 0 -> 8
  * 原因：342 + 465 = 807
- * <p>
+ *
  * 链接：https://leetcode-cn.com/problems/add-two-numbers
  */
 public class TwoPlus {
@@ -228,5 +225,123 @@ public class ListNode {
     ListNode next;
 
     ListNode(int x) { val = x; }
+}
+```
+
+### 19. 删除链表的倒数第N个节点
+
+```java
+/**
+ * 链表节点
+ *
+ * @since 2020-03-12
+ */
+public class ListNode {
+    int val;
+    ListNode next;
+
+    ListNode(int value) {
+        val = value;
+    }
+}
+
+
+/**
+ * 19. 删除链表的倒数第N个节点
+ * 给定一个链表，删除链表的倒数第 n 个节点，并且返回链表的头结点。
+ *
+ * 示例：
+ * 给定一个链表: 1->2->3->4->5, 和 n = 2.
+ * 当删除了倒数第二个节点后，链表变为 1->2->3->5.
+ *
+ * 说明：
+ * 给定的 n 保证是有效的。
+ *
+ * 进阶：
+ * 你能尝试使用一趟扫描实现吗？
+ *
+ * 来源：力扣（LeetCode）
+ * 链接：https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list
+ * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+ *
+ * @since 2020-03-12
+ */
+public class RemoveNthFromEnd {
+    /**
+     * 删除链表的倒数第N个节点
+     *
+     * @param head 给定链表
+     * @param n 倒数第n个节点
+     * @return 结果链表首节点
+     */
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        if (head == null) {
+            return null;
+        }
+        ListNode current = head;
+        for (int i = 0; i < n; i++) {
+            current = current.next;
+        }
+        // 删除的是首节点
+        if (current == null) {
+            return head.next;
+        }
+        // 删除的是第二节点
+        current = current.next;
+        if (current == null) {
+            head.next = head.next.next;
+            return head;
+        }
+        ListNode nthFromEnd = head;
+        while (current != null) {
+            nthFromEnd = nthFromEnd.next;
+            current = current.next;
+        }
+        nthFromEnd.next = nthFromEnd.next.next;
+        return head;
+    }
+
+    /**
+     * 打印链表
+     *
+     * @param list 被打印的链表
+     */
+    public void printList(ListNode list) {
+        ListNode inputList = list;
+        while (inputList != null) {
+            System.out.print(inputList.val + " -> ");
+            inputList = inputList.next;
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        ListNode first = new ListNode(1);
+        ListNode second = new ListNode(2);
+        first.next = second;
+        ListNode third = new ListNode(3);
+        second.next = third;
+        ListNode fourth = new ListNode(4);
+        third.next = fourth;
+        ListNode fifth = new ListNode(5);
+        fourth.next = fifth;
+
+        RemoveNthFromEnd rnf = new RemoveNthFromEnd();
+        rnf.printList(first);
+        ListNode result = rnf.removeNthFromEnd(first, 2);
+        rnf.printList(result);
+
+        ListNode onlyone = new ListNode(1);
+        rnf.printList(onlyone);
+        ListNode rs = rnf.removeNthFromEnd(onlyone, 1);
+        rnf.printList(rs);
+
+        ListNode onlytwo = new ListNode(1);
+        ListNode onlytwo2 = new ListNode(2);
+        onlytwo.next = onlytwo2;
+        rnf.printList(onlytwo);
+        ListNode r2 = rnf.removeNthFromEnd(onlytwo, 2);
+        rnf.printList(r2);
+    }
 }
 ```
