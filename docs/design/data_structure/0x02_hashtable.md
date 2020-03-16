@@ -1,4 +1,4 @@
-# hashtable
+# 0x02_hashtable
 
 ## 散列函数
 
