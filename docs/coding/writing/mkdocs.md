@@ -56,26 +56,77 @@ nav:
 
 ```bash
 pip install mkdocs-material
+# 安装mkdocs-material主题的时候会自动安装pymdown-extensions
+pip install pymdown-extensions
 ```
 
 ## 扩展库
 
 ```bash
-pip install pymdown-extensions
-
 # 安装PDF导出插件
-# 1. 升级pip版本
-pip --proxy=http://l0025xxxx:pass%40word@proxy.xxx.com:8080 install --upgrade pip setuptools
+# 1. 安装依赖组件
+$ pip [--proxy=http://l0025xxxx:pass%40word@proxy.xxx.com:8080] install pytest-runner
+$ pip install cffi
 # 2. 安装WeasyPrint
-pip --proxy=http://l0025xxxx:pass%40word@proxy.xxx.com:8080 install WeasyPrint
+$ pip install WeasyPrint
 # 3. 查询python 32/64位
 python --version --version
-# 4. 下载安装gtk3-runtime-3.24.10-2019-08-05-ts-win64.exe: https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases
-# 5. 安装MkDocs PDF Export Plugin
-pip --proxy=http://l0025xxxx:pass%40word@proxy.xxx.com:8080 install mkdocs-pdf-export-plugin
+# 4. 如果是64位, 下载安装gtk3-runtime-3.24.14-2020-02-21-ts-win64.exe
+: <https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases>
+# 3. 安装MkDocs PDF Export Plugin
+$ pip install mkdocs-pdf-export-plugin
+# 4. 使用
+$ mkdocs build
 ```
 
-[MkDocs PDF Export Plugin](https://github.com/zhaoterryy/mkdocs-pdf-export-plugin)
+??? bug "AttributeError: module 'mkdocs.utils' has no attribute 'string_types'"
+    ```bash
+    > mkdocs build
+    Traceback (most recent call last):
+      File "c:\python\python38\lib\runpy.py", line 193, in _run_module_as_main
+        return _run_code(code, main_globals, None,
+      File "c:\python\python38\lib\runpy.py", line 86, in _run_code
+        exec(code, run_globals)
+      File "C:\Python\Python38\Scripts\mkdocs.exe\__main__.py", line 9, in <module>
+      File "c:\python\python38\lib\site-packages\click\core.py", line 829, in __call__
+        return self.main(*args, **kwargs)
+      File "c:\python\python38\lib\site-packages\click\core.py", line 782, in main
+        rv = self.invoke(ctx)
+      File "c:\python\python38\lib\site-packages\click\core.py", line 1259, in invoke
+        return _process_result(sub_ctx.command.invoke(sub_ctx))
+      File "c:\python\python38\lib\site-packages\click\core.py", line 1066, in invoke
+        return ctx.invoke(self.callback, **ctx.params)
+      File "c:\python\python38\lib\site-packages\click\core.py", line 610, in invoke
+        return callback(*args, **kwargs)
+      File "c:\python\python38\lib\site-packages\mkdocs\__main__.py", line 159, in build_command
+        build.build(config.load_config(**kwargs), dirty=not clean)
+      File "c:\python\python38\lib\site-packages\mkdocs\config\base.py", line 197, in load_config
+        errors, warnings = cfg.validate()
+      File "c:\python\python38\lib\site-packages\mkdocs\config\base.py", line 107, in validate
+        run_failed, run_warnings = self._validate()
+      File "c:\python\python38\lib\site-packages\mkdocs\config\base.py", line 62, in _validate
+        self[key] = config_option.validate(value)
+      File "c:\python\python38\lib\site-packages\mkdocs\config\config_options.py", line 130, in validate
+        return self.run_validation(value)
+      File "c:\python\python38\lib\site-packages\mkdocs\config\config_options.py", line 591, in run_validation
+        plgins[item] = self.load_plugin(item, cfg)
+      File "c:\python\python38\lib\site-packages\mkdocs\config\config_options.py", line 599, in load_plugin
+        Plugin = self.installed_plugins[name].load()
+      File "c:\python\python38\lib\site-packages\pkg_resources\__init__.py", line 2443, in load
+        return self.resolve()
+      File "c:\python\python38\lib\site-packages\pkg_resources\__init__.py", line 2449, in resolve
+        module = __import__(self.module_name, fromlist=['__name__'], level=0)
+      File "c:\python\python38\lib\site-packages\mkdocs_pdf_export_plugin\plugin.py", line 9, in <module>
+        class PdfExportPlugin(BasePlugin):
+      File "c:\python\python38\lib\site-packages\mkdocs_pdf_export_plugin\plugin.py", line 14, in PdfExportPlugin
+        ('media_type', config_options.Type(utils.string_types, default=DEFAULT_MEDIA_TYPE)),
+    AttributeError: module 'mkdocs.utils' has no attribute 'string_types'
+    ```
+
+    解决方法: 修改`` C:\\Python\\Python38\\Lib\\site-packages\\mkdocs_pdf_export_plugin\\plugin.py ``, 将`from mkdocs import utils`注释掉, 将所有的`utils.string_types`替换为`str`
+
+!!! quote "参考链接: [MkDocs PDF Export Plugin](https://github.com/zhaoterryy/mkdocs-pdf-export-plugin)"
+
 
 ### 修改配置
 
