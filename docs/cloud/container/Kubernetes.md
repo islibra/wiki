@@ -17,7 +17,7 @@
     - default：
     - kube-system：k8s自己创建的系统资源。
 
-![架构图](../assets/markdown-img-paste-20190618201301319.png)
+!!! quote "[架构图](https://kubernetes.io/docs/concepts/overview/components/)"
 
 ## Master
 
