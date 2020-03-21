@@ -72,6 +72,13 @@ kali设置相同。
 
 ### 0x03. 若存在Web服务器，查看https协议版本和使用的加密套件。
 
+1. openssl 1.0.2
+    - Webserver: `echo | openssl s_client -connect x.x.x.x:port -cipher "EDH" 2>/dev/null | grep -ie "Server .* key"`
+
+        `Server Temp Key: DH, 4096 bits`, DH-Parameter size, {==需要>1024==}
+
+        `Server public key is 4096 bit`, RSA size
+
 1. 使用nmap查看ssl版本`nmap -sT -p 443 --script ssl-enum-ciphers x.x.x.x`  
 ![](../../img/nmap_ssl_1.png)  
 ![](../../img/nmap_ssl_2.png)  
@@ -82,6 +89,8 @@ kali设置相同。
 1. [testSSL](https://testssl.sh/)
     - 下载`git clone --depth 1 https://github.com/drwetter/testssl.sh.git`
     - 扫描`./testssl.sh x.x.x.x`检测弱ssl协议版本和加密套，serverhello携带的证书，已知漏洞
+
+!!! quote "参考链接: [针对TLS Logjam加密缺陷的加固方法](http://www.hackdig.com/05/hack-22307.htm)"
 
 ### 0x04. F12查看页面元素是否存在隐藏域。
 
