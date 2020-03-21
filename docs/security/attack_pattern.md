@@ -799,3 +799,323 @@ public class OSi {
 ### json
 
 !!! quote "参考: [Fastjson](../cve/cve_catalog/#fastjson_1)"
+
+
+---
+
+
+## SSL/TLS协议版本和加密套件
+
+### 是否开启SSLv2, SSLv3, TLSv1, TLS1.1, TLS1.2
+
+`openssl s_client -ssl2 -connect x.x.x.x:port`, 可选项: -ssl3, -tls1, -tls1_1, -tls1_2
+
+- 支持
+
+    ```bash
+    ...
+    SSL-Session:
+    Protocol  : SSLv2
+    ...
+    ```
+
+- 不支持
+
+    ```bash
+    CONNECTED(00000003)
+    458:error:1407F0E5:SSL routines:SSL2_WRITE:ssl handshake failure:s2_pkt.c:428:
+    SSLv3 Support
+    ```
+
+### Cipher Suites
+
+类型描述格式: TLS_RSA_WITH_AES_128_CBC_SHA
+
+- RSA: 密钥交换算法, DHE, ECDHE
+- AES_128_CBC: 加密算法, **弱算法**: RC4, Export, 至少128位, GCM填充, **CBC模式不应用于SSLv3/TLSv1.0**
+- SHA: MAC算法, SHA256, **弱算法**: MD5, SHA1
+
+检查支持的算法: `nmap --script ssl-enum-ciphers -p 443 x.x.x.x`
+
+```bash
+$ echo | openssl s_client -connect x.x.x.x:port -cipher "EDH" 2>/dev/null | grep -ie "Server .* key"
+```
+
+??? note "Cipher Suites"
+    - SSL_RSA_WITH_NULL_MD5                   NULL-MD5
+    - SSL_RSA_WITH_NULL_SHA                   NULL-SHA
+    - SSL_RSA_EXPORT_WITH_RC4_40_MD5          EXP-RC4-MD5
+    - SSL_RSA_WITH_RC4_128_MD5                RC4-MD5
+    - SSL_RSA_WITH_RC4_128_SHA                RC4-SHA
+    - SSL_RSA_EXPORT_WITH_RC2_CBC_40_MD5      EXP-RC2-CBC-MD5
+    - SSL_RSA_WITH_IDEA_CBC_SHA               IDEA-CBC-SHA
+    - SSL_RSA_EXPORT_WITH_DES40_CBC_SHA       EXP-DES-CBC-SHA
+    - SSL_RSA_WITH_DES_CBC_SHA                DES-CBC-SHA
+    - SSL_RSA_WITH_3DES_EDE_CBC_SHA           DES-CBC3-SHA
+    - SSL_DH_DSS_WITH_DES_CBC_SHA             DH-DSS-DES-CBC-SHA
+    - SSL_DH_DSS_WITH_3DES_EDE_CBC_SHA        DH-DSS-DES-CBC3-SHA
+    - SSL_DH_RSA_WITH_DES_CBC_SHA             DH-RSA-DES-CBC-SHA
+    - SSL_DH_RSA_WITH_3DES_EDE_CBC_SHA        DH-RSA-DES-CBC3-SHA
+    - SSL_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA   EXP-EDH-DSS-DES-CBC-SHA
+    - SSL_DHE_DSS_WITH_DES_CBC_SHA            EDH-DSS-CBC-SHA
+    - SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA       EDH-DSS-DES-CBC3-SHA
+    - SSL_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA   EXP-EDH-RSA-DES-CBC-SHA
+    - SSL_DHE_RSA_WITH_DES_CBC_SHA            EDH-RSA-DES-CBC-SHA
+    - SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA       EDH-RSA-DES-CBC3-SHA
+    - SSL_DH_anon_EXPORT_WITH_RC4_40_MD5      EXP-ADH-RC4-MD5
+    - SSL_DH_anon_WITH_RC4_128_MD5            ADH-RC4-MD5
+    - SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA   EXP-ADH-DES-CBC-SHA
+    - SSL_DH_anon_WITH_DES_CBC_SHA            ADH-DES-CBC-SHA
+    - SSL_DH_anon_WITH_3DES_EDE_CBC_SHA       ADH-DES-CBC3-SHA
+    - SSL_FORTEZZA_KEA_WITH_NULL_SHA          Not implemented.
+    - SSL_FORTEZZA_KEA_WITH_FORTEZZA_CBC_SHA  Not implemented.
+    - SSL_FORTEZZA_KEA_WITH_RC4_128_SHA       Not implemented.
+    - TLS_RSA_WITH_NULL_MD5                   NULL-MD5
+    - TLS_RSA_WITH_NULL_SHA                   NULL-SHA
+    - TLS_RSA_EXPORT_WITH_RC4_40_MD5          EXP-RC4-MD5
+    - TLS_RSA_WITH_RC4_128_MD5                RC4-MD5
+    - TLS_RSA_WITH_RC4_128_SHA                RC4-SHA
+    - TLS_RSA_EXPORT_WITH_RC2_CBC_40_MD5      EXP-RC2-CBC-MD5
+    - TLS_RSA_WITH_IDEA_CBC_SHA               IDEA-CBC-SHA
+    - TLS_RSA_EXPORT_WITH_DES40_CBC_SHA       EXP-DES-CBC-SHA
+    - TLS_RSA_WITH_DES_CBC_SHA                DES-CBC-SHA
+    - TLS_RSA_WITH_3DES_EDE_CBC_SHA           DES-CBC3-SHA
+    - TLS_DH_DSS_EXPORT_WITH_DES40_CBC_SHA    Not implemented.
+    - TLS_DH_DSS_WITH_DES_CBC_SHA             Not implemented.
+    - TLS_DH_DSS_WITH_3DES_EDE_CBC_SHA        Not implemented.
+    - TLS_DH_RSA_EXPORT_WITH_DES40_CBC_SHA    Not implemented.
+    - TLS_DH_RSA_WITH_DES_CBC_SHA             Not implemented.
+    - TLS_DH_RSA_WITH_3DES_EDE_CBC_SHA        Not implemented.
+    - TLS_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA   EXP-EDH-DSS-DES-CBC-SHA
+    - TLS_DHE_DSS_WITH_DES_CBC_SHA            EDH-DSS-CBC-SHA
+    - TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA       EDH-DSS-DES-CBC3-SHA
+    - TLS_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA   EXP-EDH-RSA-DES-CBC-SHA
+    - TLS_DHE_RSA_WITH_DES_CBC_SHA            EDH-RSA-DES-CBC-SHA
+    - TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA       EDH-RSA-DES-CBC3-SHA
+    - TLS_DH_anon_EXPORT_WITH_RC4_40_MD5      EXP-ADH-RC4-MD5
+    - TLS_DH_anon_WITH_RC4_128_MD5            ADH-RC4-MD5
+    - TLS_DH_anon_EXPORT_WITH_DES40_CBC_SHA   EXP-ADH-DES-CBC-SHA
+    - TLS_DH_anon_WITH_DES_CBC_SHA            ADH-DES-CBC-SHA
+    - TLS_DH_anon_WITH_3DES_EDE_CBC_SHA       ADH-DES-CBC3-SHA
+    - TLS_RSA_WITH_AES_128_CBC_SHA            AES128-SHA
+    - TLS_RSA_WITH_AES_256_CBC_SHA            AES256-SHA
+    - TLS_DH_DSS_WITH_AES_128_CBC_SHA         DH-DSS-AES128-SHA
+    - TLS_DH_DSS_WITH_AES_256_CBC_SHA         DH-DSS-AES256-SHA
+    - TLS_DH_RSA_WITH_AES_128_CBC_SHA         DH-RSA-AES128-SHA
+    - TLS_DH_RSA_WITH_AES_256_CBC_SHA         DH-RSA-AES256-SHA
+    - TLS_DHE_DSS_WITH_AES_128_CBC_SHA        DHE-DSS-AES128-SHA
+    - TLS_DHE_DSS_WITH_AES_256_CBC_SHA        DHE-DSS-AES256-SHA
+    - TLS_DHE_RSA_WITH_AES_128_CBC_SHA        DHE-RSA-AES128-SHA
+    - TLS_DHE_RSA_WITH_AES_256_CBC_SHA        DHE-RSA-AES256-SHA
+    - TLS_DH_anon_WITH_AES_128_CBC_SHA        ADH-AES128-SHA
+    - TLS_DH_anon_WITH_AES_256_CBC_SHA        ADH-AES256-SHA
+    - TLS_RSA_WITH_CAMELLIA_128_CBC_SHA      CAMELLIA128-SHA
+    - TLS_RSA_WITH_CAMELLIA_256_CBC_SHA      CAMELLIA256-SHA
+    - TLS_DH_DSS_WITH_CAMELLIA_128_CBC_SHA   DH-DSS-CAMELLIA128-SHA
+    - TLS_DH_DSS_WITH_CAMELLIA_256_CBC_SHA   DH-DSS-CAMELLIA256-SHA
+    - TLS_DH_RSA_WITH_CAMELLIA_128_CBC_SHA   DH-RSA-CAMELLIA128-SHA
+    - TLS_DH_RSA_WITH_CAMELLIA_256_CBC_SHA   DH-RSA-CAMELLIA256-SHA
+    - TLS_DHE_DSS_WITH_CAMELLIA_128_CBC_SHA  DHE-DSS-CAMELLIA128-SHA
+    - TLS_DHE_DSS_WITH_CAMELLIA_256_CBC_SHA  DHE-DSS-CAMELLIA256-SHA
+    - TLS_DHE_RSA_WITH_CAMELLIA_128_CBC_SHA  DHE-RSA-CAMELLIA128-SHA
+    - TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA  DHE-RSA-CAMELLIA256-SHA
+    - TLS_DH_anon_WITH_CAMELLIA_128_CBC_SHA  ADH-CAMELLIA128-SHA
+    - TLS_DH_anon_WITH_CAMELLIA_256_CBC_SHA  ADH-CAMELLIA256-SHA
+    - TLS_RSA_WITH_SEED_CBC_SHA              SEED-SHA
+    - TLS_DH_DSS_WITH_SEED_CBC_SHA           DH-DSS-SEED-SHA
+    - TLS_DH_RSA_WITH_SEED_CBC_SHA           DH-RSA-SEED-SHA
+    - TLS_DHE_DSS_WITH_SEED_CBC_SHA          DHE-DSS-SEED-SHA
+    - TLS_DHE_RSA_WITH_SEED_CBC_SHA          DHE-RSA-SEED-SHA
+    - TLS_DH_anon_WITH_SEED_CBC_SHA          ADH-SEED-SHA
+    - TLS_GOSTR341094_WITH_28147_CNT_IMIT GOST94-GOST89-GOST89
+    - TLS_GOSTR341001_WITH_28147_CNT_IMIT GOST2001-GOST89-GOST89
+    - TLS_GOSTR341094_WITH_NULL_GOSTR3411 GOST94-NULL-GOST94
+    - TLS_GOSTR341001_WITH_NULL_GOSTR3411 GOST2001-NULL-GOST94
+    - TLS_RSA_EXPORT1024_WITH_DES_CBC_SHA     EXP1024-DES-CBC-SHA
+    - TLS_RSA_EXPORT1024_WITH_RC4_56_SHA      EXP1024-RC4-SHA
+    - TLS_DHE_DSS_EXPORT1024_WITH_DES_CBC_SHA EXP1024-DHE-DSS-DES-CBC-SHA
+    - TLS_DHE_DSS_EXPORT1024_WITH_RC4_56_SHA  EXP1024-DHE-DSS-RC4-SHA
+    - TLS_DHE_DSS_WITH_RC4_128_SHA            DHE-DSS-RC4-SHA
+    - TLS_ECDH_RSA_WITH_NULL_SHA              ECDH-RSA-NULL-SHA
+    - TLS_ECDH_RSA_WITH_RC4_128_SHA           ECDH-RSA-RC4-SHA
+    - TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA      ECDH-RSA-DES-CBC3-SHA
+    - TLS_ECDH_RSA_WITH_AES_128_CBC_SHA       ECDH-RSA-AES128-SHA
+    - TLS_ECDH_RSA_WITH_AES_256_CBC_SHA       ECDH-RSA-AES256-SHA
+    - TLS_ECDH_ECDSA_WITH_NULL_SHA            ECDH-ECDSA-NULL-SHA
+    - TLS_ECDH_ECDSA_WITH_RC4_128_SHA         ECDH-ECDSA-RC4-SHA
+    - TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA    ECDH-ECDSA-DES-CBC3-SHA
+    - TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA     ECDH-ECDSA-AES128-SHA
+    - TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA     ECDH-ECDSA-AES256-SHA
+    - TLS_ECDHE_RSA_WITH_NULL_SHA             ECDHE-RSA-NULL-SHA
+    - TLS_ECDHE_RSA_WITH_RC4_128_SHA          ECDHE-RSA-RC4-SHA
+    - TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA     ECDHE-RSA-DES-CBC3-SHA
+    - TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA      ECDHE-RSA-AES128-SHA
+    - TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA      ECDHE-RSA-AES256-SHA
+    - TLS_ECDHE_ECDSA_WITH_NULL_SHA           ECDHE-ECDSA-NULL-SHA
+    - TLS_ECDHE_ECDSA_WITH_RC4_128_SHA        ECDHE-ECDSA-RC4-SHA
+    - TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA   ECDHE-ECDSA-DES-CBC3-SHA
+    - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA    ECDHE-ECDSA-AES128-SHA
+    - TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA    ECDHE-ECDSA-AES256-SHA
+    - TLS_ECDH_anon_WITH_NULL_SHA             AECDH-NULL-SHA
+    - TLS_ECDH_anon_WITH_RC4_128_SHA          AECDH-RC4-SHA
+    - TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA     AECDH-DES-CBC3-SHA
+    - TLS_ECDH_anon_WITH_AES_128_CBC_SHA      AECDH-AES128-SHA
+    - TLS_ECDH_anon_WITH_AES_256_CBC_SHA      AECDH-AES256-SHA
+    - TLS_RSA_WITH_NULL_SHA256                  NULL-SHA256
+    - TLS_RSA_WITH_AES_128_CBC_SHA256           AES128-SHA256
+    - TLS_RSA_WITH_AES_256_CBC_SHA256           AES256-SHA256
+    - TLS_RSA_WITH_AES_128_GCM_SHA256           AES128-GCM-SHA256
+    - TLS_RSA_WITH_AES_256_GCM_SHA384           AES256-GCM-SHA384
+    - TLS_DH_RSA_WITH_AES_128_CBC_SHA256        DH-RSA-AES128-SHA256
+    - TLS_DH_RSA_WITH_AES_256_CBC_SHA256        DH-RSA-AES256-SHA256
+    - TLS_DH_RSA_WITH_AES_128_GCM_SHA256        DH-RSA-AES128-GCM-SHA256
+    - TLS_DH_RSA_WITH_AES_256_GCM_SHA384        DH-RSA-AES256-GCM-SHA384
+    - TLS_DH_DSS_WITH_AES_128_CBC_SHA256        DH-DSS-AES128-SHA256
+    - TLS_DH_DSS_WITH_AES_256_CBC_SHA256        DH-DSS-AES256-SHA256
+    - TLS_DH_DSS_WITH_AES_128_GCM_SHA256        DH-DSS-AES128-GCM-SHA256
+    - TLS_DH_DSS_WITH_AES_256_GCM_SHA384        DH-DSS-AES256-GCM-SHA384
+    - TLS_DHE_RSA_WITH_AES_128_CBC_SHA256       DHE-RSA-AES128-SHA256
+    - TLS_DHE_RSA_WITH_AES_256_CBC_SHA256       DHE-RSA-AES256-SHA256
+    - TLS_DHE_RSA_WITH_AES_128_GCM_SHA256       DHE-RSA-AES128-GCM-SHA256
+    - TLS_DHE_RSA_WITH_AES_256_GCM_SHA384       DHE-RSA-AES256-GCM-SHA384
+    - TLS_DHE_DSS_WITH_AES_128_CBC_SHA256       DHE-DSS-AES128-SHA256
+    - TLS_DHE_DSS_WITH_AES_256_CBC_SHA256       DHE-DSS-AES256-SHA256
+    - TLS_DHE_DSS_WITH_AES_128_GCM_SHA256       DHE-DSS-AES128-GCM-SHA256
+    - TLS_DHE_DSS_WITH_AES_256_GCM_SHA384       DHE-DSS-AES256-GCM-SHA384
+    - TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256      ECDH-RSA-AES128-SHA256
+    - TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384      ECDH-RSA-AES256-SHA384
+    - TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256      ECDH-RSA-AES128-GCM-SHA256
+    - TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384      ECDH-RSA-AES256-GCM-SHA384
+    - TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256    ECDH-ECDSA-AES128-SHA256
+    - TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384    ECDH-ECDSA-AES256-SHA384
+    - TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256    ECDH-ECDSA-AES128-GCM-SHA256
+    - TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384    ECDH-ECDSA-AES256-GCM-SHA384
+    - TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256     ECDHE-RSA-AES128-SHA256
+    - TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384     ECDHE-RSA-AES256-SHA384
+    - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256     ECDHE-RSA-AES128-GCM-SHA256
+    - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384     ECDHE-RSA-AES256-GCM-SHA384
+    - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256   ECDHE-ECDSA-AES128-SHA256
+    - TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384   ECDHE-ECDSA-AES256-SHA384
+    - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256   ECDHE-ECDSA-AES128-GCM-SHA256
+    - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384   ECDHE-ECDSA-AES256-GCM-SHA384
+    - TLS_DH_anon_WITH_AES_128_CBC_SHA256       ADH-AES128-SHA256
+    - TLS_DH_anon_WITH_AES_256_CBC_SHA256       ADH-AES256-SHA256
+    - TLS_DH_anon_WITH_AES_128_GCM_SHA256       ADH-AES128-GCM-SHA256
+    - TLS_DH_anon_WITH_AES_256_GCM_SHA384       ADH-AES256-GCM-SHA384
+    - TLS_PSK_WITH_RC4_128_SHA                  PSK-RC4-SHA
+    - TLS_PSK_WITH_3DES_EDE_CBC_SHA             PSK-3DES-EDE-CBC-SHA
+    - TLS_PSK_WITH_AES_128_CBC_SHA              PSK-AES128-CBC-SHA
+    - TLS_PSK_WITH_AES_256_CBC_SHA              PSK-AES256-CBC-SHA
+    - SSL_CK_RC4_128_WITH_MD5                 RC4-MD5
+    - SSL_CK_RC4_128_EXPORT40_WITH_MD5        Not implemented.
+    - SSL_CK_RC2_128_CBC_WITH_MD5             RC2-CBC-MD5
+    - SSL_CK_RC2_128_CBC_EXPORT40_WITH_MD5    Not implemented.
+    - SSL_CK_IDEA_128_CBC_WITH_MD5            IDEA-CBC-MD5
+    - SSL_CK_DES_64_CBC_WITH_MD5              Not implemented.
+    - SSL_CK_DES_192_EDE3_CBC_WITH_MD5        DES-CBC3-MD5
+
+### Certificates
+
+```bash
+$ openssl s_client -connect example.com:443 | openssl x509 -noout -text
+
+$ find . -name "*.pem"
+$ find . -name "*.cer"
+$ find . -name "*.crt"
+$ find . -name "*.key"
+$ find . -name "*.jks"
+$ find . -name "*keystore*"
+$ find . -name "*truststore*"
+# 检查证书版本, 颁发者, 密钥长度, 加密算法
+$ openssl x509 -in xxx.pem -text -noout | grep -E 'Version|Algorithm|Issuer|Public-Key'
+# 私钥是否加密
+$ cat xxx.key | grep -C 3 -e 'BEGIN.*PRIVATE'
+# 文件权限
+$ stat -c %a xxx.crt | grep -v 600 | grep -v 640
+```
+
+??? note "查看和验证私钥是否加密存储"
+    ```bash tab="未加密查看"
+    $ cat ca.key
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEpQIBAAKCAQEAuVLe3y+Iz8vrPp7Upb4FXwcy2dy/tnLZOSMBj+9wCiP/ktPa
+    k4r7TcMd9hpKWJU2nIew15XKrjmQfhotVVp7sLW+Mn7OfhHumwoW+WemXzvIv59m
+    QsdfivqCxdFZUA...PFI=
+    -----END RSA PRIVATE KEY-----
+    ```
+
+    ```bash tab="加密查看" hl_lines="3"
+    $ cat secca.key
+    -----BEGIN RSA PRIVATE KEY-----
+    Proc-Type: 4,ENCRYPTED
+    DEK-Info: AES-256-CBC,E5F6C26A341C55AC9EC67A98D05E7546
+
+    e8W9+g3dIt+ll+Uy94zmt25HkQo5lHHmZk5eaL0Mcp2LPeXCpQpcJMfOAYrtYSle
+    RIiXtEzt7oCZ6PMMDhYEN+4Lug/6w1IwxvFAW1tf6LPKJOTroIuJxhQfW386i0y3
+    /YNIxuGQJEsqDJC...OVHjAhBE
+    -----END RSA PRIVATE KEY-----
+    ```
+
+    ```bash tab="未加密验证"
+    $ openssl pkcs12 -export -out ca.p12 -in ca.crt -inkey ca.key
+    Enter Export Password:
+    Verifying - Enter Export Password:
+    ```
+
+    ```bash tab="加密验证方法一" hl_lines="2"
+    $ openssl req -new -x509 -days 3650 -key secca.key -out secca.crt
+    Enter pass phrase for secca.key:
+    You are about to be asked to enter information that will be incorporated
+    into your certificate request.
+    What you are about to enter is what is called a Distinguished Name or a DN.
+    There are quite a few fields but you can leave some blank
+    For some fields there will be a default value,
+    If you enter '.', the field will be left blank.
+    -----
+    Country Name (2 letter code) [AU]:
+    State or Province Name (full name) [Some-State]:
+    Locality Name (eg, city) []:
+    Organization Name (eg, company) [Internet Widgits Pty Ltd]:
+    Organizational Unit Name (eg, section) []:
+    Common Name (e.g. server FQDN or YOUR name) []:
+    Email Address []:
+    ```
+
+    ```bash tab="加密验证方法二" hl_lines="2"
+    $ openssl pkcs12 -export -out secca.p12 -in secca.crt -inkey secca.key
+    Enter pass phrase for secca.key:
+    Enter Export Password:
+    Verifying - Enter Export Password:
+    ```
+
+### Secure Renegotiation
+
+```bash
+$ openssl s_client -connect example:443
+Secure Renegotiation IS NOT supported
+Secure Renegotiation IS supported
+```
+
+### Compression
+
+```bash
+$ openssl s_client -connect example:443
+Compression: zlib compression
+Compression: NONE
+```
+
+- 测试是否存在心脏滴血: `nmap -p 443 --script ssl-heartbleed --script-args vulns.showall example.com`
+- 测试是否存在Change Cipher Spec Injection: `nmap -p 443 --script ssl-ccs-injection example.com`
+
+!!! quote "参考链接: [手工测试SSL/TLS的脆弱性](http://bobao.360.cn/learning/detail/479.html)"
+
+## 安全编译选项
+
+1. 将readelf拷贝到/usr/bin, `readelf -a xxx`
+1. `./checksec --file=xxx`
+    - RELRO: GOT表保护
+    - STACK CANARY: 栈保护
+    - NX: Windows平台数据执行保护(DEP)
+    - PIE: 随机化
+    - RPATH: 动态库搜索路径
+    - FORTIFY: FS
