@@ -146,7 +146,7 @@ Java虚拟机把描述类的数据, 从class文件加载到内存(方法区), �
 
 ### 3. 初始化(Initialization)
 
-1. 虚拟机启动时, 初始化包含main()的主类
+1. 虚拟机启动时, 初始化包含 **main()** 的主类
 1. 由new, getstatic, putstatic, invokestatic指令触发
 
     - 使用new关键字实例化对象
@@ -172,16 +172,16 @@ Java虚拟机把描述类的数据, 从class文件加载到内存(方法区), �
             static {
                 System.out.println("SuperClass init");
             }
-
+    
             public static int value = 123;
         }
-
+    
         public class SubClass extends SuperClass {
             static {
                 System.out.println("SubClass init");
             }
         }
-
+    
         public class PassiveReference {
             public static void main(String[] args) {
                 // SuperClass init
@@ -190,9 +190,9 @@ Java虚拟机把描述类的数据, 从class文件加载到内存(方法区), �
             }
         }
         ```
-
+    
     1. 通过数组定义, 引用类, 不会触发类初始化
-
+    
         ```java
         public class PassiveReference {
             public static void main(String[] args) {
@@ -200,21 +200,21 @@ Java虚拟机把描述类的数据, 从class文件加载到内存(方法区), �
             }
         }
         ```
-
+    
         !!! tip "会触发[Lxxx.SuperClass的类初始化, 由虚拟机自动生成, 继承于java.lang.Object, 由newarray指令触发"
             代表一维数组, 包含length属性和clone()方法, 当数组越界时, 会抛出java.lang.ArrayIndexOutOfBoundsException
-
+    
     1. 常量在 **编译阶段** 会存入 **调用类** 的常量池中, 本质上没有直接引用到定义常量的类, 因此不会触发定义常量的类初始化
-
+    
         ```java
         public class ConstClass {
             static {
                 System.out.println("ConstClass init");
             }
-
+    
             public static final String HELLOWORLD = "hello world";
         }
-
+    
         public class PassiveReference {
             public static void main(String[] args) {
                 System.out.println(ConstClass.HELLOWORLD);
