@@ -1112,6 +1112,11 @@ Compression: NONE
 ## 安全编译选项
 
 1. 将readelf拷贝到/usr/bin, `readelf -a xxx`
+
+    判断是否Go语言应用：Section to Segment mapping中包含`.gosymtab .gopclntab`字样
+
+    !!! quote "参考链接: [golang语言编译的二进制可执行文件为什么比 C 语言大](https://www.cnxct.com/why-golang-elf-binary-file-is-large-than-c/)"
+
 1. `./checksec --file=xxx`
     - RELRO: GOT表保护
     - STACK CANARY: 栈保护
