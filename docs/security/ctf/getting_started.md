@@ -11,6 +11,7 @@
 
 ## 学习资源
 
+- [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)
 - prompt: <http://prompt.ml/0>，B方向，国外的xss测试。
 - RedTigers Hackit: <http://redtiger.labs.overthewire.org/>，B方向，国外sql注入挑战网站，10关，过关的形式，不同的注入，循序渐近地练习。
 - We Chall: <http://www.wechall.net/challs>，非常入门的国外ctf题库，很多国内大神都是从这里刷题成长起来的。
