@@ -125,6 +125,12 @@ Java虚拟机把描述类的数据, 从class文件加载到内存(方法区), �
 
 !!! example "编写一个面向接口的应用, 运行时通过Java预置或 {==自定义的类加载器==}, 从网络加载一个 {==二进制字节流==}作为实际的实现类"
 
+!!! note "JVM终止场景"
+    1. 运行正常结束
+    1. System.exit(), Runtine.getRuntime.exit()
+    1. 遇到未捕获异常
+    1. 强制结束JVM进程
+
 ### 1. 加载(Loading)
 
 1. 通过类 **全限定名** 获取定义类的 **二进制字节流**
@@ -132,6 +138,14 @@ Java虚拟机把描述类的数据, 从class文件加载到内存(方法区), �
     - jar/war
     - Applet
     - 运行时计算生成, 如动态代理
+    - JSP
+    - 数据库
+    - 加密class文件
+
+    !!! tip "类加载器"
+        - 除了根类加载器，其他类加载器都由Java实现
+        - 获取类的二进制字节流，可以使用JVM内置的类加载器(系统类加载器)，也可以继承ClassLoader创建自定义类加载器（重写findClass或loadClass）
+        - 数组类不通过类加载器创建，而由JVM直接在内存中构建，但数组元素类由加载器加载。
 
 1. 将字节流的静态存储结构转化为 **方法区** 的运行时数据结构
 1. 在内存中生成一个代表这个类的 **java.lang.Class** 对象, 作为方法区这个类的各种数据的访问 **入口**
@@ -140,11 +154,19 @@ Java虚拟机把描述类的数据, 从class文件加载到内存(方法区), �
 
 #### a. 验证(Verification)
 
+校验二进制字节流的类结构是否正确
+
 #### b. 准备(Preparation)
+
+为类变量分配内存，设置初始值
 
 #### c. 解析(Resolution)
 
+将符号引用替换为直接引用
+
 ### 3. 初始化(Initialization)
+
+#### 初始化时机
 
 1. 虚拟机启动时, 初始化包含 **main()** 的主类
 1. 由new, getstatic, putstatic, invokestatic指令触发
@@ -160,7 +182,9 @@ Java虚拟机把描述类的数据, 从class文件加载到内存(方法区), �
 
     > 父接口除外
 
+1. Class.forName()
 1. 使用java.lang.reflect包的方法对类进行反射调用的时候
+1. 反序列化
 1. JDK 7: java.lang.invoke.MethodHandle实例解析结果为REF_getStatic, REF_putStatic, REF_invokeStatic, REF_newInvokeSpecial
 1. JDK 8: 接口中定义了被default关键字修饰的方法, 接口的实现类初始化时
 
@@ -172,16 +196,16 @@ Java虚拟机把描述类的数据, 从class文件加载到内存(方法区), �
             static {
                 System.out.println("SuperClass init");
             }
-    
+
             public static int value = 123;
         }
-    
+
         public class SubClass extends SuperClass {
             static {
                 System.out.println("SubClass init");
             }
         }
-    
+
         public class PassiveReference {
             public static void main(String[] args) {
                 // SuperClass init
@@ -190,9 +214,9 @@ Java虚拟机把描述类的数据, 从class文件加载到内存(方法区), �
             }
         }
         ```
-    
+
     1. 通过数组定义, 引用类, 不会触发类初始化
-    
+
         ```java
         public class PassiveReference {
             public static void main(String[] args) {
@@ -200,27 +224,71 @@ Java虚拟机把描述类的数据, 从class文件加载到内存(方法区), �
             }
         }
         ```
-    
+
         !!! tip "会触发[Lxxx.SuperClass的类初始化, 由虚拟机自动生成, 继承于java.lang.Object, 由newarray指令触发"
             代表一维数组, 包含length属性和clone()方法, 当数组越界时, 会抛出java.lang.ArrayIndexOutOfBoundsException
-    
+
     1. 常量在 **编译阶段** 会存入 **调用类** 的常量池中, 本质上没有直接引用到定义常量的类, 因此不会触发定义常量的类初始化
-    
+
         ```java
         public class ConstClass {
             static {
                 System.out.println("ConstClass init");
             }
-    
+
             public static final String HELLOWORLD = "hello world";
         }
-    
+
         public class PassiveReference {
             public static void main(String[] args) {
                 System.out.println(ConstClass.HELLOWORLD);
             }
         }
         ```
+
+        但如果final修饰的值在编译时无法确定, 则会触发类初始化
+
+        ```java
+        public class ConstClass {
+            static {
+                System.out.println("ConstClass init");
+            }
+
+            public static final String NOW = System.currentTimeMillis() + "";
+        }
+
+        public class PassiveReference {
+            public static void main(String[] args) {
+                System.out.println(ConstClass.NOW);
+            }
+        }
+        ```
+
+    1. 使用ClassLoader.loadClass()只会加载类, 不会初始化, 使用Class.forName()才会初始化
+
+        ```java
+        public class PassiveReference {
+            public static void main(String[] args) throws ClassNotFoundException {
+                ClassLoader cl = ClassLoader.getSystemClassLoader();
+                cl.loadClass("jvm.ConstClass");
+                System.out.println("load class...");
+
+                Class.forName("jvm.ConstClass");
+            }
+        }
+        ```
+
+#### 对类变量指定初始值
+
+1. 声明变量时指定初始值: `static int a = 5;`
+1. 使用静态初始化块为类变量指定初始值
+
+    ```java
+    static int b;
+    static {
+        b = 6;
+    }
+    ```
 
 ### 4. 使用(Using)
 
