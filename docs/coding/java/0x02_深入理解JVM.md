@@ -119,9 +119,9 @@ NIO(New Input/Output)中引入Channel和Buffer，可以使用Native函数库直�
 
 ## 类加载
 
-Java虚拟机把描述类的数据, 从class文件加载到内存(方法区), 并对数据进行校验、转换解析和初始化，最终形成可被虚拟机直接使用的Java类型
+Java虚拟机把描述类的数据, 从class文件加载到内存(方法区), 并对数据进行校验、转换解析和初始化，最终形成可被虚拟机直接使用的Java类型。
 
-运行期间进行
+运行期间进行, 当Java程序第一次使用某个类中的内容，而该类的字节码文件在内存中不存在时，类加载器就会去加载该类的字节码文件。
 
 !!! example "编写一个面向接口的应用, 运行时通过Java预置或 {==自定义的类加载器==}, 从网络加载一个 {==二进制字节流==}作为实际的实现类"
 
@@ -142,13 +142,93 @@ Java虚拟机把描述类的数据, 从class文件加载到内存(方法区), �
     - 数据库
     - 加密class文件
 
-    !!! tip "类加载器"
-        - 除了根类加载器，其他类加载器都由Java实现
-        - 获取类的二进制字节流，可以使用JVM内置的类加载器(系统类加载器)，也可以继承ClassLoader创建自定义类加载器（重写findClass或loadClass）
-        - 数组类不通过类加载器创建，而由JVM直接在内存中构建，但数组元素类由加载器加载。
-
 1. 将字节流的静态存储结构转化为 **方法区** 的运行时数据结构
 1. 在内存中生成一个代表这个类的 **java.lang.Class** 对象, 作为方法区这个类的各种数据的访问 **入口**
+
+#### 类加载器
+
+- 数组类不通过类加载器创建，而由JVM直接在内存中构建，但数组元素类由加载器加载。
+- 在JVM中, 以全限定类名和其类加载器作为唯一标识
+
+##### 层次结构
+
+1. Bootstrap ClassLoader: 根类加载器，主要负责加载Java的核心类。除了根类加载器，其他类加载器都由Java实现。
+
+    ```java
+    import java.net.URL;
+
+    public class BootstrapClassLoaderTest {
+        public static void main(String[] args) {
+            URL[] urls = sun.misc.Launcher.getBootstrapClassPath().getURLs();
+            // 获取根类加载器所加载的核心类库
+            // file:/C:/Java/jdk1.8.0_241/jre/lib/resources.jar
+            // file:/C:/Java/jdk1.8.0_241/jre/lib/rt.jar
+            // file:/C:/Java/jdk1.8.0_241/jre/lib/sunrsasign.jar
+            // file:/C:/Java/jdk1.8.0_241/jre/lib/jsse.jar
+            // file:/C:/Java/jdk1.8.0_241/jre/lib/jce.jar
+            // file:/C:/Java/jdk1.8.0_241/jre/lib/charsets.jar
+            // file:/C:/Java/jdk1.8.0_241/jre/lib/jfr.jar
+            // file:/C:/Java/jdk1.8.0_241/jre/classes
+            for (URL url : urls) {
+                System.out.println(url.toExternalForm());
+            }
+        }
+    }
+    ```
+
+    > 通过java.exe -Xbootclasspath或-Dsun.boot.class.path指定加载附加的类
+
+2. Extension ClassLoader: 扩展类加载器, 主要负载加载`%JAVA_HOME%/jre/lib/ext/* .jar`或`java.ext.dirs`系统属性指定的目录，该类加载器在JDK1.9的时候更名为：Platform ClassLoader, 其父类加载器为: null。
+3. System ClassLoader: 系统类加载器, 应用程序类加载器(ApplicationClassLoader)，主要负责加载由`-classpath`或`java.class.path`系统属性或`classpath`环境变量所指定的jar包和类。该类加载器在JDK1.9的时候更名为：System ClassLoader, 其父类加载器为：ExtensionClassLoader。
+    > 通过ClassLoader.getSystemClassLoader()获取系统类加载器
+
+    ```java
+    import java.io.IOException;
+    import java.net.URL;
+    import java.util.Enumeration;
+
+    public class SystemClassLoaderTest {
+        public static void main(String[] args) throws IOException {
+            // 获取系统类加载器
+            ClassLoader systemLoader = ClassLoader.getSystemClassLoader();
+            // sun.misc.Launcher$AppClassLoader@18b4aac2
+            System.out.println(systemLoader);
+            // 获取系统类加载器的加载路径
+            // 默认是classpath环境变量或当前路径
+            Enumeration<URL> em = systemLoader.getResources("");
+            while (em.hasMoreElements()) {
+                System.out.println(em.nextElement());
+            }
+            // 获取扩展类加载器
+            ClassLoader extensionLoader = systemLoader.getParent();
+            // sun.misc.Launcher$ExtClassLoader@1b6d3586
+            System.out.println(extensionLoader);
+            // 扩展类加载器的加载路径
+            // C:\Java\jdk1.8.0_241\jre\lib\ext;C:\windows\Sun\Java\lib\ext
+            System.out.println(System.getProperty("java.ext.dirs"));
+            // 扩展类加载器的父类加载器
+            // null
+            System.out.println(extensionLoader.getParent());
+        }
+    }
+    ```
+
+4. 自定义类加载器(UserClassLoader)，负责加载程序员指定目录下的字节码文件。继承ClassLoader，重写findClass()（推荐）和loadClass()。
+    - loadClass()执行步骤
+        1. findLoadedClass(String), 缓存机制
+        1. 调用父/根类加载器的loadClass(), 父类委托
+        1. findClass()
+
+    - final defineClass(String name, byte[] b, int off, int len), 将class文件读入字节数组b, 并将其转换为Class对象
+
+!!! quote "参考链接: [Java中类加载器的工作原理 | 技术](https://mp.weixin.qq.com/s/0OUPf3WzQCsKLeZPjo6c9Q)"
+
+##### 类加载机制
+
+1. 全盘负责: 由同一个类加载器负责加载某个Class和其依赖/引用的其他Class
+1. 父类委托: 先让父类加载器尝试加载Class
+1. 缓存机制: **修改并替换class文件后, 必须重启JVM生效**
+
 
 ### 2. 连接(Linking)
 
