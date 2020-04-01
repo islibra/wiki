@@ -183,3 +183,7 @@ pool.destroy();
 
 1. `javac -cp /root/project/lib/jedis-2.9.0.jar:/root/project/lib/commons-pool2-2.5.0.jar /root/project/src/RedisPool.java`
 1. `java -cp /root/project/lib/jedis-2.9.0.jar:/root/project/lib/commons-pool2-2.5.0.jar:/root/project/src/ RedisPool`
+
+## 高可用(HA)
+
+Redis-Sentinel, 独立进程, 集群部署, 监控Master-Slave集群, 发现Master宕机后自动切换(选举Master, 通知另外一个进程, 如客户端)
