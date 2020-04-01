@@ -1111,6 +1111,7 @@ Compression: NONE
 
 ## 安全编译选项
 
+1. 判断二进制文件类型: `file xxx`
 1. 将readelf拷贝到/usr/bin, `readelf -a xxx`
 
     判断是否Go语言应用：Section to Segment mapping中包含`.gosymtab .gopclntab`字样
@@ -1118,9 +1119,17 @@ Compression: NONE
     !!! quote "参考链接: [golang语言编译的二进制可执行文件为什么比 C 语言大](https://www.cnxct.com/why-golang-elf-binary-file-is-large-than-c/)"
 
 1. `./checksec --file=xxx`
-    - RELRO: GOT表保护
-    - STACK CANARY: 栈保护
-    - NX: Windows平台数据执行保护(DEP)
-    - PIE: 随机化
-    - RPATH: 动态库搜索路径
-    - FORTIFY: FS
+    1. STACK CANARY: 栈保护(**SP**), 包含Linux内核态
+    1. **RELRO**: GOT表保护
+    1. **BIND_NOW**: 立即绑定
+    1. **PIC**: 地址无关
+    1. **PIE**: 随机化, Windows平台 **DYNAMICBASE**
+    1. **NX**: 堆栈不可执行, Windows平台数据执行保护(**DEP**)
+    1. Strip: 删除符号表(Linux可选, Android必选)
+    1. **Rpath/RunPath**: 动态库搜索路径(禁选)
+    1. FS: Fortify Source(可选)
+    1. Ftrapv: 整数溢出检查(可选)
+    1. ASLR: 缓冲区溢出, Windows平台 **GS**
+    1. Visibility: (可选)
+    1. Stack Check: (可选)
+    1. **SAFESEH**: Windows平台安全异常处理
