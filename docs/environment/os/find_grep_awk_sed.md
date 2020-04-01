@@ -30,16 +30,20 @@
 cat filename.xxx | grep xxx
 grep xxx filename.xxx
 
-# -i --ignore-case 忽略大小写
+# -n 显示行号
+
+# -i 忽略大小写
 # -C 显示上下文number行
 # 查找多个文件
 grep -i 'hello world' -C number first.java second.properties
+
+# -r 目录级联查询
 
 # 查找多个关键词
 cat filename.xxx | grep -E '123|abc'
 cat filename.xxx | egrep '123|abc'
 
-# 过滤关键词 -v --invert-match 查找不匹配的行
+# 过滤关键词 -v 查找不匹配的行
 ps -efw | grep -v grep | grep java
 
 # -e --regexp=PATTERN 使用正则表达式
