@@ -89,6 +89,12 @@
     - `nmap -sU -A -v --reason -p- -n -Pn --max-scan-delay 10 -oA udp ipaddr`
     - `nmap -sO -A -v --reason -n -oA proto ipaddr`
 
+!!! faq "在未安装Nmap的机器上使用IE打开xml报告"
+    拷贝Nmap安装目录下的nmap.xsl到未安装Nmap的机器上, 编辑xml报告, 修改xsl路径, 如:
+
+    ```xml
+    <?xml-stylesheet href="file:///D:/opt/installer/Nmap/nmap.xsl" type="text/xsl"?>
+    ```
 
 ### 防火墙和IDS规避
 
