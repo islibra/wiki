@@ -222,6 +222,127 @@ Java虚拟机把描述类的数据, 从class文件加载到内存(方法区), �
 
     - final defineClass(String name, byte[] b, int off, int len), 将class文件读入字节数组b, 并将其转换为Class对象
 
+    ```java
+    import java.io.File;
+    import java.io.FileInputStream;
+    import java.io.FileNotFoundException;
+    import java.io.IOException;
+    import java.lang.reflect.Method;
+
+    /**
+     * 读取某个java文件并编译成class, 加载并调用其静态方法demoStaticMethod()
+     */
+    public class CustomClassLoader extends ClassLoader {
+        /**
+         * 编译指定源文件
+         *
+         * @param javaFilename 源文件名称
+         * @return 编译是否成功
+         */
+        private boolean compile(String javaFilename) {
+            try {
+                Process p = Runtime.getRuntime().exec("javac " + javaFilename);
+                p.waitFor();
+                int ret = p.exitValue();
+                return ret == 0;
+            } catch (IOException | InterruptedException e) {
+                System.out.println(e);
+            }
+            return false;
+        }
+
+        /**
+         * 将指定文件内容读取进数组
+         *
+         * @param filename 文件名称
+         * @return 数组
+         * @throws IOException 读取失败
+         */
+        private byte[] getBytes(String filename) throws IOException {
+            File file = new File(filename);
+            long len = file.length();
+            byte[] raw = new byte[(int) len];
+            try {
+                FileInputStream fin = new FileInputStream(file);
+                int ret = fin.read(raw);
+            } catch (FileNotFoundException e) {
+                System.out.println(e);
+            }
+            return raw;
+        }
+
+        /**
+         * 继承ClassLoader并重写findClass()
+         *
+         * @param name 类全限定名
+         * @return 类
+         */
+        protected Class<?> findClass(String name) throws ClassNotFoundException {
+            Class clazz = null;
+            String basePath = "/Users/lixiaolong/code/java/";
+            // 将包路径中的.替换成/
+            String fileStub = name.replace(".", "/");
+            String javaFilename = basePath + fileStub + ".java";
+            String classFilename = basePath + fileStub + ".class";
+            System.out.println(javaFilename);
+            File javaFile = new File(javaFilename);
+            File classFile = new File(classFilename);
+            // 源文件存在
+            if (javaFile.exists()) {
+                // 字节码文件不存在, 或源文件修改时间晚于字节码修改时间
+                if (!classFile.exists() || javaFile.lastModified() > classFile.lastModified()) {
+                    // 重新编译
+                    if (!compile(javaFilename) || !classFile.exists()) {
+                        throw new ClassNotFoundException();
+                    }
+                }
+            }
+            if (classFile.exists()) {
+                try {
+                    // 将class文件的二进制字节码读入数组
+                    byte[] raw = getBytes(classFilename);
+                    // 将二进制字节码转化为class
+                    clazz = defineClass(name, raw, 0, raw.length);
+                } catch (IOException e) {
+                    System.out.println(e);
+                }
+            }
+            if (clazz == null) {
+                throw new ClassNotFoundException();
+            }
+            return clazz;
+        }
+
+        public static void main(String[] args) {
+            // 全限定名
+            String className = "HelloJava";
+            // 参数列表
+            String[] progArgs = {"a", "b", "c"};
+            CustomClassLoader ccl = new CustomClassLoader();
+            try {
+                // 加载
+                Class clazz = ccl.loadClass(className);
+                // 获取类方法, 参数为字符串数组
+                Method m = clazz.getMethod("demoStaticMethod", new String[0].getClass());
+                // 反射调用, 注意这里的参数列表要转化成Object数组
+                Object[] objArgs = {progArgs};
+                m.invoke(null, objArgs);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+    }
+
+
+    public class HelloJava {
+        public static void demoStaticMethod(String[] args) {
+            for (String arg : args) {
+                System.out.println(arg);
+            }
+        }   
+    }
+    ```
+
 !!! quote "参考链接: [Java中类加载器的工作原理 | 技术](https://mp.weixin.qq.com/s/0OUPf3WzQCsKLeZPjo6c9Q)"
 
 ##### 类加载机制
