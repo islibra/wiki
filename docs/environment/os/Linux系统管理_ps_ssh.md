@@ -103,9 +103,10 @@ echo $TMOUT  #查看是否生效
 
 参考：[https://www.cnblogs.com/enjoycode/p/5022607.html](https://www.cnblogs.com/enjoycode/p/5022607.html)
 
-### 使用ssh证书登录
 
-1. 客户端生成证书和私钥`ssh-keygen -t rsa`, 私钥设置口令, 生成路径: `C:\Users\xxx\.ssh\id_rsa, id_rsa.pub`
+### 使用ssh公私钥对登录
+
+1. 客户端生成公私钥对`ssh-keygen -t rsa`, 私钥设置口令, 生成路径: `C:\Users\xxx\.ssh\id_rsa, id_rsa.pub`
 1. 将公钥上传到服务器
 1. 配置sshd_config
 
@@ -123,6 +124,21 @@ echo $TMOUT  #查看是否生效
 1. 客户端登录: `ssh -i /xxx/.ssh/id_rsa xxx@<ssh_server_ip>`
 
 !!! quote "参考链接: [id_rsa id_pub 公钥与私钥](https://blog.csdn.net/diyxiaoshitou/article/details/52471097)"
+
+#### known_hosts
+
+SSH会把 **访问过** 的计算机的 **公钥** 都记录在`~/.ssh/known_hosts`中, 当下次访问相同的计算机时, OpenSSH会核对公钥, 如果公钥不同, OpenSSH会发出警告, 避免受到DNS Hijack攻击
+
+使用`ssh -i /xxx/.ssh/id_rsa xxx@<ssh_server_ip>`登录时, 如果存在known_hosts且文件中不包含远程机器的IP, 会登录失败
+
+- 解决方法一(临时): 删除known_hosts
+- 解决方法二: 在known_hosts中添加远程机器的IP和公钥
+- 解决方法三(永久): 在`~/.ssh/config`中添加
+
+    ```
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+    ```
 
 
 ## sftp
