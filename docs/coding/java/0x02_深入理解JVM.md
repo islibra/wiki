@@ -180,6 +180,7 @@ Java虚拟机把描述类的数据, 从class文件加载到内存(方法区), �
 
 2. Extension ClassLoader: 扩展类加载器, 主要负载加载`%JAVA_HOME%/jre/lib/ext/* .jar`或`java.ext.dirs`系统属性指定的目录，该类加载器在JDK1.9的时候更名为：Platform ClassLoader, 其父类加载器为: null。
 3. System ClassLoader: 系统类加载器, 应用程序类加载器(ApplicationClassLoader)，主要负责加载由`-classpath`或`java.class.path`系统属性或`classpath`环境变量所指定的jar包和类。该类加载器在JDK1.9的时候更名为：System ClassLoader, 其父类加载器为：ExtensionClassLoader。
+
     > 通过ClassLoader.getSystemClassLoader()获取系统类加载器
 
     ```java
