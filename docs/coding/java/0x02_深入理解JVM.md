@@ -343,6 +343,29 @@ Java虚拟机把描述类的数据, 从class文件加载到内存(方法区), �
     }
     ```
 
+5. URLClassLoader
+
+抽象类ClassLoader的实现类
+
+```java
+public class URLClassLoaderDemo {
+    public static void main(String[] args) {
+        try {
+            // 从本地文件系统或远程主机获取二进制文件来加载类, file:, http:, ftp:
+            URL[] urls = {new URL("file:mysql-connector-java-5.1.30-bin.jar")};
+            // 使用默认的ClassLoader作为父类, 创建URLClassLoader
+            URLClassLoader myClassLoader = new URLClassLoader(urls);
+            Class clazz = myClassLoader.loadClass("com.mysql.jdbc.Driver");
+            // 实例化
+            Driver driver = (Driver) clazz.newInstance();
+            // ...
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+}
+```
+
 !!! quote "参考链接: [Java中类加载器的工作原理 | 技术](https://mp.weixin.qq.com/s/0OUPf3WzQCsKLeZPjo6c9Q)"
 
 ##### 类加载机制
