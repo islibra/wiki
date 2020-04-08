@@ -2,7 +2,6 @@
 
 ![](assets/collection.jpg)
 
-
 - java.util.Collection<E>
     - AbstractCollection
     - List
@@ -58,3 +57,24 @@
 !!! quote "参考链接"
     - [Java集合List、Set、Map](https://mp.weixin.qq.com/s/he5d-RsifuqIN3dYc6yc9A)
     - [HashMap和ConcurrentHashMap终于总结清楚了!](https://mp.weixin.qq.com/s/AX9ZgiAtJ88rPmE3qzt1tA)
+
+
+## ArrayList
+
+```java
+List list = new ArrayList<>();
+list.add("hello");
+// java.lang.IndexOutOfBoundsException: Index: 2, Size: 1
+list.add(2, "ok");
+// java.lang.IndexOutOfBoundsException: Index: 1, Size: 1
+System.out.println(list.get(1));
+
+
+List list = new ArrayList<>();
+list.add("hello");
+list.add("world");
+// 在指定索引插入元素, 其他元素后移
+list.add(1, "my");
+// [hello, my, world]
+System.out.println(list);
+```
