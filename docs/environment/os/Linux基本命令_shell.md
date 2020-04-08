@@ -1,5 +1,7 @@
 # Linux基本命令_shell
 
+!!! quote "[explainshell](https://explainshell.com/)"
+
 - 设置别名：`alias ll='ls -al'`，添加到`/etc/profile`并执行`source /etc/profile`永久生效。
 - 显示文件列表并按时间正序排列：`ll -tr`
 - 读取符号链接指向的文件：`readlink xxxlinkfile`
