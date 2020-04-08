@@ -12,6 +12,9 @@
 ## 学习资源
 
 - [CTF Wiki](https://ctf-wiki.github.io/ctf-wiki/)
+- [先知社区](https://xz.aliyun.com/)
+- [攻防世界](https://adworld.xctf.org.cn/)
+- [CTF-All-In-One 《CTF 竞赛入门指南》](https://github.com/firmianay/CTF-All-In-One)
 - prompt: <http://prompt.ml/0>，B方向，国外的xss测试。
 - RedTigers Hackit: <http://redtiger.labs.overthewire.org/>，B方向，国外sql注入挑战网站，10关，过关的形式，不同的注入，循序渐近地练习。
 - We Chall: <http://www.wechall.net/challs>，非常入门的国外ctf题库，很多国内大神都是从这里刷题成长起来的。
@@ -77,6 +80,7 @@
 
 ## 推荐工具
 
+- [CTFtools](https://www.ctftools.com/down/)
 - 010 Editor：<https://www.sweetscape.com/010editor/>，16进制编辑器。
 - Binwalk：<https://github.com/ReFirmLabs/binwalk>，分析，逆向，查看图片源格式。
 - AZPR:
@@ -96,8 +100,10 @@
 
 ## 比赛
 
-- CTF TIME: <https://ctftime.org/>，国际比赛，有很多基础的。
-- XCTF社区：<https://www.xctf.org.cn/>，国内比赛，比较难。
+- [CTF TIME](https://ctftime.org/)，国际比赛，有很多基础的。
+- [XCTF社区](https://www.xctf.org.cn/)，国内比赛，比较难。
+- [Google CTF](https://buildyourfuture.withgoogle.com/events/ctf/)
+- [i春秋 - 2019巅峰极客](https://www.ichunqiu.com/2019dfjk)
 - DefCon拉斯维加斯举办的年度黑客盛会
 - NorthSec蒙特利尔举办的年度安全大会
 - NCL国家网络联盟面向高中生和大学生的解题模式CTF
