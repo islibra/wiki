@@ -2,16 +2,37 @@
 
 ## ps
 
-### 选项
-
 - `--help all`, 查看所有帮助
-- `--no-headers`, 不显示标题
+
+### 基本选项
+
 - `-e`, 查询所有进程
-- `-f`, 输出所有信息，包含UID, PID, PPID, C, STIME, 命令行CMD
-- `-o {format}`, 指定输出格式，如：`ps -o pid,args`, `ps -ew -o pid,ppid,user,cmd`
-- `-w`, 不限制输出宽度
-- -p {PID1} {PID2}, 查询指定进程ID
-- -u {UID1},{UID2} 查询指定用户
+
+### 限定范围
+
+- `-p, p, --pid {PID1} {PID2}`, 查询指定进程ID
+- `-u, U, --user {UID1},{UID2}`, 查询指定effective用户ID或name
+- `-U, --User {UID}`, 查询指定real用户ID或name
+
+### 输出格式
+
+- `--headers`, 每页都显示标题
+- `--no-headers`, 不显示标题
+- `-f`, 输出所有信息，包含UID, PID, PPID, C, STIME, TTY, TIME, CMD
+- `-o, o, --format {format}`, 指定输出格式，如：`ps -o pid,args`, `ps -ew -o pid,ppid,user,cmd`
+- `u`, 用户友好的格式, 包含USER, PID, %CPU, %MEM
+- `-H`, 显示进程层级关系
+
+---
+
+- 查询进程启动路径: `ls -l /proc/{pid}/exe`
+- 列出进程调用的文件列表: `lsof -p {pid}`
+- 用管道作为输入参数执行命令: `echo /home | xargs ls -l` == `ls -l /home`
+
+
+## lsof
+
+list open files: 1. 列出进程打开的文件, 2. 列出文件被哪个进程打开
 
 
 ## 定时任务
