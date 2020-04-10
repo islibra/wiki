@@ -30,9 +30,70 @@
 - 用管道作为输入参数执行命令: `echo /home | xargs ls -l` == `ls -l /home`
 
 
-## lsof
+## lsof(list open files)
 
-list open files: 1. 列出进程打开的文件, 2. 列出文件被哪个进程打开
+!!! warning "root运行"
+
+### 1. 列出打开文件的进程
+
+```bash
+$ lsof /path/to/file
+```
+
+### 2. 列出进程打开的文件
+
+```bash
+$ lsof -c {process name}
+$ lsof -p {pid}
+```
+
+### 3. 列出网络连接
+
+```bash
+$ lsof -i [tcp|udp]
+$ lsof -i [tcp|udp]:port
+```
+
+### FD文件描述符
+
+1. cwd：表示current work dirctory，即：应用程序的 **当前工作目录**，这是该应用程序启动的目录，除非它本身对这个目录进行更改
+1. rtd：root directory;
+1. txt：该类型的文件是程序代码，如应用程序 **二进制文件** 本身或共享库
+1. mem：memory-mapped file;
+1. 0：表示标准输出
+1. 1：表示标准输入
+1. 2：表示标准错误
+
+一般在标准输出、标准错误、标准输入后还跟着文件状态模式
+
+1. u：表示该文件被打开并处于读取/写入模式
+1. r：表示该文件被打开并处于只读模式
+1. w：表示该文件被打开并处于
+1. 空格：表示该文件的状态模式为unknow，且没有锁定
+1. -：表示该文件的状态模式为unknow，且被锁定
+
+同时在文件状态模式后面，还跟着相关的锁
+
+1. N：for a Solaris NFS lock of unknown type;
+2. r：for read lock on part of the file;
+3. R：for a read lock on the entire file;
+4. w：for a write lock on part of the file;（文件的部分写锁）
+5. W：for a write lock on the entire file;（整个文件的写锁）
+6. u：for a read and write lock of any length;
+7. U：for a lock of unknown type;
+8. x：for an SCO OpenServer Xenix lock on part of the file;
+9. X：for an SCO OpenServer Xenix lock on the entire file;
+10. space：if there is no lock.
+
+### TYPE文件类型
+
+1. DIR：表示目录
+1. REG
+1. CHR：表示字符类型
+1. BLK：块设备类型
+1. UNIX：UNIX域套接字
+1. FIFO：先进先出 (FIFO) 队列
+1. IPv4：网际协议 (IP) 套接字
 
 
 ## 定时任务
