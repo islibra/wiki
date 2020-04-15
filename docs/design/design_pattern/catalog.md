@@ -4,7 +4,55 @@
 
 ### 单例模式
 
-[设计模式之单例模式](https://www.cnblogs.com/aaroncnblogs/p/8586892.html)
+#### 饿汉式
+
+```java hl_lines="2"
+public class Singleton {  
+    private static Singleton singleton = new Singleton();  
+    private Singleton(){}  
+    public static Singleton getInstance(){  
+        return singleton;  
+    }  
+}
+```
+
+#### 懒汉式
+
+```java hl_lines="5"
+public class Singleton {  
+    private static Singleton singleton;  
+    private Singleton(){}  
+
+    public static synchronized Singleton getInstance(){  
+        if(singleton==null){  
+            singleton = new Singleton();  
+        }  
+        return singleton;  
+    }  
+}
+```
+
+#### 双重判断加同步锁
+
+```java hl_lines="2 7 8 9"
+public class Singleton {    
+    private static volatile Singleton instance=null;    
+    private Singleton() {        
+        //do something
+    }    
+    public static Singleton getInstance() {        
+        if(instance==null) {            
+            synchronized(SingletonClass.class) {                
+                if(instance==null) {
+                    instance=new Singleton();
+                }
+            }
+        }        
+        return instance;
+    }
+}
+```
+
 
 ### 工厂模式
 
