@@ -36,7 +36,10 @@
 - [minimap-highlight-selected](https://atom.io/packages/minimap-highlight-selected): 选中缩略图高亮
 - [sublime-style-column-selection](https://atom.io/packages/sublime-style-column-selection): 列选择
 - [atom-beautify](https://atom.io/packages/atom-beautify): 代码格式化
+    - 下载安装[Uncrustify](https://github.com/uncrustify/uncrustify)
+    - File - Settings - Packages - atom-beautify - Settings - Executables - Uncrustify - Binary/Script Path
     - 选中代码 - `Ctrl + Shift + p` - `beautify language`
+
 - [markdown-pdf](https://atom.io/packages/markdown-pdf): MD转化为PDF
 
 ### 安装插件
