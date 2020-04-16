@@ -520,6 +520,92 @@ public class URLClassLoaderDemo {
 ### 5. 卸载(Unloading)
 
 
+## 安全管理器(默认不安装, 所有操作都被允许)
+
+```java
+package java.lang;
+
+public class Runtime {
+    public void exit(int status) {
+        // 获取安全管理器 java.lang.SecurityManager
+        SecurityManager security = System.getSecurityManager();
+        if (security != null) {
+            // 检查权限, 抛出异常 SecurityException
+            security.checkExit(status);
+        }
+        Shutdown.exit(status);
+    }
+}
+
+
+package java.lang;
+
+public class SecurityManager {
+    public void checkExit(int status) {
+        checkPermission(new RuntimePermission("exitVM."+status));
+    }
+
+    public void checkPermission(Permission perm) {
+        java.security.AccessController.checkPermission(perm);
+    }
+}
+```
+
+### 权限
+
+- public abstract class java.security.Permission
+    - AllPermission
+    - FilePermission: read, write, execute, delete
+        - file
+        - directory
+        - directory/* 目录中的所有文件
+        - * 当前目录中的所有文件
+        - directory/- 目录和其子目录中的所有文件
+        - - 当前目录和其子目录中的所有文件
+        - <<ALL FILES>>
+
+    - SocketPermission: accept, connect, listen, resolve
+    - public abstract class java.security.BasicPermission
+        - public final class java.lang.RuntimePermission: createClassLoader, exitVM, setIO
+        - Audio
+        - Auth
+        - AWT
+        - Logging
+        - Net
+        - Property: read, write
+        - Reflected
+        - Security
+        - Serializable
+        - SQL
+
+### 策略
+
+策略文件路径: `C:\Java\jdk1.8.0_241\jre\lib\security\java.policy`
+
+```
+grant codeBase "file:${{java.ext.dirs}}/*" {
+        permission java.security.AllPermission;
+};
+```
+
+1. 方法一: 在`java.security`中修改
+
+    ```
+    policy.url.1=file:${java.home}/lib/security/java.policy
+    policy.url.2=file:${user.home}/.java.policy
+    ```
+
+2. 方法二: 启动参数修改: `java -Djava.security.policy=MyApp.policy MyApp`
+    - 只使用指定策略: `java -Djava.security.policy==MyApp.policy MyApp`
+
+3. 方法三: 设置系统属性修改: `System.setProperty("java.security.policy", "MyApp.policy");`
+
+### 启用安全管理器
+
+1. 方法一: 启动参数: `java -Djava.security.manager -Djava.security.policy=MyApp.policy MyApp`
+2. 方法二: 在main方法中添加: `System.setSecurityManager(new SecurityManager);`
+
+
 ## 对象访问
 
 ```java
