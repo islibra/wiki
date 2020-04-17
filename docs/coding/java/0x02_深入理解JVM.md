@@ -522,10 +522,24 @@ public class URLClassLoaderDemo {
 
 ## 安全管理器(默认不安装, 所有操作都被允许)
 
+!!! abstract "用来保护敏感操作, 当系统 {==需要加载不可信的代码时==}, 必须 {==安装安全管理器==}, 且敏感操作必须经过安全管理器检查, 从而防止其被不可信代码调用"
+    - 已使用安全管理器检查的敏感操作的API
+        - 访问本地文件
+        - 向外部主机开放套接字连接
+        - 创建类加载器
+
+    - 应用自定义敏感操作
+        1. 自定义安全策略
+        2. 操作前增加安全管理器检查
+        3. 安装安全管理器
+
+    - 如果类构造方法引入了安全管理器检查, 则其必须实现反序列化自动调用方法readObject并进行安全检查
+
 ```java
 package java.lang;
 
 public class Runtime {
+    // 敏感操作
     public void exit(int status) {
         // 获取安全管理器 java.lang.SecurityManager
         SecurityManager security = System.getSecurityManager();
@@ -533,6 +547,8 @@ public class Runtime {
             // 检查权限, 抛出异常 SecurityException
             security.checkExit(status);
         }
+
+        // 检查通过, 执行操作
         Shutdown.exit(status);
     }
 }
@@ -553,9 +569,11 @@ public class SecurityManager {
 
 ### 权限
 
+permission className targetName, actionList;
+
 - public abstract class java.security.Permission
     - AllPermission
-    - FilePermission: read, write, execute, delete
+    - public final class java.io.FilePermission: read, write, execute, delete
         - file
         - directory
         - directory/* 目录中的所有文件
@@ -564,7 +582,26 @@ public class SecurityManager {
         - - 当前目录和其子目录中的所有文件
         - <<ALL FILES>>
 
+        `permission java.io.FilePermission "/myapp/-", "read,write,delete";`
+
+        `permission java.io.FilePermission "c:\\myapp\\-", "read,write,delte";`
+
+        `permission java.io.FilePermission "${user.home}${/}-", "read,write"`
+
+        > ${/}相当于${file.separator}
+
     - SocketPermission: accept, connect, listen, resolve
+        - localhost, 空字符串 本机
+        - hostname, IPaddress
+        - * .domain
+        - *
+        - :port
+        - :port- 大于等于
+        - :-port 小于等于
+        - :p1-p2
+
+        `permission java.net.SocketPermission "*.xxx.com:8000-8999", "connect";`
+
     - public abstract class java.security.BasicPermission
         - public final class java.lang.RuntimePermission: createClassLoader, exitVM, setIO
         - Audio
@@ -573,6 +610,9 @@ public class SecurityManager {
         - Logging
         - Net
         - Property: read, write
+
+            `permission java.util.PropertyPermission "java.vm.*", "read";`
+
         - Reflected
         - Security
         - Serializable
