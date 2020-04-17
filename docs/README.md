@@ -86,7 +86,11 @@
     - 主机Overlay
     - 混合Overlay
 
-!!! quote "参考链接: [数据中心网络里的Underlay和Overlay](https://mp.weixin.qq.com/s?src=3&timestamp=1581759978&ver=1&signature=mFSxihVY3mTo7V4YJDaCGTIL0x7hCNcYJkO8qSuYCXsSSrSSMlYzC21wbq5FDBZ7EvO2wU*ITrx60MI7pX7BxSCpHY2h1fJmeg*mpK9EUepQFtg7mDINnwCQxZLF9IuKi37xcEpGED0i7z9m9zhFG65C6VQuW*l3SZvTBXFbcmo=)"
+    !!! quote "参考链接: [数据中心网络里的Underlay和Overlay](https://mp.weixin.qq.com/s?src=3&timestamp=1581759978&ver=1&signature=mFSxihVY3mTo7V4YJDaCGTIL0x7hCNcYJkO8qSuYCXsSSrSSMlYzC21wbq5FDBZ7EvO2wU*ITrx60MI7pX7BxSCpHY2h1fJmeg*mpK9EUepQFtg7mDINnwCQxZLF9IuKi37xcEpGED0i7z9m9zhFG65C6VQuW*l3SZvTBXFbcmo=)"
+
+- proof-of-concept(POC): 对某些想法的一个较短而不完整的实现, 以证明其可行性, 示范其原理
+    - 漏洞证明
+    - POC测试, 针对客户具体应用的验证性测试, 验证系统方案是否能满足客户需求
 
 
 ## 语录
