@@ -182,37 +182,153 @@ public class MyClient {
 
 ## NIO
 
+将文件(或一段区域)映射到内存, 相对于传统IO面向字节流, NIO是面向块处理
+
 ### 核心要素
 
-#### Buffer，缓冲区
+#### Buffer，缓冲区数组
 
-Buffer类型: Byte Char Int long short double float
+##### Buffer类型
 
-数据流向：`Client <-data-> Buffer <-data-> Channel <-data-> Channel <-data-> Buffer <-data-> Server`
+- ByteBuffer
+    - MappedByteBuffer
 
-+ 分配空间：`ByteBuffer byteBuffer = ByteBuffer.allocate(1024);`
-+ 从Client向Buffer中写入数据：`byteBuffer.put(...);`
-+ 获取Channel：`inputstream.getchanel();`
-+ Buffer中的数据写入Channel：`channel.write(byteBuffer);`
-+ 读写转换：`bytebuffer.flip();`
-+ Buffer从Channel中读取数据：`channel.read(byteBuffer);`
-+ Server从Buffer中读取数据：`byteBuffer.get(...);`
+- CharBuffer
+- ShortBuffer
+- IntBuffer
+- LongBuffer
+- FloatBuffer
+- DoubleBuffer
 
+##### 状态变量
 
-> + capacity，缓冲区容量
-> + position，当前位置，下一次读取和写入的索引
-> + limit，界限，最后一个有效位置之后的下一个位置的索引
-> + flip()，将limit设置为position，position设置为0
-> + clear()，清空缓冲区
+0 <= mark <= position <= limit <= capacity
+
+```java
+// 分配缓冲区空间
+ByteBuffer buffer = ByteBuffer.allocate(1024);
+// 缓冲区容量, 创建后不改变, 1024
+log.info("capacity: " + buffer.capacity());
+// 下一次读取和写入的索引, 0
+// 向缓冲区Buffer写入数据时, position等于已写入数据大小
+log.info("position: " + buffer.position());
+// 最后一个有效位置之后的下一个位置的索引, 1024
+log.info("limit: " + buffer.limit());
+
+// 向缓冲区Buffer写入数据
+buffer.put("This is a NIO demo.".getBytes(StandardCharsets.UTF_8));
+// 写入时, position后移, 19
+log.info("position: " + buffer.position());
+// 写入完毕, 将limit设置为position，position设置为0, 准备读取
+buffer.flip();
+// 0
+log.info("position: " + buffer.position());
+// 19
+log.info("limit: " + buffer.limit());
+
+// 从缓冲区Buffer读取数据
+log.info("first position: " + buffer.get());
+// 读取时, position后移, 1
+log.info("position: " + buffer.position());
+// 清空缓冲区, 将position设置为0, limit设置为capacity，准备写入
+buffer.clear();
+// 0
+log.info("position: " + buffer.position());
+// 1024
+log.info("limit: " + buffer.limit());
+
+// clear()后缓冲区内容不清除, 只移动position和limit
+log.info("first position: " + buffer.get(0));
+// 按索引读取, 不影响position
+log.info("position: " + buffer.position());
+```
 
 
 #### Channel，通道
 
-chanel相对于input/outputstream流来说是双向的。
+##### Channel类型
 
-+ FileChannel，文件IO
-+ DatagramChannel，UDP协议
-+ ServerSocketChannel/SocketChannel，TCP协议
+- FileChannel，文件IO
+- ServerSocketChannel/SocketChannel，TCP协议
+- DatagramChannel，UDP协议
+- Pipe.SinkChannel
+- Pipe.SourceChannel
+- SelectableChannel
+
+```java
+File file = new File("D:\\tmp\\cleancode\\io.txt");
+int len = (int) file.length();
+FileInputStream fin = null;
+FileOutputStream fout = null;
+try {
+    fin = new FileInputStream(file);
+    // 1. 通过输入流获取Channel
+    FileChannel inChannel = fin.getChannel();
+    // 2. 通过Channel将文件映射到Buffer
+    MappedByteBuffer buffer = inChannel
+            .map(FileChannel.MapMode.READ_ONLY, 0, file.length());
+
+    fout = new FileOutputStream("D:\\tmp\\cleancode\\nio.txt");
+    // 3. 通过输出流获取Channel
+    // Channel相对于InputStream/OutputStream来说是双向的
+    FileChannel outChannel = fout.getChannel();
+    // 4. 将Buffer中的数据写入Channel
+    outChannel.write(buffer);
+    // 5. 读取完毕, 清空Buffer
+    buffer.clear();
+
+    // 6. 通过字符集创建解码器
+    // Charset charset = Charset.forName("UTF-8");
+    // CharsetDecoder decoder = charset.newDecoder();
+    CharsetDecoder decoder = StandardCharsets.UTF_8.newDecoder();
+    // 7. 将ByteBuffer解码成CharBuffer
+    CharBuffer charBuffer = decoder.decode(buffer);
+    // 8. 将CharBuffer转换为字符串
+    log.info(charBuffer.toString());
+} catch (Exception e) {
+    log.severe(e.getMessage());
+} finally {
+    try {
+        fin.close();
+        fout.close();
+    } catch (IOException e) {
+        log.severe(e.getMessage());
+    }
+}
+```
+
+```java
+File file = new File("D:\\tmp\\cleancode\\io.txt");
+FileInputStream fin = null;
+try {
+    fin = new FileInputStream(file);
+    // 1. 通过输入流获取Channel
+    FileChannel inChannel = fin.getChannel();
+    // 2. 分配缓冲区空间
+    ByteBuffer buffer = ByteBuffer.allocate(1024);
+    // 3. 从Channel中读取数据到Buffer
+    while (inChannel.read(buffer) != -1) {
+        // 4. 向Buffer写入数据完毕, 锁定缓冲区
+        buffer.flip();
+        CharsetDecoder decoder = StandardCharsets.UTF_8.newDecoder();
+        CharBuffer charBuffer = decoder.decode(buffer);
+        log.info(charBuffer.toString());
+        // 5. 从Buffer读取数据完毕, 清空缓冲区
+        buffer.clear();
+    }
+} catch (Exception e) {
+    log.severe(e.getMessage());
+} finally {
+    try {
+        fin.close();
+    } catch (IOException e) {
+        log.severe(e.getMessage());
+    }
+}
+```
+
+
+数据流向：`Client <-data-> Buffer <-data-> Channel <-data-> Channel <-data-> Buffer <-data-> Server`
 
 > 打开一个ServerSocketChannel通道：`ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();`
 > 将通道设置为非阻塞：`serverSocketChannel.configureBlocking(false);`
@@ -279,6 +395,8 @@ Selector selector = selectionKey.selector();
 selectionKey.attach(Object);
 Object anthorObj = selectionKey.attachment();
 ```
+
+#### Charset
 
 ### 示例代码
 
