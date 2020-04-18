@@ -78,3 +78,27 @@ list.add(1, "my");
 // [hello, my, world]
 System.out.println(list);
 ```
+
+## Collections
+
+```java
+// 创建空的只读集合
+List emptyList = Collections.emptyList();
+// java.lang.UnsupportedOperationException
+emptyList.add("ele");
+
+// 创建只包含单个元素的只读集合
+Set singletonSet = Collections.singleton("single");
+// java.lang.UnsupportedOperationException
+singletonSet.add("ele");
+
+Map<String, Integer> demoMap = new HashMap();
+demoMap.put("1", 1);
+demoMap.put("2", 2);
+// 创建Map的只读副本
+Map<String, Integer> unmodifiableMap = Collections.unmodifiableMap(demoMap);
+// java.lang.UnsupportedOperationException
+unmodifiableMap.put("3", 3);
+// java.lang.UnsupportedOperationException
+unmodifiableMap.clear();
+```
