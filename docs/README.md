@@ -13,6 +13,7 @@
 
 ### 算法
 
+- [labuladong的算法小抄](https://labuladong.gitbook.io/algo/)
 - [力扣题库](https://leetcode-cn.com/problemset/all/)
 - python实现的排序算法：<https://github.com/TheAlgorithms/Python>
 - python算法动画演示：<https://www.toptal.com/developers/sorting-algorithms/bubble-sort>
