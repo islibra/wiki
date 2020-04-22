@@ -9,7 +9,8 @@ go语言web框架。
 ## 下载安装
 
 ```bash
-go get github.com/astaxie/beego
+# 如果因为网络问题无法下载, 可以直接从github下载release包到workspace/src/github.com/astaxie/beego目录
+$ go get github.com/astaxie/beego
 ```
 
 !!! example "选项"
@@ -36,35 +37,89 @@ go build -o hello hello.go
 
 浏览器访问：<http://localhost:8080>
 
-## 接口
+## bee工具
+
+## 新建项目
+
+1. 进入`$GOPATH/src`, 执行`$ bee new quickstart`
+1. `$ cd quickstart`
+1. `$ bee run`
+
+> Go语言执行过程: main --> pkg1 --> pkg2 --> pkg2.init() --> pkg1.init() --> main.init() --> main()
 
 ```go
+package main
+
+import (
+    _ "quickstart/routers"
+    "github.com/astaxie/beego"
+)
+
+func main() {
+    beego.Run()
+}
+```
+
+
+## Router
+
+```go
+package routers
+
+import (
+    "quickstart/controllers"
+    "github.com/astaxie/beego"
+)
+
+// main中引入路由包时，自动执行init()方法
+func init() {
+    // 注册路由
+    // 声明一个自定义Controller变量，并将其引用作为参数
+    // 相当于
+    // var main MainController
+    // 传入&main
+    beego.Router("/", &controllers.MainController{})
+}
+```
+
+
+## Controller
+
+```go
+package controllers
+
+import (
+    "github.com/astaxie/beego"
+)
+
 // 定义接口类
 type MainController struct {
     beego.Controller
 }
 
-// 定义方法
-func (this *MainController) Get() {
-    this.Ctx.WriteString("hello world")
+// 定义方法(重写beego.Controller中的Get方法)
+func (c *MainController) Get() {
+    c.Data["Website"] = "beego.me"
+    c.Data["Email"] = "astaxie@gmail.com"
+    c.TplName = "index.tpl"
 }
 
-// 注册接口路径
-// 声明一个自定义Controller变量，并将引用作为参数
-// 相当于
-// var main MainController
-// 传入&main
-beego.Router("/", &MainController{})
+func (this *MainController) Post() {
+    this.Ctx.WriteString("hello beego!")
+
+    // 请求头
+    input := this.Ctx.Input
+    token := input.Header("Access-Token")
+    this.Ctx.WriteString(token)
+    this.Ctx.WriteString("\n")
+
+    // 请求参数
+    username := this.GetString("username")
+    this.Ctx.WriteString(username)
+    this.Ctx.WriteString("\n")
+}
 ```
 
-## 路由
-
-```go
-// 引入路由包，自动执行init方法
-import (
-    "quickstart/controllers"
-)
-```
 
 ## 执行逻辑
 
