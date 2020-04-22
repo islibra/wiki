@@ -4,19 +4,40 @@
 
 中文版：<https://go-zh.org/>
 
-二进制安装包下载地址：<https://golang.org/dl/>
+1. 二进制安装包下载地址：<https://golang.org/dl/>
+1. 提取安装包到指定目录：`tar -C /usr/local/ -zxf go1.12.5.linux-amd64.tar.gz`
 
-提取安装包到指定目录：`tar -C /usr/local/ -zxf go1.12.5.linux-amd64.tar.gz`
-
-!!! info "linux添加环境变量"
+!!! info "Linux添加环境变量"
     1. 执行`vim /etc/profile`
     1. 添加`export PATH=$PATH:/usr/local/go/bin`
     1. 执行`source /etc/profile`
     1. 查看go版本`go version`
 
-!!! info "windows设置环境变量"
+!!! info "Windows设置环境变量"
     1. 添加`GOPATH`，指向自定义workspace，在workspace下建立目录src，并创建main.go和package。使用`go get`也会将库默认下载到该目录下。
     1. 使用GoLand导入工程 {==一般是包含src的目录==} 后，File - Settings - Go - GOPATH - Project GOPATH，添加工程目录 {==包含src的目录==}，在GoLand中才能找到依赖。
+
+## 工作空间
+
+- workspace
+    - src
+        - code.google.com/xxx/
+            - xxx.go
+            - xxx_test.go
+
+        - github.com/xxx/
+            - xxx.go
+
+    - pkg  # 包对象
+    - bin  # 可执行命令
+
+### GOPATH
+
+```sh
+$ export GOPATH=/path/to/workspace
+$ export PATH=$PATH:$GOPATH/bin
+```
+
 
 ## demo
 
@@ -40,6 +61,7 @@ func main() {
 
 !!! tip "提示"
 	如果在同一个包中定义多个文件，需要执行`go run hello1.go hello2.go`，否则会报undefined。
+
 
 ## 包
 
