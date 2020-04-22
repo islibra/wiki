@@ -1,3 +1,10 @@
+# 0xFD_JSON解析
+
+## j
+
+
+## Jackson
+
 <https://github.com/FasterXML/jackson>  
 Java实现的JSON库，用来解析或生成JSON，和POJO互转，或其他格式如：Avro, BSON, CBOR, CSV, Smile, (Java) Properties, Protobuf, XML or YAML。
 
