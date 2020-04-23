@@ -1,46 +1,26 @@
----
-title: Maven
-date: 2018-12-28 20:42:38
-categories: environment
-tags:
----
+# Maven
 
-# 前置条件
+!!! quote "官方网站: [Apache Maven Project](https://maven.apache.org/)"
 
-已安装JDK，并设置环境变量`JAVA_HOME`和`path`。
+> 前置条件: 已安装JDK，并设置环境变量`JAVA_HOME`和`path`。
 
-# 设置环境变量
+## 设置环境变量
 
-> M2_HOME=D:\software\apache-maven-3.3.3
-> M2=%M2_HOME%\bin  **--添加到path中去**
-> MAVEN_OPTS=-Xms256m -Xmx512m
+- M2_HOME=D:\opt\installer\apache-maven-3.6.3
+- M2=%M2_HOME%\bin, 添加到path中
+- MAVEN_OPTS=-Xms256m -Xmx512m
 
-# 生命周期
+查看版本: `mvn -v`
 
-- pre-clean -> clean -> post-clean
-- validate -> initialize -> compile -> test -> package -> install -> depoly
-- pre-site -> site -> post-site -> site-depoly
-
-# 配置文件
+## 配置文件
 
 配置文件路径：`/conf/setting.xml`
 
 ```xml
-<!--本地仓路径-->
-<localRepository>D:\software\apache-maven-3.3.3\repo</localRepository>
+  <!--本地仓路径-->
+  <localRepository>D:\opt\installer\apache-maven-3.6.3\repo</localRepository>
 
-<!--从远程仓下载使用的镜像-->
-  <mirrors>
-    <mirror>
-      <id>planetmirror.com</id>
-      <name>PlanetMirror Australia</name>
-      <url>http://downloads.planetmirror.com/pub/maven2</url>
-      <!--需镜像的远程仓，如central代表https://repo.maven.apache.org/maven2/-->
-      <mirrorOf>central</mirrorOf>
-    </mirror>
-  </mirrors>
-
-<!--为Maven配置代理访问网络-->
+  <!--为Maven配置代理访问网络-->
   <proxies>
     <proxy>
       <id>myproxy</id>
@@ -54,24 +34,45 @@ tags:
     </proxy>
   </proxies>
 
-<!--定义配置，通过<activatedProfiles/>标签或环境变量/JDK版本激活-->
+  <!--从远程仓下载使用的镜像-->
+  <mirrors>
+    <mirror>
+      <id>mirrorId</id>
+      <name>Remote Mirror</name>
+      <!--需镜像的远程仓，如*代表所有, central代表https://repo.maven.apache.org/maven2/-->
+      <mirrorOf>central</mirrorOf>
+      <url>http://downloads.planetmirror.com/pub/maven2</url>
+    </mirror>
+  </mirrors>
+
+  <!--
+  构建过程中的自定义配置，可以通过多种方式激活, 如:
+  1. <activatedProfiles>标签
+  2. 系统属性, 如JDK版本前缀
+  3. cmd指定
+  -->
   <profiles>
     <profile>
       <id>test</id>
+
       <activation>
         <activeByDefault>false</activeByDefault>
-	<!--在JDK 1.8版本构建时被激活-->
+
+        <!--在JDK 1.8版本构建时被激活-->
         <jdk>1.8</jdk>
-	<!--在环境变量mavenVersion的值为2.0.3时被激活-->
+
+        <!--在系统属性mavenVersion的值为2.0.3时被激活-->
         <property>
           <name>mavenVersion</name>
           <value>2.0.3</value>
         </property>
       </activation>
-      <!--当该profile被激活时，在POM中通过${user.install}访问该属性-->
+
+      <!--定义变量, 当该profile被激活时，在pom.xml中通过${user.install}访问该属性-->
       <properties>
-        <user.install>${user.home}/our-project</user.install>
+        <user.install>/path/to/our-project</user.install>
       </properties>
+
       <!--定义Maven下载依赖和插件的远端仓库地址-->
       <repositories>
         <repository>
@@ -92,7 +93,7 @@ tags:
         </repository>
       </repositories>
       <pluginRepositories>
-        ...
+        <!--...-->
       </pluginRepositories>
     </profile>
   </profiles>
@@ -103,25 +104,37 @@ tags:
   </activeProfiles>
 ```
 
-# maven工程典型目录结构
 
-> /src/main/java  **--源码**
-> /src/main/resources  **--资源文件**
-> /src/test  **--测试代码**
-> /target  **--编译生成的二进制文件**
-> /target/classes  **--部署使用的jar**
-> /pom.xml
+## 创建Maven工程
 
-# POM
+典型目录结构
+
+- /src
+    - /main
+        - /java  **--源码**
+        - /resources  **--资源文件**
+
+    - /test
+        - /java  **--测试代码**
+
+- /target  **--编译生成的二进制文件**
+    - /classes
+    - xxx.jar  **--部署使用的jar**
+
+- /pom.xml
+
+
+## POM
 
 ```xml
-<groupId>com.aaron</groupId>
-<artifactId>springBootDemo</artifactId>
-<version>0.0.1-SNAPSHOT</version>
+<groupId>com.xxx</groupId>
+<artifactId>yyy-demo</artifactId>
+<version>1.0-SNAPSHOT</version>
+
 <packaging>jar</packaging>
 ```
 
-## 依赖管理
+### 依赖管理
 
 在parent中配置dependencyManagement，统一管理jar版本。
 
@@ -153,7 +166,7 @@ tags:
     <artifactId>parent</artifactId>  
     <groupId>com.zhisheng</groupId>
     <version>0.0.1-SNAPSHOT</version>  
-	<relativePath>../parent/pom.xml</relativePath> 
+	<relativePath>../parent/pom.xml</relativePath>
 </parent>
 <!--依赖关系-->  
 <dependencies>  
@@ -224,7 +237,31 @@ tags:
 </dependency>
 ```
 
-## 插件管理
+### 插件管理
+
+#### [Apache Maven JAR Plugin](http://maven.apache.org/plugins/maven-jar-plugin/)
+
+构建jar
+
+```xml
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.2.0</version>
+            <configuration>
+                <archive>
+                    <manifest>
+                        <!--构建的jar中包含主类-->
+                        <mainClass>com.xxx.yyydemo.MainClass</mainClass>
+                    </manifest>
+                </archive>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
 
 在parent中统一配置pluginManagement，与dependencyManagement类似，子项目继承父项目配置。
 
@@ -247,7 +284,13 @@ tags:
 </build>
 ```
 
-# 常用命令
+## 生命周期
+
+- pre-clean -> clean -> post-clean
+- validate -> initialize -> compile -> test -> package -> install -> depoly
+- pre-site -> site -> post-site -> site-depoly
+
+## 常用命令
 
 ```bash
 mvn clean package/install -DskipTests
