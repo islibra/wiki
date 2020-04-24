@@ -92,8 +92,12 @@ $ gzip FileName  #压缩
 ### 3. tar.gz
 
 ```bash
-$ tar -zxvf file.tar.gz  #解压
-$ tar -zcvf file.tar.gz dir  #压缩
+# 解压到当前目录
+$ tar -zxvf file.tar.gz
+# 解压到指定目录
+$ tar -zxvf /tmp/file.tar.gz -C /tmp/
+# 压缩
+$ tar -zcvf file.tar.gz dir
 ```
 
 ### 4. bz2
