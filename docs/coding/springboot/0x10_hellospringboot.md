@@ -79,6 +79,7 @@ demo
                     |-- static
                     |-- templates
                     |-- application.properties
+                    |-- logback.xml
         |-- test
   |-- pom.xml
 ```
@@ -137,19 +138,17 @@ public class HelloWorldController {
 }
 ```
 
-Maven构建: `mvn clean package -DskipTests`
+## Maven构建
 
-启动主程序:
+```
+$ mvn clean package -DskipTests
+```
+
+## 启动主程序
 
 ```bash
 $ java -jar demo-0.0.1-SNAPSHOT.jar
 
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::        (v2.1.7.RELEASE)
 
 2019-08-29 14:16:47.982  INFO 4236 --- [           main] com.example.demo.DemoApplication         : Starting DemoApplication v0.0.1-SNAPSHOT on szxy8l002509891 with PID 4236 (F:\java\demo\target\demo-0.0.1-SNAPSHOT.jar started by l00250989 in F:\java\demo\target)
@@ -167,3 +166,11 @@ $ java -jar demo-0.0.1-SNAPSHOT.jar
 访问<http://127.0.0.1:8080/hello>返回`Hello World`
 
 访问<http://127.0.0.1:8080/getUser>返回`{"username":"jack","password":"passW0rd"}`
+
+## Web开发
+
+Spring Boot推荐使用[Thymeleaf](https://www.thymeleaf.org/)来代替JSP, HTML5模板引擎, 能直接在浏览器打开显示而不启动整个Web应用
+
+对标产品: Velocity, FreeMaker
+
+## 实现上传文件
