@@ -130,11 +130,21 @@
 <groupId>com.xxx</groupId>
 <artifactId>yyy-demo</artifactId>
 <version>1.0-SNAPSHOT</version>
-
+<!-- 构建生成的文件类型 -->
 <packaging>jar</packaging>
 ```
 
 ### 依赖管理
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>fastjson</artifactId>
+        <version>1.2.61</version>
+    </dependency>
+</dependencies>
+```
 
 在parent中配置dependencyManagement，统一管理jar版本。
 
@@ -253,7 +263,10 @@
             <configuration>
                 <archive>
                     <manifest>
-                        <!--构建的jar中包含主类-->
+                        <!-- 在MANIFEST.MF中添加Class-Path -->
+                        <addClasspath>true</addClasspath>
+                        <classpathPrefix>lib/</classpathPrefix>
+                        <!-- 构建的jar中包含主类 -->
                         <mainClass>com.xxx.yyydemo.MainClass</mainClass>
                     </manifest>
                 </archive>
@@ -262,6 +275,71 @@
     </plugins>
 </build>
 ```
+
+#### [Apache Maven Assembly Plugin](http://maven.apache.org/plugins/maven-assembly-plugin/)
+
+构建时集成依赖, 该插件会将依赖jar解压, 包含到jar中
+
+```xml
+<plugin>
+    <!-- NOTE: We don't need a groupId specification because the group is
+         org.apache.maven.plugins ...which is assumed by default.
+     -->
+    <artifactId>maven-assembly-plugin</artifactId>
+    <version>3.2.0</version>
+    <configuration>
+        <archive>
+            <manifest>
+                <mainClass>com.huawei.osidemo.ICAgent</mainClass>
+            </manifest>
+        </archive>
+        <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+    </configuration>
+    <!-- 绑定到package生命周期上 -->
+    <executions>
+        <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+                <goal>single</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+#### [Apache Maven Dependency Plugin](https://maven.apache.org/plugins/maven-dependency-plugin/)
+
+构建时包含依赖
+
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-dependency-plugin</artifactId>
+    <version>3.1.2</version>
+    <executions>
+        <execution>
+            <id>copy-dependencies</id>
+            <phase>package</phase>
+            <goals>
+                <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+                <outputDirectory>target/lib</outputDirectory>
+                <overWriteReleases>false</overWriteReleases>
+                <overWriteSnapshots>false</overWriteSnapshots>
+                <overWriteIfNewer>true</overWriteIfNewer>
+                <excludeTransitive>false</excludeTransitive>
+                <!-- Warning: 不要加这个, MANIFEST.MF会携带版本号, 如果不一致会导致找不到依赖
+                <stripVersion>true</stripVersion>-->
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+```
+
 
 在parent中统一配置pluginManagement，与dependencyManagement类似，子项目继承父项目配置。
 
