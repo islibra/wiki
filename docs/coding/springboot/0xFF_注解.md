@@ -1,5 +1,41 @@
 # 0xFF_注解
 
+## Spring Boot
+
+### SpringBootApplication
+
+```java
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class DemoApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+}
+```
+
+### RestController RequestMapping
+
+- RestController: 注解在Controller类上, 提供RESTful接口
+- RequestMapping: 注解在方法上, 提供URL映射
+
+```java
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@RestController
+public class UploadController {
+    @RequestMapping("/upload")
+    public String index() {
+        return "upload";
+    }
+}
+```
+
+
 ## 表单校验
 
 1. 增加正则表达式
