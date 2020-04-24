@@ -1,6 +1,8 @@
 # hellospringboot
 
-创建工程：<http://start.spring.io/>
+## 创建工程
+
+http://start.spring.io/
 
 > Project: Maven Project  
 Language: Java  
@@ -11,52 +13,53 @@ Packaging: Jar
 Java: 8  
 Dependencies: Spring Web Starter
 
-??? note "pom自动引入web依赖"
-    ```xml hl_lines="23 24"
-    <?xml version="1.0" encoding="UTF-8"?>
-    <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-    	<modelVersion>4.0.0</modelVersion>
-    	<parent>
-    		<groupId>org.springframework.boot</groupId>
-    		<artifactId>spring-boot-starter-parent</artifactId>
-    		<version>2.1.7.RELEASE</version>
-    		<relativePath/> <!-- lookup parent from repository -->
-    	</parent>
-    	<groupId>com.example</groupId>
-    	<artifactId>demo</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
-    	<name>demo</name>
-    	<description>Demo project for Spring Boot</description>
+## pom自动引入web依赖
 
-    	<properties>
-    		<java.version>1.8</java.version>
-    	</properties>
+```xml hl_lines="23 24"
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.1.7.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.example</groupId>
+	<artifactId>demo</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>demo</name>
+	<description>Demo project for Spring Boot</description>
 
-    	<dependencies>
-    		<dependency>
-    			<groupId>org.springframework.boot</groupId>
-    			<artifactId>spring-boot-starter-web</artifactId>
-    		</dependency>
+	<properties>
+		<java.version>1.8</java.version>
+	</properties>
 
-    		<dependency>
-    			<groupId>org.springframework.boot</groupId>
-    			<artifactId>spring-boot-starter-test</artifactId>
-    			<scope>test</scope>
-    		</dependency>
-    	</dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
 
-    	<build>
-    		<plugins>
-    			<plugin>
-    				<groupId>org.springframework.boot</groupId>
-    				<artifactId>spring-boot-maven-plugin</artifactId>
-    			</plugin>
-    		</plugins>
-    	</build>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
-    </project>
-    ```
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+```
 
 ## 目录结构
 
@@ -75,7 +78,7 @@ demo
               |-- resources
                     |-- static
                     |-- templates
-                          |-- application.properties
+                    |-- application.properties
         |-- test
   |-- pom.xml
 ```
