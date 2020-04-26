@@ -1,8 +1,41 @@
 # 0xFF_注解
 
+## Spring
+
+### Configuration Bean
+
+- org.springframework.context.annotation.**Configuration**: 表示这个类可以使用 Spring IoC 容器作为 Bean 定义的来源，相当于xml配置文件，所有带 @Bean 注解的方法返回的都是同一个实例。（使用 AnnotationConfigApplicationContext 来加载并把他们提供给 Spring 容器。）
+    - org.springframework.stereotype.**Component** 的别名: 带 @Bean 注解的方法返回的都是新的实例。
+
+- org.springframework.context.annotation.**Bean**: 可理解为用Spring的时候xml里面的bean标签，方法将返回一个对象，方法名称作为 bean 的 id，如：
+
+```java
+@Configuration
+public class BeanConfig {
+    @Bean
+    public News news()
+    {
+        return new News();
+    }
+}
+```
+
+相当于：
+
+```xml
+<bean id="news" class="com.xxx.News">
+</bean>
+```
+
+
 ## Spring Boot
 
 ### SpringBootApplication
+
+- org.springframework.boot.autoconfigure.**SpringBootApplication**
+    - org.springframework.context.annotation.**ComponentScan** 的别名: 指明对象扫描范围，默认只扫描当前启动类所在的包里的对象
+        - basePackages = {"com.xxx.yyy"}
+        - basePackageClasses = 要扫描类.class所在位置的包
 
 ```java
 import org.springframework.boot.SpringApplication;
@@ -19,8 +52,13 @@ public class DemoApplication {
 
 ### RestController RequestMapping
 
-- RestController: 注解在Controller类上, 提供RESTful接口
-- RequestMapping: 注解在方法上, 提供URL映射
+- org.springframework.web.bind.annotation.**RestController**: 注解在Controller类上, 提供RESTful接口
+    - org.springframework.stereotype.**Controller** 的别名
+        - org.springframework.stereotype.**Component** 的别名
+
+- org.springframework.web.bind.annotation.**PostMapping**
+- org.springframework.web.bind.annotation.**GetMapping**
+    - org.springframework.web.bind.annotation.**RequestMapping** 的别名: 注解在方法上, 提供URL映射
 
 ```java
 import org.springframework.web.bind.annotation.RestController;
@@ -35,8 +73,20 @@ public class UploadController {
 }
 ```
 
+### RequestParam
 
-## 表单校验
+- org.springframework.web.bind.annotation.**RequestParam**, 请求参数
+
+```java
+@PostMapping("/upload")
+public String fileUpload(@RequestParam("file") MultipartFile file,
+    RedirectAttributes redirectAttributes) {
+    return "redirect:/uploadStatus";
+}
+```
+
+
+## Pattern Valid - 表单校验
 
 1. 增加正则表达式
 
@@ -67,13 +117,7 @@ public class UploadController {
 
 ---
 
-- @Configuration: 表示这个类可以使用 Spring IoC 容器作为 bean 定义的来源。相当于xml配置文件，所有带@Bean注解的方法返回的都是同一个实例。（使用 AnnotationConfigApplicationContext 来加载并把他们提供给 Spring 容器。）
-- @Component: 带@Bean注解的方法返回的都是新的实例。
-- @Bean: 可理解为用spring的时候xml里面的bean标签，方法将返回一个对象。方法名称作为 bean 的 ID。
 - @import: 从另一个配置类中加载 @Bean 定义。
-- @ComponentScan: 指明对象扫描范围，默认只扫描当前启动类所在的包里的对象
-    - basePackages = {"com.xxx.yyy"}
-    - basePackageClasses = 要扫描类.class所在位置的包
 - @ConditionalOnProperty(name = "synchronize", havingValue = "true"): 控制Configuration是否生效，name为application.properties中配置的属性。
 - @Value: 值注入
     - 外部注入：
