@@ -1,9 +1,4 @@
----
-title: Ubuntu16.04安装mysql5.7.23
-date: 2018-08-11 11:52:06
-categories: db
-tags:
----
+# 0x10_Ubuntu16.04安装MySQL
 
 # 下载安装包和依赖包
 
