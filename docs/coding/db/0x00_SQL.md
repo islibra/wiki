@@ -1,12 +1,6 @@
----
-title: SQL
-date: 2018-09-16 14:09:20
-categories: db
-tags:
----
+# 0x00_SQL
 
 > **Tips:** SQL 对大小写不敏感！
-
 
 # DML
 
