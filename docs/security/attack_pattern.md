@@ -505,19 +505,89 @@ print_r($uc->test);
 #### JDBC
 
 ```java tab="错误的做法"
-// 拼接SQL语句
-String sql = "SELECT * FROM users WHERE name ='" + name + "'";
-Statement stmt = connection.createStatement();
-ResultSet rs = stmt.executeQuery(sql);
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Logger;
+
+public class SqlUtil {
+    private static final Logger LOG = Logger.getLogger(SqlUtil.class.getName());
+
+    private void getData(String name) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager
+                    .getConnection("jdbc:mysql://x.x.x.x:3306/sqlidemo",
+                            "root", "Admin@123");
+            Statement stmt = conn.createStatement();
+            // 拼接SQL语句
+            String sqlString = "select * from PERSONS where NAME='" + name + "';";
+            ResultSet rs = stmt.executeQuery(sqlString);
+            while (rs.next()) {
+                LOG.info(rs.getString("NAME"));
+            }
+        } catch (ClassNotFoundException e) {
+            LOG.severe(e.getMessage());
+        } catch (SQLException e) {
+            LOG.severe(e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        SqlUtil sqlUtil = new SqlUtil();
+        sqlUtil.getData("Amanda");
+    }
+}
 ```
 
 ```java tab="推荐的做法"
-// 使用占位符 ? 和预编译
-String sql = "SELECT * FROM users WHERE name= ? ";
-PreparedStatement ps = connection.prepareStatement(sql);
-// 参数 index 从 1 开始
-ps.setString(1, name);
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Logger;
+
+public class SqlUtil {
+    private static final Logger LOG = Logger.getLogger(SqlUtil.class.getName());
+
+    private void getData(String name) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager
+                    .getConnection("jdbc:mysql://100.101.58.155:3306/sqlidemo",
+                            "root", "Admin@123");
+
+            // Statement stmt = conn.createStatement();
+            // String sqlString = "select * from PERSONS where NAME='" + name + "';";
+            // ResultSet rs = stmt.executeQuery(sqlString);
+            // 使用占位符 ? 和预编译
+            String psqlString = "select * from PERSONS where NAME=?;";
+            PreparedStatement psmt = conn.prepareStatement(psqlString);
+            // 参数 index 从 1 开始
+            psmt.setString(1, name);
+            ResultSet rs = psmt.executeQuery();
+            while (rs.next()) {
+                LOG.info(rs.getString("NAME"));
+            }
+        } catch (ClassNotFoundException e) {
+            LOG.severe(e.getMessage());
+        } catch (SQLException e) {
+            LOG.severe(e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        SqlUtil sqlUtil = new SqlUtil();
+        sqlUtil.getData("Amanda");
+        // sqlUtil.getData("Amanda' or 'a'='a");
+    }
+}
 ```
+
+{==poc==}: `xxx' or 'a'='a`
 
 ???+ warning
     **order by** 不能使用参数绑定，需要通过白名单过滤。
