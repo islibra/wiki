@@ -20,6 +20,12 @@
 | /usr | 普通用户的应用程序、库文件、文档，建议**单独分区**，设置较大的磁盘空间 | 如：/usr/bin应用程序 /usr/lib库文件 /usr/share共享数据 /usr/local软件升级包 /usr/share/doc系统说明文件 /usr/share/man程序说明文件 |
 | /var | 动态变化的文件，建议**单独分区**，设置较大的磁盘空间 | 如：日志/var/log /var/log/message 邮件/var/spool/mail 程序PID/var/run |
 
+## 软链接
+
+```sh
+$ ln -s /path/to/file softlink
+```
+
 ## setuid
 
 ```bash
@@ -31,6 +37,5 @@ $ ll /etc/passwd /usr/bin/passwd
 让执行该命令的用户以该命令拥有者的权限去执行
 
 > 命令必须先具备x权限
-
 
 !!! quote "参考链接: [setuid与setgid讲解](https://www.jianshu.com/p/70f9ea162ca9)"
