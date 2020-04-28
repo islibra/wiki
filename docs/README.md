@@ -67,6 +67,8 @@
 - AAA: Authentication, Authorization, Accouting
 - CRUD: Create, Retrieve, Update, Delete
 - IAM(Identity and Access Management): 认证(身份识别) + 鉴权(访问)
+- logo: 商标
+- slogan: 口号, 标语
 - MTU: 通道中传输的最大数据单元
 - native: 原生的, 如native sql
     - Cloud Native: 在云环境下构建、运行、管理软件，充分利用云基础设施（IaaS）与平台服务（PaaS）。
