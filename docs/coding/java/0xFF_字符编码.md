@@ -182,7 +182,7 @@ Unicode字符在计算机中的存储方式，使用1~4个字节 {==变长存储
     | 0101 1101 | 93 | 5D | ] |
     | 0101 1110 | 94 | 5E | ^ |
     | 0101 1111 | 95 | 5F | _ |
-    | 0110 0000 | 96 | 60 | ` |
+    | 0110 0000 | 96 | 60 | \` |
     | 0110 0001 | 97 | 61 | a |
     | 0110 0010 | 98 | 62 | b |
     | 0110 0011 | 99 | 63 | c |
@@ -216,6 +216,107 @@ Unicode字符在计算机中的存储方式，使用1~4个字节 {==变长存储
 
 
 ## 加解密
+
+### 摘要
+
+```java
+try {
+    // 初始化哈希算法
+    MessageDigest digest = MessageDigest.getInstance("SHA-1");  // or MD5
+
+    String msg = "This is a message.";
+    // 计算摘要
+    digest.update(msg.getBytes(StandardCharsets.UTF_8));
+    byte[] hash = digest.digest();
+    // MD5: 16, SHA-1: 20
+    LOG.info("hash length: " + hash.length);
+    LOG.info(Base64.getEncoder().encodeToString(hash));
+} catch (Exception e) {
+    LOG.severe(e.toString());
+}
+```
+
+### 非对称算法签名和验证
+
+```java
+try {
+    // 生成密钥对
+    KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
+    generator.initialize(2048, new SecureRandom());
+    KeyPair kp = generator.generateKeyPair();
+
+    // --------
+    PublicKey publicKey = kp.getPublic();
+    // 公钥X.509编码
+    byte[] x509Encoded = publicKey.getEncoded();
+    // 解码
+    X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(x509Encoded);
+    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+    PublicKey decodedPublicKey = keyFactory.generatePublic(pubKeySpec);
+
+    PrivateKey privateKey = kp.getPrivate();
+    // 私钥PKCS#8编码
+    byte[] pkcsEncoded = privateKey.getEncoded();
+    // 解码
+    PKCS8EncodedKeySpec priKeySpec = new PKCS8EncodedKeySpec(pkcsEncoded);
+    PrivateKey decodedPrivatekey = keyFactory.generatePrivate(priKeySpec);
+    // --------
+
+    // 初始化签名算法
+    Signature signature = Signature.getInstance("SHA256withRSA");
+    // 使用私钥签名
+    signature.initSign(kp.getPrivate());
+    String information = "This is an important information.";
+    signature.update(information.getBytes(StandardCharsets.UTF_8));
+    byte[] sign = signature.sign();
+    // 256
+    LOG.info("sign length: " + sign.length);
+    LOG.info(Base64.getEncoder().encodeToString(sign));
+
+    // 使用公钥验证
+    signature.initVerify(kp.getPublic());
+    signature.update(information.getBytes(StandardCharsets.UTF_8));
+    LOG.info("Verify: " + signature.verify(sign));
+} catch (Exception e) {
+    LOG.severe(e.toString());
+}
+```
+
+### AES加解密
+
+```java
+try {
+    // 随机生成AES key
+    KeyGenerator generator = KeyGenerator.getInstance("AES");
+    generator.init(new SecureRandom());
+    Key key = generator.generateKey();
+
+    // --------
+    // 编码
+    byte[] encodedKey = key.getEncoded();
+    // 解码
+    SecretKeySpec keySpec = new SecretKeySpec(encodedKey, "AES");
+    SecretKey decodedKey = keySpec;
+    // --------
+
+    // 初始化加密算法
+    Cipher cipher = Cipher.getInstance("AES");
+    cipher.init(Cipher.ENCRYPT_MODE, key);
+
+    String plainText = "This is a secret.";
+    // 加密
+    byte[] cipherTextBytes = cipher
+            .doFinal(plainText.getBytes(StandardCharsets.UTF_8));
+    LOG.info(Base64.getEncoder().encodeToString(cipherTextBytes));
+
+    // 初始化解密算法
+    cipher.init(Cipher.DECRYPT_MODE, key);
+    byte[] plainTextBytes = cipher.doFinal(cipherTextBytes);
+    LOG.info(new String(plainTextBytes));
+} catch (Exception e) {
+    LOG.severe(e.toString());
+}
+```
 
 ### DES加密再BASE64
 
