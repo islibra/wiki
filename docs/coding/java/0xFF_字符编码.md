@@ -236,6 +236,29 @@ try {
 }
 ```
 
+### 口令哈希/密钥导出
+
+```java
+try {
+    String password = "Admin@123";
+    // 随机盐值
+    byte[] salt = new byte[8];
+    SecureRandom.getInstance("SHA1PRNG").nextBytes(salt);
+    // 迭代次数
+    final int ITERATE_COUNT = 10000;
+    // 输出长度
+    final int OUTPUT_LEN = 256;
+    PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt,
+            ITERATE_COUNT, OUTPUT_LEN);
+    SecretKeyFactory factory = SecretKeyFactory
+            .getInstance("PBKDF2WithHmacSHA256");
+    byte[] encodedPassword = factory.generateSecret(spec).getEncoded();
+    LOG.info("口令哈希/密钥导出: " + encodedPassword.length);
+} catch (Exception e) {
+    LOG.severe(e.toString());
+}
+```
+
 ### 非对称算法签名和验证
 
 ```java
@@ -313,6 +336,43 @@ try {
     cipher.init(Cipher.DECRYPT_MODE, key);
     byte[] plainTextBytes = cipher.doFinal(cipherTextBytes);
     LOG.info(new String(plainTextBytes));
+} catch (Exception e) {
+    LOG.severe(e.toString());
+}
+```
+
+```java
+try {
+    // 随机生成AES key
+    KeyGenerator generator = KeyGenerator.getInstance("AES");
+    generator.init(new SecureRandom());
+    Key key = generator.generateKey();
+
+    // 随机生成初始向量
+    final int GCM_IV_LEN = 12;
+    byte[] initVector = new byte[GCM_IV_LEN];
+    (new SecureRandom()).nextBytes(initVector);
+
+    final int GCM_TAG_LEN = 16;
+    GCMParameterSpec spec = new GCMParameterSpec(GCM_TAG_LEN * Byte.SIZE,
+            initVector);
+
+    // 初始化加密算法
+    Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+    cipher.init(Cipher.ENCRYPT_MODE, key, spec);
+
+    String msg = "This is a secret.";
+    byte[] msgBytes = msg.getBytes(StandardCharsets.UTF_8);
+    // 计算输出长度
+    int outputLen = cipher.getOutputSize(msgBytes.length);
+    byte[] cipherBytes = Arrays.copyOf(initVector, GCM_IV_LEN + outputLen);
+    cipher.doFinal(msgBytes, 0, msgBytes.length, cipherBytes, GCM_IV_LEN);
+    LOG.info("cipherText: " + cipherBytes.length);
+
+    // 解密
+    cipher.init(Cipher.DECRYPT_MODE, key, spec);
+    byte[] plainBytes = cipher.doFinal(cipherBytes, GCM_IV_LEN, outputLen);
+    LOG.info(new String(plainBytes));
 } catch (Exception e) {
     LOG.severe(e.toString());
 }
