@@ -21,9 +21,79 @@
 表名 | 全大写下划线
 列名 | 全大写下划线
 
+## 注释
+
+### Javadoc用于public/protected
+
+## 排版
+
+### 文件非空非注释不超过2000行, 每行120窄字符, 方法不超过50行
+
+换行开始:
+
+- `.`
+- `::`
+- `&`
+- `|`
+
+### 修饰符
+
+1. public
+2. abstract, static
+3. final transient volatile synchronized
+4. void
+
+### 数字后缀大写
+
+`long value = 1000000000L`
+
+### 数组声明
+
+`String[] args = {"a", "b"}`
+
+### 条件和循环必须使用大括号, 左括号在行尾
+
 ## 变量
 
 - 一个局部变量只表达一种含义, 避免前后不一致
+
+### 浮点数不能使用==判等, 不能精确计算, 不能作为循环变量
+
+```java
+BigDecimal income = new BigDecimal("1.03");
+BigDecimal expense = new BigDecimal("0.42");
+// 0.61
+LOG.info("BigDecimal: " + income.subtract(expense));
+// 0.61
+LOG.info("1.03f - 0.42f: " + (1.03f - 0.42f));
+```
+
+## 方法
+
+### 包含方法本身, 嵌套深度不超过4
+
+### 参数不超过5个, 异常不超过5个
+
+## 类,接口
+
+### 接口中属性缺省public static final, 方法缺省public abstract
+
+## 异常
+
+### 在finally中不要使用return, break, continue
+
+## 日志
+
+### 使用SLF4J+LogBack
+
+`private static final Logger LOG = LoggerFactory.getLogger(Xxx.class)`
+
+### 日志级别
+
+### 条件或占位符
+
+## 不要使用foreach remove, 可以使用iterator.remove()
+
 
 ## 安全编程
 
@@ -448,3 +518,30 @@ int exitVal = proc.waitFor();
 
 - json: fastjson, jackson
     - type白名单
+
+### 类加载
+
+#### 存在安全管理器检查的方法要声明为private或final, 防止子类复写
+
+#### 自定义类加载器覆写getPermissions()方法时需要调用super.getPermissions()
+
+#### 使用本地KeyStore中的证书校验jar中的签名
+
+### 加解密
+
+#### 算法javax.crypto
+
+- SHA256 + 8Bytes salt + iterator 10000 => 256bit(32Bytes)
+- `AES/GCM/NoPadding`
+- RSA
+- DSA
+- ECDSA
+
+禁止
+
+- DES
+- AES ECB
+
+#### 强随机数SecureRandom
+
+#### javax.net.ssl.SSLSocket
