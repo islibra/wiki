@@ -43,9 +43,10 @@ public class BinTreeNode {
     }
 
     /**
+     * 深度优先搜索DFS
      * 先序遍历(递归)
      *
-     * @param node
+     * @param node 根节点
      */
     public static void preTravelRecursive(BinTreeNode node) {
         // 跳出语句
@@ -61,9 +62,10 @@ public class BinTreeNode {
     }
 
     /**
+     * 深度优先搜索DFS
      * 先序遍历(迭代)
      *
-     * @param node
+     * @param node 根节点
      */
     public static void preTravelIterate(BinTreeNode node) {
         Stack<BinTreeNode> stack = new Stack<>();
@@ -129,8 +131,99 @@ public class BinTreeNode {
 
 #### 层次遍历
 
+```java
+/**
+ * 广度优先搜索BFS
+ * 层次遍历
+ *
+ * @param node 根节点
+ */
+public static void levelOrderTravel(BinTreeNode node) {
+    Queue<BinTreeNode> queue = new LinkedList<>();
+    // 先把根节点入队
+    if (node != null) {
+        queue.offer(node);
+    }
 
-!!! quote "参考链接: [二叉树的遍历详解](https://mp.weixin.qq.com/s/5yM7viuv6atoUsSvrrjGyQ)"
+    while (!queue.isEmpty()) {
+        // 取出并访问队首节点
+        BinTreeNode top = queue.poll();
+        LOG.info("" + top.val);
+
+        if (top.left != null) {
+            queue.offer(top.left);
+        }
+        if (top.right != null) {
+            queue.offer(top.right);
+        }
+    }
+}
+```
+
+```java
+/**
+ * 102. 二叉树的层序遍历
+ * 给你一个二叉树，请你返回其按 层序遍历 得到的节点值。 （即逐层地，从左到右访问所有节点）。
+ *
+ * 示例：
+ * 二叉树：[3,9,20,null,null,15,7]
+ *
+ *     3
+ *    / \
+ *   9  20
+ *     /  \
+ *    15   7
+ *
+ * 返回其层次遍历结果：
+ * [
+ *   [3],
+ *   [9,20],
+ *   [15,7]
+ * ]
+ *
+ * 来源：力扣（LeetCode）
+ * 链接：https://leetcode-cn.com/problems/binary-tree-level-order-traversal
+ * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+ *
+ * @param root 根节点
+ * @return 层序遍历结果
+ */
+public static List<List<Integer>> levelOrder(BinTreeNode root) {
+    Queue<BinTreeNode> queue = new LinkedList<>();
+    // 先把根节点入队
+    if (root != null) {
+        queue.offer(root);
+    }
+
+    List<List<Integer>> result = new LinkedList<>();
+    while (!queue.isEmpty()) {
+        // 记录该层节点数量
+        int count = queue.size();
+        List<Integer> nodes = new ArrayList<>();
+
+        // 一次性处理该层所有节点
+        for (int i = 0; i < count; i++) {
+            // 取出并访问队首节点
+            BinTreeNode top = queue.poll();
+            nodes.add(top.val);
+
+            if (top.left != null) {
+                queue.offer(top.left);
+            }
+            if (top.right != null) {
+                queue.offer(top.right);
+            }
+        }
+        result.add(nodes);
+    }
+    return result;
+}
+```
+
+
+!!! quote "参考链接"
+    - [二叉树的遍历详解](https://mp.weixin.qq.com/s/5yM7viuv6atoUsSvrrjGyQ)
+    - [LeetCode 例题精讲 | 13 BFS 的使用场景：层序遍历、最短路径问题](https://mp.weixin.qq.com/s/OoPmFiZ0VKTJ-wf7QEc7zA)
 
 
 ## 二叉查找树
