@@ -54,6 +54,7 @@
 
 ### 实用
 
+- [AI卡通秀](https://github.com/minivision-ai/photo2cartoon)
 - [Java 8 API](https://docs.oracle.com/javase/8/docs/api/index.html)
 - kindle传书：<https://mp.weixin.qq.com/s/Sag8vLmmLbAs47aIVF3rnQ>
 
