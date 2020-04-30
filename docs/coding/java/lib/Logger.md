@@ -57,6 +57,24 @@ log.addHandler(fileHandler);
 1. FINEST: highly detailed tracing message
 1. ALL: all messages
 
+## 日志输出格式
+
+典型应用: `%1$tY-%1$tb-%1$td %1$tl:%1$tM:%1$tS %1$Tp [%4$s] %2$s: %5$s%6$s%n`
+
+1. `java.util.logging.SimpleFormatter.format="%4$s: %5$s [%1$tc]%n"`
+    - 级别: `4$`, `WARNING`
+    - 内容: `5$`, `warning message`
+    - 时间: `1$`, `Tue Mar 22 13:11:31 PDT 2011`
+    - 换行: `%n`
+
+1. `java.util.logging.SimpleFormatter.format="%1$tc %2$s%n%4$s: %5$s%6$s%n"`
+    - 代码: `2$`, `MyClass fatal`
+    - 异常: `6$`
+
+1. `java.util.logging.SimpleFormatter.format="%1$tb %1$td, %1$tY %1$tl:%1$tM:%1$tS %1$Tp %2$s%n%4$s: %5$s%n"`
+    - 时间: `Mar 22, 2011 1:11:31 PM`
+
+
 ## 指定配置文件路径
 
 ```bash
