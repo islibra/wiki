@@ -13,6 +13,7 @@
 
 ### 算法
 
+- [《面向大象编程》文章目录](https://mp.weixin.qq.com/s/_KN3DjoZGgrhs794p8uQlg)
 - [labuladong的算法小抄](https://labuladong.gitbook.io/algo/)
 - [力扣题库](https://leetcode-cn.com/problemset/all/)
 - python实现的排序算法：<https://github.com/TheAlgorithms/Python>
