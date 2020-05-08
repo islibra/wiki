@@ -464,3 +464,102 @@ public static void bfs(int[][] grid, int r, int c) {
     }
 }
 ```
+
+## 1162. 地图分析
+
+```java
+/**
+ * 1162. 地图分析
+ * 你现在手里有一份大小为 N x N 的「地图」（网格） grid，上面的每个「区域」（单元格）都用 0 和 1 标记好了。其中 0 代表海洋，
+ * 1 代表陆地，请你找出一个海洋区域，这个海洋区域到离它最近的陆地区域的距离是最大的。
+ * 我们这里说的距离是「曼哈顿距离」（ Manhattan Distance）：(x0, y0) 和 (x1, y1) 这两个区域之间的距离是 |x0 -
+ * x1| + |y0 - y1| 。
+ * 如果我们的地图上只有陆地或者海洋，请返回 -1。
+ *
+ * 示例 1：
+ * 输入：[[1,0,1],[0,0,0],[1,0,1]]
+ * 输出：2
+ * 解释：
+ * 海洋区域 (1, 1) 和所有陆地区域之间的距离都达到最大，最大距离为 2。
+ *
+ * 示例 2：
+ * 输入：[[1,0,0],[0,0,0],[0,0,0]]
+ * 输出：4
+ * 解释：
+ * 海洋区域 (2, 2) 和所有陆地区域之间的距离都达到最大，最大距离为 4。
+ *
+ * 提示：
+ * 1 <= grid.length == grid[0].length <= 100
+ * grid[i][j] 不是 0 就是 1
+ *
+ * 来源：力扣（LeetCode）
+ * 链接：https://leetcode-cn.com/problems/as-far-from-land-as-possible
+ * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+ *
+ * @param grid 网格地图
+ * @return 最远距离
+ */
+public static int maxDistance(int[][] grid) {
+    // 网格大小
+    int maxRow = grid.length;
+    int maxCol = grid[0].length;
+    int[][] inQueue = new int[maxRow][maxCol];
+
+    Queue<int[]> queue = new LinkedList<>();
+    // 多源BFS, 先将所有陆地入队
+    int landNum = 0;
+    for (int i = 0; i < maxRow; i++) {
+        for (int j = 0; j < maxCol; j++) {
+            if (grid[i][j] == 1) {
+                queue.offer(new int[]{i, j});
+                inQueue[i][j] = 1;
+                landNum++;
+            }
+        }
+    }
+    if (landNum == 0 || landNum == maxRow * maxCol) {
+        return -1;
+    }
+
+    int distance = 0;
+    while (!queue.isEmpty()) {
+        int count = queue.size();
+        boolean hasSea = false;
+        for (int k = 0; k < count; k++) {
+            int[] coordinate = queue.poll();
+
+            if (coordinate[0] > 0 && 1 != inQueue[coordinate[0]
+                    - 1][coordinate[1]]) {
+                queue.offer(new int[]{coordinate[0] - 1, coordinate[1]});
+                inQueue[coordinate[0] - 1][coordinate[1]] = 1;
+                hasSea = true;
+            }
+            if ((coordinate[0] < maxRow - 1) && 1 != inQueue[coordinate[0]
+                    + 1][coordinate[1]]) {
+                queue.offer(new int[]{coordinate[0] + 1, coordinate[1]});
+                inQueue[coordinate[0] + 1][coordinate[1]] = 1;
+                hasSea = true;
+            }
+            if (coordinate[1] > 0 && 1 != inQueue[coordinate[0]][coordinate[1]
+                    - 1]) {
+                queue.offer(new int[]{coordinate[0], coordinate[1] - 1});
+                inQueue[coordinate[0]][coordinate[1] - 1] = 1;
+                hasSea = true;
+            }
+            if ((coordinate[1] < maxCol - 1) && 1 != inQueue[coordinate[0]][
+                    coordinate[1] + 1]) {
+                queue.offer(new int[]{coordinate[0], coordinate[1] + 1});
+                inQueue[coordinate[0]][coordinate[1] + 1] = 1;
+                hasSea = true;
+            }
+        }
+        if (hasSea) {
+            distance++;
+        }
+    }
+    return distance;
+}
+```
+
+!!! quote "参考链接"
+    - [LeetCode 例题精讲 | 13 BFS 的使用场景：层序遍历、最短路径问题](https://mp.weixin.qq.com/s/OoPmFiZ0VKTJ-wf7QEc7zA)
