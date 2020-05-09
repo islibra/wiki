@@ -79,6 +79,22 @@ function_name arg1 arg2
 
 显示命令历史记录：`HISTSIZE=1000`
 
+### FAQ: /bin/bash^M: bad interpreter: No such file or directory
+
+使用`./xxx.sh`执行shell脚本时提示该错误, 是因为脚本文件是dos格式, 即换行符为`\r\n`
+
+#### 判断文件格式
+
+- `$ cat -A xxx.sh`, dos格式以`^M$`结尾, unix格式以`$`结尾
+- `$ od -t x1 xxx.sh`, dos格式存在`0d 0a`, unix格式只有`0a`
+- `$ vim xxx.sh`, `:set ff`, dos格式显示`fileformat=dos`, unix格式显示`fileformat=unix`
+
+#### 修改文件格式
+
+- `$ dos2unix xxx.sh`
+- `$ sed -i "s/\r//" xxx.sh`或`$ sed -i "s/^M//" xxx.sh`
+- `$ vim xxx.sh`, `:set ff=unix`
+
 
 ## 字符串处理
 
