@@ -1,24 +1,26 @@
 # Operator
 
-## Operator SDK
-
 > 使用[minikube](https://github.com/kubernetes/minikube) v0.25.0+ 用作本地 Kubernetes 集群，[Quay.io](https://quay.io/) 用于公共 registry。
 
-### [安装并设置 kubectl](https://kubernetes.io/zh/docs/tasks/tools/install-kubectl/)
+## [安装并设置 kubectl](https://kubernetes.io/zh/docs/tasks/tools/install-kubectl/)
 
 1. `curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl`
 1. `chmod +x ./kubectl`
 1. `mv ./kubectl /usr/local/bin/kubectl`
 
-### [安装 Hypervisor - VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+## [安装 Hypervisor - VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 
 > 如果主机已安装[Docker](https://www.docker.com/products/docker-desktop), 使用`--vm-driver=none`使K8s运行在主机中
 
-### [安装 Minikube](https://kubernetes.io/zh/docs/tasks/tools/install-minikube/)
+## [安装 Minikube](https://kubernetes.io/zh/docs/tasks/tools/install-minikube/)
 
 > 检查是否支持虚拟化: `sysctl -a |grep -E --color 'machdep.cpu.features|VMX'`
 
-- macOS安装Minikube: `brew install minikube`
+- macOS安装Minikube:
+    1. `brew install minikube`
+    1. `minikube start --vm-driver=virtualbox --registry-mirror=https://registry.docker-cn.com --image-mirror-country=cn --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers`, [driver_name](https://kubernetes.io/docs/setup/learning-environment/minikube/#specifying-the-vm-driver)
+    1. `kubectl cluster-info`
+
 - [GitHub Releases](https://github.com/kubernetes/minikube/releases), Latest release minikube_1.9.2-0_amd64.deb
     1. `dpkg -i minikube_1.9.2-0_amd64.deb`
     1. `minikube version`
@@ -27,9 +29,19 @@
     1. 停止集群: `minikube stop`
     1. 清理集群: `minikube delete`
 
+## 安装[Operator Lifecycle Manager(OLM)](https://github.com/operator-framework/operator-lifecycle-manager/blob/master/doc/install/install.md)
+
+`curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/0.14.1/install.sh | bash -s 0.14.1`
+
+- 创建`olm`和`operators` namespace
+- 在`olm` namespace创建deployment `olm-operator`, `catalog-operator`, `packageserver`
+
+## Operator SDK
+
 ### 安装 [Operator SDK CLI](https://github.com/operator-framework/operator-sdk/releases/download/v0.17.0/operator-sdk-v0.17.0-x86_64-linux-gnu)
 
 ```bash
+$ curl -OJL https://github.com/operator-framework/operator-sdk/releases/download/v0.17.0/operator-sdk-v0.17.0-x86_64-apple-darwin
 $ chmod +x operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu
 $ sudo cp operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu /usr/local/bin/operator-sdk
 $ rm operator-sdk-${RELEASE_VERSION}-x86_64-linux-gnu
