@@ -1,5 +1,14 @@
 # 0x05_Linux软件管理
 
+## Ubuntu
+
+### 修改apt源
+
+1. `/etc/apt/sources.list`
+1. `apt-get update`
+1. `apt-get install -y xxx`
+
+
 ## mount
 
 ```bash
