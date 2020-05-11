@@ -1,4 +1,4 @@
-# Linux网络_ip_ifconfig_route_DNS
+# 0x06_Linux网络_ip_ifconfig_route_DNS
 
 ## 开启/禁止ping
 
