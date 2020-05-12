@@ -36,6 +36,36 @@
 - 创建`olm`和`operators` namespace
 - 在`olm` namespace创建deployment `olm-operator`, `catalog-operator`, `packageserver`
 
+## 在集群中安装Operator
+
+1. 在`operators namespace`创建 **Subscription**, 指定olm namespace中的operatorhubio-catalog中的operator名称和channel, **所有namespace可用**
+
+```yaml
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: my-cassandra-operator
+  namespace: operators
+spec:
+  channel: alpha
+  name: cassandra-operator
+  source: operatorhubio-catalog
+  sourceNamespace: olm
+```
+
+1. 创建 **CatalogSource**: OperatorHub.io中所有Operators的catalog, 包含Operator的下载地址
+2. 创建 **Subscription**: 实际要部署的Operator
+
+如果指定Operator仅运行在指定namespace:
+
+1. 创建独立的namespace, 如: `my-<operator-name>`
+1. 创建 **OperatorGroup**: 使用`spec.targetNamespace`配置Operator仅watch所在namespace的CustomResourceDefinitions
+
+## 查看在operator namespace中创建的CSV, 使用其依赖的CRD
+
+- `kubectl get csv -n operators -w`
+- `kubectl get pod -n operators`
+
 ## Operator SDK
 
 ### 安装 [Operator SDK CLI](https://github.com/operator-framework/operator-sdk/releases/download/v0.17.0/operator-sdk-v0.17.0-x86_64-linux-gnu)
