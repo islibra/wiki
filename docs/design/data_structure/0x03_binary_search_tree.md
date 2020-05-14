@@ -272,6 +272,187 @@ public static boolean hasPathSum(BinTreeNode root, int sum) {
 
 !!! quote "参考链接: [LeetCode 例题精讲 | 02 Path Sum：二叉树的子问题划分](https://mp.weixin.qq.com/s?__biz=MzA5ODk3ODA4OQ==&mid=2648167032&idx=1&sn=5734e539c8b037faf649df21dce4578d&chksm=88aa223ebfddab28c17163d0f80d4f966a6cff87277bca354e3c5e7aac25486386aa77c1dd0d&token=1450614154&lang=zh_CN&scene=21#wechat_redirect)"
 
+### 113. 路径总和 II
+
+```java
+/**
+ * 113. 路径总和 II
+ * 给定一个二叉树和一个目标和，找到所有从根节点到叶子节点路径总和等于给定目标和的路径。
+ * 说明: 叶子节点是指没有子节点的节点。
+ * 示例:
+ * 给定如下二叉树，以及目标和 sum = 22，
+ *
+ *               5
+ *              / \
+ *             4   8
+ *            /   / \
+ *           11  13  4
+ *          /  \    / \
+ *         7    2  5   1
+ * 返回:
+ * [
+ *    [5,4,11,2],
+ *    [5,8,4,5]
+ * ]
+ *
+ * 来源：力扣（LeetCode）
+ * 链接：https://leetcode-cn.com/problems/path-sum-ii
+ * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+ *
+ * @param root 二叉树
+ * @param sum 目标路径总和
+ * @return 符合条件的路径列表
+ */
+public static List<List<Integer>> pathSum(BinTreeNode root, int sum) {
+    List<List<Integer>> result = new LinkedList<>();
+    // 使用回溯法先初始化一个存放路径的栈
+    Stack<Integer> path = new Stack<>();
+    dfsFindPath(root, path, sum, result);
+    return result;
+}
+
+// DFS寻找符合目标和的路径, 加入到结果列表中
+private static void dfsFindPath(BinTreeNode node, Stack<Integer> path, int sum,
+        List<List<Integer>> result) {
+    // 跳出语句
+    if (node == null) {
+        return;
+    }
+
+    path.push(node.val);
+    // 叶子结点
+    if (node.left == null && node.right == null) {
+        // 计算路径和
+        int pathSum = 0;
+        for (int i : path) {
+            pathSum += i;
+        }
+        if (sum == pathSum) {
+            List<Integer> copy = new Stack<>();
+            copy.addAll(path);
+            result.add(copy);
+        }
+    }
+
+    // 再访问左右孩子
+    dfsFindPath(node.left, path, sum, result);
+    dfsFindPath(node.right, path, sum, result);
+
+    // 回溯的时候将结点出栈
+    path.pop();
+}
+```
+
+### 78. 子集
+
+```java
+/**
+ * 78. 子集
+ * 给定一组不含重复元素的整数数组 nums，返回该数组所有可能的子集（幂集）。
+ * 说明：解集不能包含重复的子集。
+ * 示例:
+ * 输入: nums = [1,2,3]
+ * 输出:
+ * [
+ *   [3],
+ *   [1],
+ *   [2],
+ *   [1,2,3],
+ *   [1,3],
+ *   [2,3],
+ *   [1,2],
+ *   []
+ * ]
+ *
+ * 来源：力扣（LeetCode）
+ * 链接：https://leetcode-cn.com/problems/subsets
+ * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+ *
+ * @param nums 数组
+ * @return 子集列表
+ */
+public static List<List<Integer>> subsets(int[] nums) {
+    List<List<Integer>> result = new LinkedList<>();
+    Stack<Integer> subset = new Stack<>();
+    backtrack(nums, 0, subset, result);
+    return result;
+}
+
+private static void backtrack(int[] nums, int level, Stack<Integer> subset,
+        List<List<Integer>> result) {
+    // 在叶子节点处退出
+    if (level == nums.length) {
+        List<Integer> copy = new Stack<>();
+        copy.addAll(subset);
+        result.add(copy);
+
+        return;
+    }
+
+    // 选择
+    subset.push(nums[level]);
+    backtrack(nums, level + 1, subset, result);
+    // 不选
+    subset.pop();
+    backtrack(nums, level + 1, subset, result);
+}
+```
+
+!!! quote "参考链接: [LeetCode 例题精讲 | 03 从二叉树遍历到回溯算法](https://mp.weixin.qq.com/s?__biz=MzA5ODk3ODA4OQ==&mid=2648167045&idx=1&sn=55577c31fd264a13511b4c0f27b3acce&chksm=88aa22c3bfddabd58c470f2933d6272c37f2d6d7a25ddda93f7203a25bf8bc8be4a15e8b9eb4&token=1450614154&lang=zh_CN&scene=21#wechat_redirect)"
+
+### 543. 二叉树的直径
+
+```java
+/**
+ * 543. 二叉树的直径
+ * 给定一棵二叉树，你需要计算它的直径长度。一棵二叉树的直径长度是任意两个结点路径长度中的最大值。这条路径可能穿过也可能不穿过根结点。
+ * 示例 :
+ * 给定二叉树
+ *
+ *           1
+ *          / \
+ *         2   3
+ *        / \
+ *       4   5
+ * 返回 3, 它的长度是路径 [4,2,1,3] 或者 [5,2,1,3]。
+ * 注意：两结点之间的路径长度是以它们之间边的数目表示。
+ *
+ * 来源：力扣（LeetCode）
+ * 链接：https://leetcode-cn.com/problems/diameter-of-binary-tree
+ * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+ *
+ * @param root 给定二叉树
+ * @return 直径
+ */
+public static int diameterOfBinaryTree(BinTreeNode root) {
+    return diameterAndMaxDeep(root)[0];
+}
+
+// 定义一个递归方法, 返回二叉树的直径和深度
+private static int[] diameterAndMaxDeep(BinTreeNode root) {
+    if (root == null) {
+        return new int[]{0, 0};
+    }
+
+    int[] left = diameterAndMaxDeep(root.left);
+    int[] right = diameterAndMaxDeep(root.right);
+    // 左子树或右子树的直径较大者
+    int diameter = Math.max(left[0], right[0]);
+    // 再与经过当前节点的路径比较
+    int leftDeep = root.left == null ? 0 : 1;
+    int rightDeep = root.right == null ? 0 : 1;
+    // 左子树的深度 + 右子树的深度 + 左右子树到当前节点的路径
+    diameter = Math.max(diameter, left[1] + right[1] + leftDeep + rightDeep);
+
+    // 当前节点的深度 = 左右子树的深度+1较大者
+    return new int[]{
+            diameter, Math.max(left[1] + leftDeep, right[1] + rightDeep)
+    };
+}
+```
+
+!!! quote "参考链接: [LeetCode 例题精讲 | 10 二叉树直径：二叉树遍历中的全局变量](https://mp.weixin.qq.com/s?__biz=MzA5ODk3ODA4OQ==&mid=2648167144&idx=1&sn=93a4dfaa42aa1bf78d121e224efb7adb&chksm=88aa22aebfddabb8ec6312c96e9178a96a80558ed1eaea89906c3e7c49899cde4b62fdeca7bf&token=621102215&lang=zh_CN&scene=21#wechat_redirect)"
+
 
 ## 二叉查找树
 
