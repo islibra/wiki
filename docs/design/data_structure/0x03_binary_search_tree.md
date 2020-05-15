@@ -437,6 +437,7 @@ private static int[] diameterAndMaxDeep(BinTreeNode root) {
     int[] left = diameterAndMaxDeep(root.left);
     int[] right = diameterAndMaxDeep(root.right);
     // 左子树或右子树的直径较大者
+    // 这里的直径也可以定义为全局变量
     int diameter = Math.max(left[0], right[0]);
     // 再与经过当前节点的路径比较
     int leftDeep = root.left == null ? 0 : 1;
