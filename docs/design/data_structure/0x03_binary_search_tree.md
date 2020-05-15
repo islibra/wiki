@@ -452,6 +452,64 @@ private static int[] diameterAndMaxDeep(BinTreeNode root) {
 }
 ```
 
+### 124. 二叉树中的最大路径和
+
+```java
+/**
+ * 124. 二叉树中的最大路径和
+ * 给定一个非空二叉树，返回其最大路径和。
+ * 本题中，路径被定义为一条从树中任意节点出发，达到任意节点的序列。该路径至少包含一个节点，且不一定经过根节点。
+ *
+ * 示例 1:
+ * 输入: [1,2,3]
+ *
+ *        1
+ *       / \
+ *      2   3
+ *
+ * 输出: 6
+ *
+ * 示例 2:
+ * 输入: [-10,9,20,null,null,15,7]
+ *
+ *    -10
+ *    / \
+ *   9  20
+ *     /  \
+ *    15   7
+ *
+ * 输出: 42
+ *
+ * 来源：力扣（LeetCode）
+ * 链接：https://leetcode-cn.com/problems/binary-tree-maximum-path-sum
+ * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+ *
+ * @param root 二叉树
+ * @return 最大路径和
+ */
+public static int maxPathSum(BinTreeNode root) {
+    // 节点有可能为负, 所以不能初始化为0
+    maxSum = root.val;
+    maxSingleSum(root);
+    return maxSum;
+}
+
+public static int maxSum;
+
+private static int maxSingleSum(BinTreeNode node) {
+    if (node == null) {
+        return 0;
+    }
+    // 如果子树的单侧最大和是负, 则不计算
+    int left = Math.max(0, maxSingleSum(node.left));
+    int right = Math.max(0, maxSingleSum(node.right));
+    maxSum = Math.max(maxSum, left + node.val);
+    maxSum = Math.max(maxSum, right + node.val);
+    maxSum = Math.max(maxSum, left + right + node.val);
+    return node.val + Math.max(left, right);
+}
+```
+
 !!! quote "参考链接: [LeetCode 例题精讲 | 10 二叉树直径：二叉树遍历中的全局变量](https://mp.weixin.qq.com/s?__biz=MzA5ODk3ODA4OQ==&mid=2648167144&idx=1&sn=93a4dfaa42aa1bf78d121e224efb7adb&chksm=88aa22aebfddabb8ec6312c96e9178a96a80558ed1eaea89906c3e7c49899cde4b62fdeca7bf&token=621102215&lang=zh_CN&scene=21#wechat_redirect)"
 
 
