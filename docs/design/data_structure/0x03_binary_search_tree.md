@@ -127,6 +127,78 @@ public class BinTreeNode {
 
 #### 中序遍历
 
+```java
+/**
+ * 98. 验证二叉搜索树
+ * 给定一个二叉树，判断其是否是一个有效的二叉搜索树。
+ * 假设一个二叉搜索树具有如下特征：
+ * 节点的左子树只包含小于当前节点的数。
+ * 节点的右子树只包含大于当前节点的数。
+ * 所有左子树和右子树自身必须也是二叉搜索树。
+ *
+ * 示例 1:
+ * 输入:
+ *     2
+ *    / \
+ *   1   3
+ * 输出: true
+ *
+ * 示例 2:
+ * 输入:
+ *     5
+ *    / \
+ *   1   4
+ *      / \
+ *     3   6
+ * 输出: false
+ * 解释: 输入为: [5,1,4,null,null,3,6]。
+ *      根节点的值为 5 ，但是其右子节点值为 4 。
+ *
+ * 来源：力扣（LeetCode）
+ * 链接：https://leetcode-cn.com/problems/validate-binary-search-tree
+ * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+ *
+ * @param root 二叉搜索树
+ * @return 验证结果
+ */
+public static boolean isValidBST(BinTreeNode root) {
+    if (root == null) {
+        return true;
+    }
+
+    pre = null;
+    valid = true;
+    midOrderTravel(root);
+
+    return valid;
+}
+
+// 使用全局变量保存上一个节点
+private static BinTreeNode pre;
+
+private static boolean valid;
+
+// 中序遍历，节点递增
+private static void midOrderTravel(BinTreeNode node) {
+    if (valid == false || node == null) {
+        return;
+    }
+
+    // 左子树
+    midOrderTravel(node.left);
+
+    if (pre != null && node.val <= pre.val) {
+        valid = false;
+    }
+    pre = node;
+
+    // 右子树
+    midOrderTravel(node.right);
+}
+```
+
+!!! quote "参考链接: [](https://mp.weixin.qq.com/s?__biz=MzA5ODk3ODA4OQ==&mid=2648167195&idx=1&sn=ae27bd4eaf1d0d4c842436a12ae4fdc0&chksm=88aa235dbfddaa4bdbf996918a15cab0c77d7d2ae8faff766b5d3c4b2cdd0efdd5172f858c79&token=416147250&lang=zh_CN&scene=21#wechat_redirect)"
+
 #### 后序遍历
 
 #### 层次遍历
