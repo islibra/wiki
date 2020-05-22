@@ -126,4 +126,8 @@ monitor_in_web  test.1
 
 ## 0x04_其他
 
-撤销并丢弃本地修改：`git checkout .`
+- 撤销并丢弃本地修改：`git checkout .`
+- 撤销 add: `$ git reset HEAD [filename]`
+- 撤销 commit: `$ git reset --soft HEAD~1`, 1 代表 commit 次数
+
+!!! quote "[Git 基础 - 撤消操作](https://git-scm.com/book/zh/v2/Git-%E5%9F%BA%E7%A1%80-%E6%92%A4%E6%B6%88%E6%93%8D%E4%BD%9C)"
