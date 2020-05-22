@@ -1,4 +1,4 @@
-# k8s_secret
+# 0x03_k8s_secret
 
 !!! abstract "存放密码、密钥、token等敏感数据，而不需要暴露到镜像或POD Spec中"
 
