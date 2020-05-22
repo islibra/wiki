@@ -1,4 +1,4 @@
-# Kubernetes
+# 0x00_Kubernetes
 
 ## 重要概念
 
@@ -46,12 +46,50 @@
 kubectl --> API Server --> Controller Manager --> Scheduler --> kubelet
 
 
-## 常用命令
+## 使用 K8s API 访问集群
 
 ```bash
 # 查看版本
 $ kubectl version
+# 查看集群位置和认证凭据
+$ kubectl config view
+# 使用 kubectl 作为代理访问 K8s REST API
+$ kubectl proxy --port=8080 &
+$ curl http://localhost:8080/api/
+```
 
+> 不使用 kubectl 作为代理直接访问参考: https://kubernetes.io/zh/docs/tasks/administer-cluster/access-cluster-api/#%E4%B8%8D%E4%BD%BF%E7%94%A8-kubectl-%E4%BB%A3%E7%90%86
+
+### [Go 客户端](../0x90_client-go)
+
+```sh
+# 获取库
+$ go get k8s.io/client-go/<version number>/kubernetes
+```
+
+```go
+import (
+   "fmt"
+   "k8s.io/client-go/1.4/kubernetes"
+   "k8s.io/client-go/1.4/pkg/api/v1"
+   "k8s.io/client-go/1.4/tools/clientcmd"
+)
+...
+   // uses the current context in kubeconfig
+   config, _ := clientcmd.BuildConfigFromFlags("", "path to kubeconfig")
+   // creates the clientset
+   clientset, _:= kubernetes.NewForConfig(config)
+   // access the API to list pods
+   pods, _:= clientset.CoreV1().Pods("").List(v1.ListOptions{})
+   fmt.Printf("There are %d pods in the cluster\n", len(pods.Items))
+...
+```
+
+### Python 客户端
+
+!!! quote "参考链接: [使用 Kubernetes API 访问集群](https://kubernetes.io/zh/docs/tasks/administer-cluster/access-cluster-api/)"
+
+```bash
 kubectl get namespace/ns  #查看namespace
 kubectl get node -nmynamespace  #查看指定namespace节点状态
 kubectl get node --all-namespaces  #查看所有namespace节点状态
