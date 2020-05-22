@@ -1,4 +1,45 @@
-# Git常用命令
+# Git
+
+## 0x00_配置认证
+
+### 生成SSH密钥对
+
+```sh
+$ ssh-keygen -t rsa -C "islibra@xxx.com"
+Generating public/private rsa key pair.
+Enter file in which to save the key (/c/Users/xxx/.ssh/id_rsa): id_rsa_github
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in id_rsa_github
+Your public key has been saved in id_rsa_github.pub
+```
+
+### 将 id_rsa_github.pub 内容添加到 github
+
+### 配置映射 /c/Users/xxx/.ssh/config
+
+```
+Host github.com
+HostName github.com
+User islibra@xxx.com
+PreferredAuthentications publickey
+IdentityFile C:\Users\xxx\.ssh\id_rsa_github
+```
+
+### 把私钥文件添加到SSH-Agent中
+
+```sh
+$ eval $(ssh-agent)
+$ ssh-add id_rsa_github
+```
+
+### 测试连通性
+
+```sh
+$ ssh -T git@github.com
+```
+
+!!! quote "[一台电脑如何同时玩转GitHub和公司Git服务器？](https://baijiahao.baidu.com/s?id=1667080409461835667&wfr=spider&for=pc)"
 
 ## 0x00_配置git代理
 
