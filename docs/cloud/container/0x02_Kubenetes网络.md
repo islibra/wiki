@@ -1,9 +1,4 @@
----
-title: Kubenetes网络
-date: 2018-12-28 20:49:39
-categories: container
-tags:
----
+# 0x02_Kubenetes网络
 
 假设创建Deployment的yaml为：
 
@@ -180,7 +175,7 @@ spec:
       protocol: TCP
       port: 80
       targetPort: 9376
-  externalIPs: 
+  externalIPs:
     - 80.11.12.10  //可以通过80.11.12.10:80访问该Service
 ```
 
