@@ -1,5 +1,10 @@
 # OpenShift
 
+- OpenShift Online: Red Hat 公有云 K8s 平台
+- OpenShift Container Platform: Red Hat 私有 K8s 平台
+- OKD: OpenShift 开源项目
+
+
 - 启动minikube: `minikube start --vm-driver=virtualbox --registry-mirror=https://registry.docker-cn.com --image-mirror-country=cn --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers`
 - 在host上使用Docker: `eval $(minikube docker-env)`
 
@@ -33,3 +38,39 @@ INFO[0146] Created deploy/crds/cache.example.com_v1alpha1_memcached_cr.yaml
 
 INFO[0000] Created pkg/controller/memcached/memcached_controller.go
 INFO[0000] Created pkg/controller/add_memcached.go
+
+
+## Marketplace Operator
+
+### CRD
+
+#### OperatorSource
+
+定义外部存储 operator bundles 的 datastore
+
+```yaml
+apiVersion: operators.coreos.com/v1
+kind: OperatorSource
+metadata:
+  name: community-operators
+  namespace: marketplace
+spec:
+  type: appregistry
+  endpoint: https://quay.io/cnr
+  registryNamespace: community-operators
+  displayName: "Community Operators"
+  publisher: "Red Hat"
+```
+
+> 在 OKD 创建后, 可在 console OperatorHub 显示 operators, Kubernetes 中没有
+
+OperatorSource 会创建 CatalogSource, 填入 operators
+
+- [community-operators](https://github.com/operator-framework/operator-marketplace/blob/master/deploy/examples/community.operatorsource.cr.yaml): OpenShift 集群
+- [upstream-community-operators](https://github.com/operator-framework/operator-marketplace/blob/master/deploy/upstream/07_upstream_operatorsource.cr.yaml): Kubernetes 集群
+
+#### CatalogSourceConfig(集群内部使用)
+
+用来创建 CatalogSource(包含由 OperatorSource 填充的 operators)
+
+成功创建后, 可以创建 Subscription
