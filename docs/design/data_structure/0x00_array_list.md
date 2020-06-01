@@ -367,6 +367,7 @@ public class RemoveNthFromEnd {
  * @since 2020-05-21
  */
 public class ReverseList {
+    // 原始解法
     public ListNode reverseList(ListNode head) {
         if (head == null) {
             return null;
@@ -383,6 +384,30 @@ public class ReverseList {
             pointer = tmp2;
         }
         return result;
+    }
+
+    // 双指针框架解法
+    public ListNode reverseListTwoPointer(ListNode head) {
+        // 指向前一个结点的辅助指针
+        ListNode prev = null;
+        // 遍历链表
+        ListNode curr = head;
+        while (curr != null) {
+            // 先将 curr.next 保存起来
+            ListNode cnext = curr.next;
+            // 修改 curr.next
+            if (prev == null) {
+                // 处理头结点
+                curr.next = null;
+            } else {
+                curr.next = prev;
+            }
+            // 指针后移
+            prev = curr;
+            // 恢复 curr.next
+            curr = cnext;
+        }
+        return prev;
     }
 }
 
@@ -406,11 +431,14 @@ public class ReverseListTest {
     ReverseList rl = new ReverseList();
 
     public void printList(ListNode head) {
+        StringBuilder sb = new StringBuilder();
         ListNode pointer = head;
         while (pointer != null) {
-            LOG.info("" + pointer.val);
+            sb.append(pointer.val);
+            sb.append("->");
             pointer = pointer.next;
         }
+        LOG.info(sb.toString());
     }
 
     @Test
@@ -423,8 +451,10 @@ public class ReverseListTest {
             pointer = node;
         }
         printList(head);
-        ListNode result = rl.reverseList(head);
+        ListNode result = rl.reverseListTwoPointer(head);
         printList(result);
     }
 }
 ```
+
+!!! quote "[LeetCode 例题精讲 | 01 反转链表：如何轻松重构链表](https://mp.weixin.qq.com/s?__biz=MzA5ODk3ODA4OQ==&mid=2648167030&idx=1&sn=c61cb5f0fb8d82aeda29e67050e6815c&chksm=88aa2230bfddab26c47d2204bc7a39fe3c994f998cb29cbaf7b9e33ab30f3988f4c3fd1b21ec&token=1450614154&lang=zh_CN&scene=21#wechat_redirect)"

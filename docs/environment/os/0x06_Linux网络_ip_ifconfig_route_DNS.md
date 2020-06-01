@@ -35,6 +35,25 @@ $ iptables -A OUTPUT -p icmp --icmp-type echo-reply -j ACCEPT
 !!! quote "参考链接: [Linux禁止ping以及开启ping的方法](https://www.cnblogs.com/chenshoubiao/p/4781016.html)"
 
 
+## 配置代理
+
+```sh
+$ vim /etc/profile
+export proxy="http://l0025xxxx:pass%40word@proxy.xxx.com:8080"
+export http_proxy=$proxy
+export https_proxy=$proxy
+export ftp_proxy=$proxy
+export no_proxy="localhost, 127.0.0.1, ::1"
+$ source /etc/profile
+```
+
+```sh
+# 取消代理
+$ unset http_proxy
+$ unset https_proxy
+```
+
+
 ## ip
 
 ```bash

@@ -197,7 +197,7 @@ private static void midOrderTravel(BinTreeNode node) {
 }
 ```
 
-!!! quote "参考链接: [](https://mp.weixin.qq.com/s?__biz=MzA5ODk3ODA4OQ==&mid=2648167195&idx=1&sn=ae27bd4eaf1d0d4c842436a12ae4fdc0&chksm=88aa235dbfddaa4bdbf996918a15cab0c77d7d2ae8faff766b5d3c4b2cdd0efdd5172f858c79&token=416147250&lang=zh_CN&scene=21#wechat_redirect)"
+!!! quote "参考链接: [LeetCode 例题精讲 | 11 二叉树转化为链表：二叉树遍历中的相邻结点](https://mp.weixin.qq.com/s?__biz=MzA5ODk3ODA4OQ==&mid=2648167195&idx=1&sn=ae27bd4eaf1d0d4c842436a12ae4fdc0&chksm=88aa235dbfddaa4bdbf996918a15cab0c77d7d2ae8faff766b5d3c4b2cdd0efdd5172f858c79&token=416147250&lang=zh_CN&scene=21#wechat_redirect)"
 
 #### 后序遍历
 
