@@ -45,6 +45,17 @@
 
 kubectl --> API Server --> Controller Manager --> Scheduler --> kubelet
 
+## I. kubectl CLI
+
+```sh
+# 查看某个 Pod 启动状态
+$ kubectl describe pod {pod-name}
+# 查看某个 Pod 启动失败日志
+$ kubectl logs {pod-name}
+# error: a container name must be specified for pod my-cluster-cruise-control-7474f5cd84-f4z4t, choose one of: [cruise-control tls-sidecar]
+$ kubectl logs {pod-name} {container-name}
+```
+
 
 ## 使用 K8s API 访问集群
 

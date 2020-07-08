@@ -118,6 +118,9 @@ spec:
 
 可与Liveness同时使用。
 
+!!! faq "Pod READY 0/1 STATUS Running"
+    readinessProbe 检测失败, 参考: [pod应用生命周期（init容器，容器探针）](https://blog.csdn.net/weixin_44791884/article/details/105639917)
+
 
 ### 在Scale Up中的应用：
 

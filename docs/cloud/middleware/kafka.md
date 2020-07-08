@@ -1,6 +1,4 @@
-# kafka
-
-!!! abstract "官方网站: <http://kafka.apache.org/>"
+# [kafka](http://kafka.apache.org/)
 
 对标产品：
 
@@ -8,7 +6,7 @@
 - rabbitmq
 - activemq
 
-## Quickstart
+## I. Quickstart
 
 1. 下载地址: <https://www.apache.org/dyn/closer.cgi?path=/kafka/2.3.0/kafka_2.12-2.3.0.tgz>, <http://ftp.cuhk.edu.hk/pub/packages/apache.org/kafka/2.3.0/kafka_2.12-2.3.0.tgz>
 1. 解压: `$ tar -zxvf kafka_2.12-2.3.0.tgz`
@@ -146,41 +144,240 @@
     <http://kafka.apache.org/quickstart>
 
 
-## 安全特性
+## I. 集群配置
 
-1. 使用 {==SSL==} 或 {==SASL==} 进行clients(producers, consumers), other brokers, tools到brokers连接的认证
-    - SASL/GSSAPI(Kerberos)
-    - SASL/PLAIN
-    - SASL/SCRAM-SHA-256, SASL/SCRAM-SHA-512
-    - SASL/OAUTHBEARER
+!!! quote "[【消息队列 MQ 专栏】消息队列之 Kafka](https://mp.weixin.qq.com/s/eyXr9Df6GcfvdYHpy_qyZg)"
 
-1. brokers到ZooKeeper之间的认证
-1. 使用 {==SSL==} 对brokers到clients, other brokers, tools之间的传输通道加密
-1. clients读写操作授权
+
+## I. 架构
+
+- 一个 **topic** 划分为多个 **partition**, 单个 partition 内保证消息有序
+- partition(**leader**) 均匀的分布在多个 **broker**
+- 每个 partition(leader) 设置多个 **replica**, 分布在另外的 broker
+- consumer 可以按照 **group** 接收消费消息, 一个 group 中只有随机一个 consumer 可以消费一次消息
+
+!!! quote "[震惊了！原来这才是 Kafka！（多图+深入）](https://mp.weixin.qq.com/s/d9KIz0xvp5I9rqnDAlZvXw)"
+
+
+## I. 安全特性
+
+1. 使用 {==SSL==} 或 {==SASL==} 进行 clients(producers, consumers), other brokers, tools 到 **brokers** 连接的 **认证**
+    - SASL/GSSAPI(Kerberos), {>>starting at version 0.9.0.0<<}
+    - SASL/PLAIN, {>>starting at version 0.10.0.0<<}
+    - SASL/SCRAM-SHA-256, SASL/SCRAM-SHA-512, {>>starting at version 0.10.2.0<<}
+    - SASL/OAUTHBEARER, {>>starting at version 2.0<<}
+
+1. brokers 到 ZooKeeper 之间的 **认证**
+1. 使用 {==SSL==} 对 **brokers** 到 clients, other brokers, tools 之间的传输 **通道加密**
+1. clients 读写操作 **授权**
 1. 外部授权服务通过插件方式集成
 
-### 客户端配置SSL
+### II. 使用 SSL 进行加密和认证
 
-```bash tab="配置"
+#### III. 生成 key 和证书
+
+1. 使用 **keytool** 为 broker 生成 SSL key 和证书, 并存入 jks
+
+    ```sh hl_lines="5 24"
+    # -keystore server.keystore.jks: keystore 文件名称, 保存私钥
+    # -validity: 证书有效期(天)
+    # -ext SAN=DNS:{FQDN}: 添加 Host Name 校验字段
+    keytool -keystore server.keystore.jks -alias {keyname} -validity {validity} -genkey -keyalg RSA -ext SAN=DNS:{FQDN}
+    Enter keystore password:
+    Re-enter new password:
+    What is your first and last name?
+      [Unknown]:  OSS3.0 CA
+    What is the name of your organizational unit?
+      [Unknown]:  OSS & Service Tools Dept
+    What is the name of your organization?
+      [Unknown]:  Huawei Technologies Co., Ltd
+    What is the name of your City or Locality?
+      [Unknown]:  ShenZhen
+    What is the name of your State or Province?
+      [Unknown]:  GuangDong
+    What is the two-letter country code for this unit?
+      [Unknown]:  CN
+    Is CN=OSS3.0 CA, OU=OSS & Service Tools Dept, O=Huawei Technologies Co., Ltd, L=ShenZhen, ST=GuangDong, C=CN correct?
+      [no]:  yes
+
+    # 验证生成证书
+    keytool -list -v -keystore server.keystore.jks
+    Enter keystore password:
+    Keystore type: PKCS12
+    Keystore provider: SUN
+
+    Your keystore contains 1 entry
+
+    Alias name: Broker
+    Creation date: Jul 7, 2020
+    Entry type: PrivateKeyEntry
+    Certificate chain length: 1
+    Certificate[1]:
+    Owner: CN=OSS3.0 CA, OU=OSS & Service Tools Dept, O=Huawei Technologies Co., Ltd, L=ShenZhen, ST=GuangDong, C=CN
+    Issuer: CN=OSS3.0 CA, OU=OSS & Service Tools Dept, O=Huawei Technologies Co., Ltd, L=ShenZhen, ST=GuangDong, C=CN
+    Serial number: 62e1be7b
+    Valid from: Tue Jul 07 11:38:57 GMT+08:00 2020 until: Wed Jul 08 11:38:57 GMT+08:00 2020
+    Certificate fingerprints:
+             SHA1: 67:9B:20:25:7A:D2:A2:13:AD:80:8B:CF:EB:32:BD:9B:1B:02:21:94
+             SHA256: 31:A8:4C:82:D9:2B:4A:78:D9:E0:B5:D5:63:73:C3:F4:F4:BD:A4:68:FE:7F:11:05:3E:2C:4E:EE:9A:82:36:86
+    Signature algorithm name: SHA256withRSA
+    Subject Public Key Algorithm: 2048-bit RSA key
+    Version: 3
+
+    Extensions:
+
+    #1: ObjectId: 2.5.29.17 Criticality=false
+    SubjectAlternativeName [
+      DNSName: xxx.com
+    ]
+
+    #2: ObjectId: 2.5.29.14 Criticality=false
+    SubjectKeyIdentifier [
+    KeyIdentifier [
+    0000: EE 67 9F 1A EA E7 E3 33   DE 46 A4 9B 3B 47 32 60  .g.....3.F..;G2
+    0010: DA EC A7 33                                        ...3
+    ]
+    ]
+    ```
+
+    > 关闭 Host Name 校验: `ssl.endpoint.identification.algorithm=`
+
+    > 启用 Host Name 校验(新版本默认开启): `ssl.endpoint.identification.algorithm=HTTPS`
+
+    > 对于动态配置的 broker listeners 关闭 Host Name 校验: `bin/kafka-configs.sh --bootstrap-server localhost:9093 --entity-type brokers --entity-name 0 --alter --add-config "listener.name.internal.ssl.endpoint.identification.algorithm="`
+
+    - 开启 Host Name 校验后客户端校验 fully qualified domain name (FQDN)
+        - Common Name (CN)
+        - Subject Alternative Name (SAN): 推荐, 允许声明多个 DNS
+
+#### III. 创建 CA
+
+1. 使用 **openssl** 创建 CA
+
+    ```sh hl_lines="6"
+    openssl req -new -x509 -keyout ca.key -out ca.cer -days 3650
+    Generating a 2048 bit RSA private key
+    ..................................................................................................+++
+    ...........................................+++
+    writing new private key to 'ca.key'
+    Enter PEM pass phrase:
+    Verifying - Enter PEM pass phrase:
+    -----
+    You are about to be asked to enter information that will be incorporated
+    into your certificate request.
+    What you are about to enter is what is called a Distinguished Name or a DN.
+    There are quite a few fields but you can leave some blank
+    For some fields there will be a default value,
+    If you enter '.', the field will be left blank.
+    -----
+    Country Name (2 letter code) [XX]:CN
+    State or Province Name (full name) []:GuangDong
+    Locality Name (eg, city) [Default City]:ShenZhen
+    Organization Name (eg, company) [Default Company Ltd]:Huawei Technologies Co., Ltd
+    Organizational Unit Name (eg, section) []:OSS & Service Tools Dept
+    Common Name (eg, your name or your servers hostname) []:OSS3.0 CA
+    Email Address []:
+    ```
+
+- 使用 **keytool** 将 CA 添加到 client 的 truststore
+
+    ```sh hl_lines="2"
+    keytool -keystore client.truststore.jks -alias CARoot -import -file ca.cer
+    Enter keystore password:
+    Re-enter new password:
+    Owner: CN=OSS3.0 CA, OU=OSS & Service Tools Dept, O="Huawei Technologies Co., Ltd", L=ShenZhen, ST=GuangDong, C=CN
+    Issuer: CN=OSS3.0 CA, OU=OSS & Service Tools Dept, O="Huawei Technologies Co., Ltd", L=ShenZhen, ST=GuangDong, C=CN
+    Serial number: 9c312cccb5a14474
+    Valid from: Tue Jul 07 14:12:32 GMT+08:00 2020 until: Fri Jul 05 14:12:32 GMT+08:00 2030
+    ...
+    Trust this certificate? [no]:  yes
+    Certificate was added to keystore
+    ```
+
+    > 配置认证客户端: `ssl.client.auth=requested/required`, 则需要生成 server.truststore.jks
+
+#### III. 签名证书
+
+- 从 keystore 中导出证书
+
+    ```sh
+    keytool -keystore server.keystore.jks -alias {keyname} -certreq -file {cert-req}
+    ```
+
+- 对证书签名
+
+    ```sh
+    openssl x509 -req -CA ca.cer -CAkey ca.key -in {cert-req} -out {signed-cert} -days {validity} -CAcreateserial -passin pass:{ca-password}
+    ```
+
+- 将 CA 和已签名的证书导入 keystore
+
+    ```sh
+    keytool -keystore server.keystore.jks -alias CARoot -import -file ca.cer
+    keytool -keystore server.keystore.jks -alias Broker -import -file {signed-cert}
+    ```
+
+#### III. 配置 broker server.properties
+
+```
+listeners=PLAINTEXT://host.name:port,SSL://host.name:port
+
+# 开启 broker 之间 SSL
+security.inter.broker.protocol=SSL
+ssl.keystore.location=/var/private/ssl/server.keystore.jks
+ssl.keystore.password=test1234
+ssl.key.password=test1234
+ssl.truststore.location=/var/private/ssl/server.truststore.jks
+ssl.truststore.password=test1234
+# 安全的随机数发生器
+# SHA1PRNG 支持单 broker 50MB/sec 生产消息 + 副本流量
+ssl.secure.random.implementation=SHA1PRNG
+
+# 可选配置
+# 认证客户端
+# required: 推荐
+# requested: 请求客户端证书, 但无证书仍然可以连接
+ssl.client.auth=none
+# 加密套件
+ssl.cipher.suites=
+# 协议
+ssl.enabled.protocols=TLSv1.2,TLSv1.1,TLSv1
+ssl.keystore.type=JKS
+ssl.truststore.type=JKS
+```
+
+检查 SSL 配置是否正确: `openssl s_client -debug -connect localhost:9093 -tls1`, 可显示证书信息
+
+#### III. 配置 client
+
+```bash
 $ vim client-ssl.properties
-security.protocol=SASL_SSL
-sasl.mechanism=PLAIN
+security.protocol=SSL
 ssl.truststore.location=/var/private/ssl/client.truststore.jks
 ssl.truststore.password=test1234
+
+# 如果配置了认证客户端
+ssl.keystore.location=/var/private/ssl/client.keystore.jks
+ssl.keystore.password=test1234
+ssl.key.password=test1234
+
 # 可选参数
 ssl.provider
 ssl.cipher.suites
 ssl.enabled.protocols=TLSv1.2,TLSv1.1,TLSv1
 ssl.truststore.type=JKS
 ssl.keystore.type=JKS
-```
 
-```bash tab="使用"
-$ kafka-console-producer.sh --broker-list localhost:9093 --topic test --producer.config client-ssl.properties
+# 验证连接
+$ kafka-console-producer.sh --bootstrap-server localhost:9093 --topic test --producer.config client-ssl.properties
 $ kafka-console-consumer.sh --bootstrap-server localhost:9093 --topic test --consumer.config client-ssl.properties
 ```
 
-### SASL
+### II. ZooKeeper 认证
+
+从 ZooKeeper 3.5.x/Kafka 2.5 版本开始支持 SASL/mTLS 认证
+
+### 使用 SASL 进行认证
 
 #### JAAS(Java Authentication and Authorization Service)
 
@@ -261,6 +458,107 @@ public class KafkaPublisher {
     }
 }
 ```
+
+
+## I. 性能测试
+
+### II. Kafka 性能测试脚本
+
+- $KAFKA_HOME/bin/kafka-producer-perf-test.sh: 测试 **producer** 性能
+    - 总共发送消息量(MB)
+    - 每秒发送消息量(MB/second)
+    - 总共发送消息数(records)
+    - 每秒发送消息数(records/second)
+
+    参数 | 说明
+    --- | ---
+    broker-list | kafka 服务器 ip:port
+    topics | 生产消息的 topic
+    messages | 总共发送消息数
+    message-size | 每条消息大小
+    batch-size | 每次批量发送的消息数
+    threads | 线程数
+    request-timeout-ms | 一个消息请求发送超时时间
+    producer-num-retries | 一个消息失败发送重试次数
+
+- $KAFKA_HOME/bin/kafka-consumer-perf-test.sh: 测试 **consumer** 性能
+
+    参数 | 说明
+    --- | ---
+    zookeeper | zookeeper 端口配置
+    topic | 消费的 topic
+    group | 消费者组名称
+    messages | 总共消费消息数
+    fetch-size | 每次向 kafka broker 请求消费大小
+    threads | 线程数
+    socket-buffer-sizesocket | 缓冲大小
+    consumer.timeout.ms | 超时时间
+
+### II. Yammer Metrics
+
+#### III. 收集
+
+1. Meters
+1. Gauges
+1. Counters
+1. Histograms
+1. Timers
+1. Health Checks
+
+#### III. 报告
+
+1. Console Reporter
+1. JMX Reporter
+1. HTTP Reporter
+1. CSV Reporter
+1. SLF4J Reporter
+1. Ganglia Reporter
+1. Graphite Reporter
+
+!!! quote "参考链接"
+    - [Metrics](https://metrics.dropwizard.io/)
+    - [dropwizard/metrics](https://github.com/dropwizard/metrics)
+
+### II. JConsole(Java自带) 查看单台服务器 Metrics
+
+启用 Kafka 的 JMX Reporter: `export JMX_PORT=19797`
+
+### II. Kafka Manager(Yahoo开源) 查看整个集群的 Metrics
+
+通过 ZooKeeper 地址和 Kafka 版本添加集群
+
+### II. 性能测试
+
+- 吞吐率
+    - MB/second
+    - records/seccond
+    - 100Byte/Payload
+
+- 单 Broker CPU 和内存使用情况
+
+### II. 影响因子
+
+- 创建 topic: `bin/kafka-topics.sh --zookeeper localhost:2181/kafka --create --topic test-rep-one --partitions 6 --replication-factor 1`
+- 随 **producer 数量** 线性增长, 单 producer 1280 K x 100Byte = 128MB
+- 随 **线程数量** 增长
+    - 1个线程: `bin/kafka-producer-perf-test.sh --broker-list m103:9092,m105:9092 --topics test-rep-one --messages 50000000 --threads 1`
+
+- **批处理大小** 具有峰值
+- 随 **Message Size** 越大,  MB/second 越大, records/second 越小
+- **异步** 大于同步
+    - 同步: `bin/kafka-producer-perf-test.sh --broker-list m103:9092,m105:9092 --topics test-rep-two_2 --messages 50000000 --threads 2 --sync`
+    - 异步: `bin/kafka-producer-perf-test.sh --broker-list m103:9092,m105:9092 --topics test-rep-two_2 --messages 50000000 --threads 2 --batch-size 5000 --request-timeout-ms 100000`
+
+- 当 **Partition 数量** 小于 **Broker 个数** 时, 随 Partition 数量线性增长; Partition 数量大于 Broker 个数时, 总吞吐量并未提升, 整数倍性能最佳(均匀分布)
+    - `bin/kafka-producer-perf-test.sh  --broker-list m103:9092,m105:9092 --topics test-rep-one-part --messages 50000000 --threads 1 --request-timeout-ms 10000`
+
+- 随 **Replica** 数量增加, 吞吐率下降, 但下降速度减缓(并行复制)
+- 随 **consumer 数量** 线性增长, 单 consumer 3060 K x 100Byte = 306MB, 多 consumer 以 Partition 为分配单位
+- **一对 producer/consumer** 1,215,613 records/second x 100Byte = 121MB
+
+!!! quote "参考链接"
+    - [Kafka设计解析（五）Kafka性能测试方法及Benchmark报告](http://www.jasongj.com/2015/12/31/KafkaColumn5_kafka_benchmark/)
+    - [kafka性能基准测试](https://www.cnblogs.com/xiaodf/p/6023531.html)
 
 
 ## 概念

@@ -61,4 +61,6 @@ companies: # 由map组成的list
     name: company2
 ```
 
-!!! quote "参考链接: [YAML语法学习](https://mp.weixin.qq.com/s?src=11&timestamp=1589525347&ver=2339&signature=3b-LR8zyOM4LPpVwTAoSrAlZYseOgv-E-xpuV8Ga4fx0xh4xrXhOHMjuX1WQYsKdgRGsurNNfKHlAvZpSuTC24TBqKzPUE9TtLk6-TUs7mqRqA38KzleQ9V8wkCTJto4&new=1)"
+!!! quote "参考链接"
+    - [YAML语法学习](https://mp.weixin.qq.com/s?src=11&timestamp=1589525347&ver=2339&signature=3b-LR8zyOM4LPpVwTAoSrAlZYseOgv-E-xpuV8Ga4fx0xh4xrXhOHMjuX1WQYsKdgRGsurNNfKHlAvZpSuTC24TBqKzPUE9TtLk6-TUs7mqRqA38KzleQ9V8wkCTJto4&new=1)
+    - [JSON to YAML](https://www.json2yaml.com/)

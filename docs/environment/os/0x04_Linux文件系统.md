@@ -23,8 +23,15 @@
 ## 软链接
 
 ```sh
+# 创建软连接
 $ ln -s /path/to/file softlink
+# 删除软连接
+$ rm -rf ./softlink
+# 删除软连接及软连接指向的内容
+$ rm -rf ./softlink/
 ```
+
+!!! quote "[Linux软链接创建及删除](https://www.cnblogs.com/jing99/p/10797230.html)"
 
 ## setuid
 

@@ -1,4 +1,4 @@
-# Dockerfile
+# 0x11_Dockerfile
 
 **FROM xxx:latest** 指定base镜像
 
@@ -12,6 +12,13 @@
 ENV MY_VERSION 1.3
 RUN apt-get install -y mypackage=$MY_VERSION
 ```
+
+!!! warning "ENV中变量引用需要添加引号"
+    ```
+    # ZK_DATA_DIR 无法获取到 ZK_DATA 的值
+    ENV ZK_DATA="/var/lib/zookeeper" \
+        ZK_DATA_DIR="${ZK_DATA}/data"
+    ```
 
 ## 拷贝文件到镜像
 

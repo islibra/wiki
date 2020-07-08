@@ -55,23 +55,39 @@ git clone https://github.com/xxx/xxx.git  # 使用HTTPS方式clone
 ```
 
 
-## 0x01_通过分支MERGE
+## 2. 通过分支 Merge
 
 ```bash
-git clone xxx.git #将要提交代码仓路径clone到本地
-cd #进入代码目录
-git branch #查看当前分支
-git pull origin master #更新本地分支
-git checkout -b newbranch #checkout到个人分支
-git branch #查看当前分支为个人分支
-git push origin newbranch #将checkout出来的个人分支push到CodeClub
-git status #查看本地修改的文件
-git add -A . #将本地修改的文件add到本地仓个人分支
-git commit -m "xxx" #将本地修改的文件提交到本地仓个人分支
-git push origin newbranch #将本地修改的文件提交到远程仓个人分支
+# 将要提交代码仓路径 clone 到本地
+$ git clone xxx.git
+# 进入代码目录
+$ cd xxx
+# 更新服务端的所有分支到本地
+$ git fetch --all
+# 查看本地所有分支
+$ git branch --all
+# 更新本地 master 分支
+$ git pull origin master
+# 新建个人分支
+$ git checkout -b newbranch
+# 合入修改代码
+# ...
+# 查看本地修改的文件
+$ git status
+# 将本地修改的文件 add 到本地仓个人分支
+$ git add -A .
+# 将本地修改的文件提交到本地仓个人分支
+$ git commit -m "xxx"
+# 将本地修改的文件提交到远程仓个人分支
+$ git push origin newbranch
+# 发起 merge，从远程仓个人分支 merge 到远程仓 master 分支
+# ...
+# 删除本地个人分支
+$ git branch -D newbranch
+# 删除服务端的个人分支
+$ git push origin :newbranch
 ```
 
-发起merge，从远程仓个人分支merge到远程仓主干分支
 
 ## 0x02_Fork个人仓
 

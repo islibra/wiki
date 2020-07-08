@@ -8,7 +8,31 @@
 - 查看程序依赖: `ldd xxx`
 
 
-## Shell
+## I. Shell
+
+### II. set 指令
+
+#### III. set -x
+
+```sh
+$ cat setcmd.sh
+#!/bin/bash
+
+# 执行指令后，显示该指令及参数。用于脚本调试。
+set -x
+a=$$
+b=$1
+$ ./setcmd.sh 123 abc
++ a=96665
++ b=123
+```
+
+#### III. set -e
+
+若指令传回值不等于0，则立即退出shell。
+
+!!! quote "[Shell脚本中的set指令，比如set -x 和 set -e](https://www.cnblogs.com/robinunix/p/11635560.html)"
+
 
 [SHELL输出颜色和闪烁控制](https://www.jianshu.com/p/ba1b8aded634)
 

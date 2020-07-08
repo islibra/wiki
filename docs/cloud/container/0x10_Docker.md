@@ -1,4 +1,4 @@
-# docker
+# 0x10_Docker
 
 ![language](https://img.shields.io/badge/language-Go-brightgreen.svg)
 
@@ -6,7 +6,34 @@
     Docker官方版本从 {==1.13.x==} 开始，一跃到 {==17.03==}。  
     之后每月发布一个edge版本，如17.03, 17.04, 17.05...，每三个月发布一个stable版本，如17.03, 17.06, 17.09...
 
-## 下载安装
+## I. 下载安装
+
+### II. Ubuntu
+
+1. 查询 Ubuntu 版本: `lsb_release -cs`
+1. 下载[安装包](https://download.docker.com/linux/ubuntu/dists/$(lsb_release -cs)/pool/stable/amd64/)
+1. 安装
+
+    ```sh
+    $ sudo dpkg -i containerd.io_1.2.13-2_amd64.deb
+    $ sudo dpkg -i docker-ce-cli_19.03.11_3-0_ubuntu-focal_amd64.deb
+    $ sudo dpkg -i docker-ce_19.03.11_3-0_ubuntu-focal_amd64.deb
+    $ sudo docker --version
+    $ sudo service docker start
+    $ sudo docker run hello-world
+    ```
+
+1. 卸载
+
+    ```sh
+    $ dpkg -P docker-ce
+    $ dpkg -P docker-ce-cli
+    $ dpkg -P containerd.io
+    ```
+
+!!! quote "[docker docs](https://docs.docker.com/engine/install/ubuntu/#install-from-a-package)"
+
+### II. Mac
 
 1. 使用Docker ID登录[Docker Hub](https://hub.docker.com/editions/community/docker-ce-desktop-mac)
 1. 下载[Docker Desktop for Mac](https://download.docker.com/mac/stable/Docker.dmg)
@@ -23,6 +50,25 @@ docker-machine version 0.16.1, build cce350d7
 ???+ quote "参考链接"
     [Install Docker Desktop for Mac](https://docs.docker.com/docker-for-mac/install/)
 
+## I. 修改存储路径
+
+```sh
+$ docker info | grep Root
+ Docker Root Dir: /var/lib/docker
+
+$ vim [/usr]/lib/systemd/system/docker.service
+ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock --insecure-registry registry-cbu.huawei.com --graph=/home/islibra/docker
+```
+
+## I. 设置 Docker 不校验证书
+
+```sh
+$ vim /lib/systemd/system/docker.service
+ExecStart= --insecure-registry registry-cbu.huawei.com
+$ systemctl daemon-reload
+$ systemctl restart docker
+```
+
 ## 设置代理
 
 ```bash
@@ -33,6 +79,7 @@ Environment="HTTP_PROXY=http://l0025xxxx:pass%40word@proxy.xxx.com:8080/" "NO_PR
 $ systemctl daemon-reload
 $ systemctl show --property=Environment docker
 $ systemctl restart docker
+$ docker run hello-world
 ```
 
 ## 常用命令
@@ -81,6 +128,22 @@ docker import file.tar  #将容器导入
 
 ???+ quote "参考链接"
     [docker docs](https://docs.docker.com/engine/reference/commandline/run/)
+
+
+## docker config
+
+### COMMAND
+
+- create
+- inspect
+- ls
+- rm
+
+``` tab="示例"
+docker config COMMAND
+```
+
+!!! quote "参考链接: [docker docs](https://docs.docker.com/engine/reference/commandline/config/)"
 
 
 ## Docker Compose

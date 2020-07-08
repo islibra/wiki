@@ -20,13 +20,15 @@ umount /mnt/cdrom
 ```
 
 
-## rhel
+## RHEL
 
 ```bash
-#Redhat查询软件是否安装
+# 查询软件是否安装
 rpm -qa xxx
-#Redhat安装软件
+# 安装软件
 rpm -ivh xxx.rpm
+# 卸载
+rpm -e xxx
 ```
 
 

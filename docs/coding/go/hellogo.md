@@ -63,6 +63,49 @@ func main() {
 	如果在同一个包中定义多个文件，需要执行`go run hello1.go hello2.go`，否则会报undefined。
 
 
+## I. Go Modules
+
+> go version >= 1.11
+
+```sh
+# 启用后, 默认不在 GOPATH 下查找依赖, 而在 $GOPATH/pkg/mod 中查找
+export GO111MODULE=on/off/auto: 根据当前目录下是否存在 go.mod 判断是否启用
+export GOPROXY=https://mirrors.aliyun.com/goproxy/
+export GONOSUMDB=*
+```
+
+- 新建项目
+
+    ```sh
+    $ go mod init xxx
+    $ go build
+    ```
+
+- 已有项目
+
+    ```sh
+    $ go mod init
+    $ go get ./...
+    ```
+
+
+- 项目打包: `go mod vendor`, 将所有依赖下载到本地 vendor 目录
+- 依赖下载: `go mod download`
+
+
+- go.mod: 必须提交到 git 仓
+
+    ```
+    replace (
+        golang.org/x/text v0.3.0 => github.com/golang/text v0.3.0
+    )
+    ```
+
+- go.sum: 无需提交到 git 仓
+
+!!! quote "[使用 Go Modules 管理依赖](https://www.jianshu.com/p/dca7c631587f)"
+
+
 ## 包
 
 创建包路径如：`math/rand`，`rand`包内所有`.go`文件都以`package rand`开头。
@@ -76,16 +119,48 @@ import (
 
 调用时使用`rand.xxx()`
 
-## 变量
+
+## I. 基本类型
+
+- bool
+- byte // alias for uint8
+- int(推荐)  int8  int16  int32  int64
+- uint uint8 uint16 uint32 uint64 uintptr
+- rune // alias for int32
+       // represents a Unicode code point
+- float32 float64
+- complex64 complex128
+- string
+
+> int, uint, uintptr 在 32 位系统上为 32 位, 在 64 位系统上为 64 位
+
+!!! quote "[A Tour of Go](https://tour.golang.org/basics/11)"
+
+
+## I. 变量
 
 ```go
-//声明变量
+// 声明变量
 var a, b int
-//变量初始化
+// 变量初始化
 var c, d int = 1, 2
-//简洁赋值语句，代替var和类型声明，只能用在函数内部
+// 简洁赋值语句，代替var和类型声明，只能用在函数内部
 e := 3
+// 0 0 1 2 3
 fmt.Println(a, b, c, d, e)
+
+// 声明块
+var (
+    tobe bool = false
+    maxInt uint64 = 1<<64 -1
+    z complex128 = cmplx.Sqrt(-5 + 12i)
+)
+// Type: bool Value: false
+fmt.Printf("Type: %T Value: %v\n", tobe, tobe)
+// Type: uint64 Value: 18446744073709551615
+fmt.Printf("Type: %T Value: %v\n", maxInt, maxInt)
+// Type: complex128 Value: (2+3i)
+fmt.Printf("Type: %T Value: %v\n", z, z)
 ```
 
 ## 数组

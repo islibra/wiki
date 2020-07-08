@@ -12,7 +12,7 @@
 
 查看版本: `mvn -v`
 
-## 配置文件
+## I. setting.xml 配置文件
 
 配置文件路径：`/conf/setting.xml`
 
@@ -102,6 +102,25 @@
   <activeProfiles>
     <activeProfile>env-test</activeProfile>
   </activeProfiles>
+```
+
+指定编译使用的 JDK 版本为 11
+
+```xml
+<profile>
+  <id>jdk-11</id>
+
+  <activation>
+    <activeByDefault>true</activeByDefault>
+    <jdk>11</jdk>
+  </activation>
+
+  <properties>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+    <maven.compiler.compilerVersion>11</maven.compiler.compilerVersion>
+  </properties>
+</profile>
 ```
 
 

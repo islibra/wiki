@@ -63,15 +63,18 @@ volumes:
     name: pki
 ```
 
-## PV
+## I. PV
 
-### PersistentVolume
+### II. PersistentVolume
 
 ```yaml
 apiVersion: v1
 kind: PersistentVolume
 metadata:
     name: mypv1
+    annotations:
+        # 访问控制: 使用 group ID(GID) 配置的存储仅允许 Pod 使用相同的 GID 进行写入。
+        pv.beta.kubernetes.io/gid: "1234"
 spec:
     capacity:
         storage: 1Gi  # 指定PV容量
@@ -92,7 +95,7 @@ spec:
         server: 192.168.56.105
 ```
 
-### PersistentVolumeClaim
+### II. PersistentVolumeClaim
 
 ```yaml
 apiVersion: v1
@@ -108,20 +111,127 @@ spec:
     storageClassName: nfs  # 指定PV分类
 ```
 
-#### 使用PVC
+#### III. 使用 PVC
 
 ```yaml
-volumeMounts:
-- mountPath: "/mydata"
-    name: mydata
 volumes:
     - name: mydata
         persistentVolumeClaim:
             claimName: mypvc1  # 指定使用PVC
+
+volumeMounts:
+- mountPath: "/mydata"
+    name: mydata
 ```
 
-删除PVC：`kubectl delete pvc mypvc1`
-删除PV：`kubectl delete pv mypv1`
+- 删除PVC：`kubectl delete pvc mypvc1`
+- 删除PV：`kubectl delete pv mypv1`
+
+
+### II. Demo - 使用本地 hostPath 创建一个 PV
+
+!!! tip "仅适用于单节点, 在生产环境中需使用 nfs"
+
+#### III. 准备本地卷
+
+```sh
+$ mkdir -p /home/islibra/data
+$ echo 'Hello from Kubernetes storage' > /home/islibra/data/index.html
+```
+
+#### III. 创建 PV
+
+```sh
+$ vim /home/islibra/kubernetes/pods/storage/pv-volume.yaml
+```
+
+```yaml
+# filename: pv-volume.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: task-pv-volume
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: manual
+  hostPath:
+    path: "/home/islibra/data"
+```
+
+```sh
+$ kubectl create -f /home/islibra/kubernetes/pods/storage/pv-volume.yaml
+```
+
+#### III. 创建 PVC
+
+```sh
+$ vim pv-claim.yaml
+```
+
+```yaml
+# filename: pv-claim.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: task-pv-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: manual
+```
+
+```sh
+$ kubectl create -f /home/islibra/kubernetes/pods/storage/pv-claim.yaml
+```
+
+#### III. 创建 Pod
+
+```sh
+$ vim pv-pod.yaml
+```
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: task-pv-pod
+spec:
+  volumes:
+    - name: task-pv-storage
+      persistentVolumeClaim:
+        claimName: task-pv-claim
+  containers:
+    - name: task-pv-container
+      image: nginx
+      ports:
+        - containerPort: 80
+          name: "http-server"
+      volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: task-pv-storage
+```
+
+```sh
+$ kubectl create -f /home/islibra/kubernetes/pods/storage/pv-pod.yaml
+```
+
+#### III. 验证
+
+```sh
+$ kubectl exec -it task-pv-pod -- /bin/bash
+$ cat /usr/share/nginx/html/index.html
+```
+
+!!! quote "[配置 Pod 以使用 PersistentVolume 作为存储 - Kubernetes官方](https://kubernetes.io/zh/docs/tasks/configure-pod-container/configure-persistent-volume-storage/)"
+
 
 ### PV动态供给
 
