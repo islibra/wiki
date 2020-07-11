@@ -61,6 +61,37 @@ ZAB(ZooKeeper Atomic Broadcast)协议保证一致性，类似Paxos和Raft，单�
         - epoch
         - 计数
 
+
+## I. 集群搭建
+
+1. 在 zoo.cfg 中添加
+
+    ``` hl_lines="16 17 18"
+    # 客户端连接
+    clientPort=2181
+
+    dataDir=/var/lib/zookeeper
+    dataLogDir=/var/lib/log
+
+    # tick 周期(毫秒)
+    tickTime=2000
+    # 初始同步阶段 tick 次数
+    initLimit=5
+    # 发送请求接收响应 tick 次数
+    syncLimit=2
+
+    # 2888: Follower 与 Leader 进行通信和数据同步
+    # 3888: Leader 选举
+    server.1=IP1:2888:3888
+    server.2=IP2:2888:3888
+    server.3=IP3:2888:3888
+    ```
+
+1. 在每台机器的 dataDir 目录下创建 **myid** 文件，文件内容即为该机器对应的 Server ID 数字
+
+!!! quote "[如何构建一个高可用ZooKeeper集群？](https://mp.weixin.qq.com/s?subscene=3&__biz=MzU0MTcxMDYxNA==&mid=2247484927&idx=1&sn=7608cf30b2124fd621250c095c36c7f8&chksm=fb248586cc530c908ad8b34ca51037c5f2c0767338b6860ed9ae5314b84be96f29a24ba68ba1&scene=7&ascene=65&devicetype=android-28&version=27000f51&nettype=WIFI&abtest_cookie=AAACAA%3D%3D&lang=zh_CN&exportkey=AX3IWNSpjgoGFSs%2B%2Be29uLM%3D&pass_ticket=1K02ShOaEGYDYdy3bxfJ9NUTimqiZKZaZFZbFrdn5ITp4UxAjC64%2F7w%2B2RX009bF&wx_header=1)"
+
+
 ## 应用
 
 - 分布式锁，类似还有

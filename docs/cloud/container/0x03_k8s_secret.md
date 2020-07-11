@@ -1,33 +1,43 @@
 # 0x03_k8s_secret
 
-!!! abstract "存放密码、密钥、token等敏感数据，而不需要暴露到镜像或POD Spec中"
+!!! abstract "存放 {==密码、token、ssh密钥==} 等敏感数据，而不需要暴露到 容器镜像 或 Pod Spec 中"
 
-## secret类型
+## I. 内置 secret 类型
 
 1. Opaque: 数据使用 {==BASE64编码==}
-1. kubernetes.io/dockerconfigjson: 存储私有docker registry的认证信息
-1. kubernetes.io/service-account-token
+1. kubernetes.io/dockerconfigjson: 存储私有 docker registry 的认证信息
+1. kubernetes.io/service-account-token: 由 service account 自动创建
 
     > 默认token: default-token-xxxxx
 
-## 创建secret
+
+## I. 创建 secret
 
 ### 方式1
 
 ```bash
 # generic对应创建Opaque类型
 $ kubectl create secret generic mysecret --from-literal=username=admin --from-literal=password=123456
+
+# 如果密码中包含特殊字符, 应使用如下命令
+shell kubectl create secret generic dev-db-secret --from-literal=username=devuser --from-literal=password='S!B\*d$zDsb='
 ```
 
-### 方式2
+### II. 通过本地文件创建
 
 ```bash
-$ echo -n admin > ./username
-$ echo -n 123456 > ./password
-$ kubectl create secret generic mysecret --from-file=./username --from-file=./password
+echo -n 'admin' > ./username.txt
+echo -n '1f2d1e2e67df' > ./password.txt
+# 默认的 key 是文件名, 可以省略
+kubectl create secret generic db-user-pass --from-file[=username]=./username.txt --from-file[=password]=./password.txt
 ```
 
-> 可以指定为证书和私钥文件创建secret, 如`kubectl create secret generic xxx-tls --from-file=key.pem --from-file=cert.pem`
+> 可以为指定证书和私钥文件创建 secret, 如:
+
+```sh
+kubectl create secret generic xxx-tls --from-file=key.pem --from-file=cert.pem
+```
+
 
 ### 方式3
 
@@ -39,10 +49,22 @@ EOF
 $ kubectl create secret generic mysecret --from-env-file=env.txt
 ```
 
-### 方式4
+### II. 通过 yaml 创建
+
+#### III. 使用 BASE64 之后的数据
+
+```sh
+# 将数据 BASE64
+# YWRtaW4=
+echo -n 'admin' | base64
+# MWYyZDFlMmU2N2Rm
+echo -n '1f2d1e2e67df' | base64
+```
+
+> 应使用 `base64 -w 0` 或 `base64 | tr -d '\n'` 去掉换行
 
 ```yaml
-# filename: secret.yml
+# filename: secret.yaml
 apiVersion: v1
 kind: Secret
 metadata:
@@ -50,12 +72,59 @@ metadata:
 type: Opaque
 data:
   username: YWRtaW4=  # BASE64编码
-  password: MTIzNDU2
+  password: MWYyZDFlMmU2N2Rm
+```
+
+#### III. 直接使用原始字符串
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+type: Opaque
+# 优先级高于 data
+stringData:
+  config.properties: |-
+    apiUrl: "https://my.api.com/api/v1"
+    username: admin
+    password: 'S!B\*d$zDsb='
 ```
 
 ```bash
-$ kubectl create -f secret.yml
+$ kubectl create -f ./secret.yaml
 ```
+
+#### III. 通过 secretGenerator 创建
+
+Since Kubernetes v1.14
+
+```sh
+cat <<EOF >./kustomization.yaml
+secretGenerator:
+- name: db-user-pass
+  files:
+  - username.txt
+  - password.txt
+EOF
+
+kubectl apply -k .
+```
+
+```sh
+cat <<EOF >./kustomization.yaml
+secretGenerator:
+- name: db-user-pass
+  literals:
+  - username=admin
+  - password=secret
+EOF
+
+kubectl apply -k .
+```
+
+!!! quote "[Secrets](https://kubernetes.io/docs/concepts/configuration/secret/), from kubernetes"
+
 
 ### 创建dockerconfigjson
 
@@ -64,9 +133,9 @@ $ kubectl create -f secret.yml
 $ kubectl create secret docker-registry myregistrykey --docker-server=DOCKER_REGISTRY_SERVER --docker-username=DOCKER_USER --docker-password=DOCKER_PASSWORD --docker-email=DOCKER_EMAIL
 ```
 
-## 使用方式
+## I. 使用方式
 
-### 1. 环境变量
+### II. 作为容器的环境变量
 
 ```yaml
 # filename: demo_deployment.yml
@@ -102,7 +171,7 @@ spec:  # 定义deployment: 副本数量, 升级策略
               key: password
 ```
 
-### 2. 挂载Volume
+### II. 通过 volume 以文件方式挂载到一个或多个容器
 
 ```yaml
 # filename: demo_pod.yml

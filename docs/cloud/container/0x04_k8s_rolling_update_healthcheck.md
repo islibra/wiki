@@ -105,6 +105,21 @@ spec:
       periodSeconds: 20
 ```
 
+```sh tab="健康检查脚本"
+#!/bin/bash
+
+ZK_CLIENT_PORT=${ZK_CLIENT_PORT:-2181}
+
+ss -antl | grep $ZK_CLIENT_PORT
+if [ $? == 0 ]; then
+	exit 0
+else
+	exit 1
+fi
+```
+
+!!! quote "[Dockerfile HEALTHCHECK健康检查](https://www.cnblogs.com/shawhe/p/11126450.html)"
+
 
 ### 可读性（就绪）探针Readiness
 

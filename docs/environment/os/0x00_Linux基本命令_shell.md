@@ -2,6 +2,7 @@
 
 !!! quote "[explainshell](https://explainshell.com/)"
 
+- 显示命令历史记录：`HISTSIZE=1000`
 - 设置别名：`alias ll='ls -al'`，添加到`/etc/profile`并执行`source /etc/profile`永久生效。
 - 显示文件列表并按时间正序排列：`ll -tr`
 - 读取符号链接指向的文件：`readlink xxxlinkfile`
@@ -69,17 +70,49 @@ $ with 2 is abc
 - 单引号字符串中不能包含变量和反转义
 - 标准输入0，标准输出1，标准错误2，> 重定向，>> 追加，如：`cmd 1 > file`, `cmd > file 2>&1`
 - 命令替换：`USERID=反引号id -u反引号`, `USERID=$(uname -a)`
-- 条件测试：[ condition ], -d目录，-s文件非空，-f文件，-L符号链接，-x可执行，-r可读，-w可写，-a与，-o或，!非，==字符串相等，!=字符串不等，-z空串，-n非空串，-eq数值相等，-ne不等，-gt大于，-lt小于，-ge大于等于，-le小于等于  
-```bash
-if condition1
+
+### II. 条件测试语句
+
+```sh
+if [ condition1 ]
 then
   command1
-elif condition2
+elif [ condition2 ]
   command2
 else
   commandn
 fi
+```
 
+#### III. [ condition ]
+
+- [ ! xxx ]: 逻辑非
+- [ xxx -a yyy ]: 逻辑与
+- [ xxx -o yyy ]: 逻辑或
+- [ 'abc'=='xyz' ]: 字符串相等
+- [ 'abc'!='xyz' ]: 字符串不等
+- [ -z xxx ]: 空串
+- [ -n xxx ]: 非空串
+- [ a -eq b ]: 数值相等
+- [ a -ne b ]: 不等
+- [ a -gt b ]: 大于
+- [ a -lt b ]: 小于
+- [ a -ge b ]: 大于等于
+- [ a -le b ]: 小于等于
+- [ -d $xxx ]: 存在目录
+- [ -f $xxx ]: 文件
+- [ -s $xxx ]: 文件非空
+- [ -L $xxx ]: 符号链接
+- [ -x $xxx ]: 可执行
+- [ -r $xxx ]: 可读
+- [ -w $xxx ]: 可写
+
+!!! example "`if [ -z "$HOME" -a -d $HOME/$num ]`"
+
+!!! quote "[shell的逻辑与或非](https://www.cnblogs.com/aaronLinux/p/8340281.html)"
+
+
+```sh
 for var in 1 2 ... n
 do
   command
@@ -100,8 +133,6 @@ function_name arg1 arg2
 ```
 - 文件包含：`source file.sh`, `. file.sh`
 
-
-显示命令历史记录：`HISTSIZE=1000`
 
 ### FAQ: /bin/bash^M: bad interpreter: No such file or directory
 

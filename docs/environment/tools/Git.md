@@ -140,7 +140,12 @@ devops
 monitor_in_web  test.1
 ```
 
-## 0x04_其他
+## I. 操作命令
+
+- 添加 **单个文件** 到暂存区: `git add {file}`
+- 添加 **新增/修改文件** 到暂存区: `git add .`
+- 添加 **修改/删除文件** 到暂存区: `git add -u`
+- 添加 **所有文件** 到暂存区: `git add -A`
 
 - 撤销并丢弃本地修改：`git checkout .`
 - 撤销 add: `$ git reset HEAD [filename]`

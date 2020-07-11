@@ -1,15 +1,10 @@
----
-title: SSL
-date: 2019-01-12 19:44:27
-categories: java
-tags:
----
+# 0x10_SSL
 
 通过SSL协议保护client和server之间的通信，包含1. 服务端认证、2. 客户端认证和3. 通信数据加密，例：`https://www.onlinebooks.com/creditcardinfo.html`。  
 最新的协议版本：TLS。  
 认证过程通过公私钥对机制，owner对外发布公钥，并通过 **X.509证书** 来证明是该公钥的owner，保留私钥。  
 
-# X.509证书
+## I. X.509 证书
 
 ## 结构
 
@@ -21,7 +16,7 @@ tags:
 1. 通过CA(Certificate Authority)，例VeriSign。证书颁发机构具有层级，root CA的证书自签名，下层颁发机构的证书由上层机构签名，由此构成certificate chain。  
 1. 自签名：owner和issuer相同。  
 
-# Keytool
+## I. keytool
 
 存在于jre的bin目录下，用来管理keystore/truststore。  
 
@@ -39,43 +34,45 @@ truststore，在SSL协议中认证服务器使用，只用来存储trusted CA ro
 - 导出证书：`-exportcert`  
 - 列出keystore中的条目：`-list`
 
-## 创建keystore.jks
+### II. 创建 keystore.jks
 
-```bash
-#生成密钥并在当前目录自动生成名为clientkeystore的JKS格式keystore文件。
-$ keytool -keystore clientkeystore -genkey -alias client
+```sh hl_lines="25"
+# 生成密钥对和自签名证书并存入 keystore
+# -keystore: 生成 keystore
+# -genkeypair: 生成密钥对
+# -alias: 在 keystore 中的别名
+keytool -keystore server.keystore.jks -genkeypair -keyalg RSA -keysize 4096 -validity 3650 -sigalg SHA256withRSA -alias server -ext SAN=DNS:{FQDN}
 输入密钥库口令:
 再次输入新口令:
 您的名字与姓氏是什么?
-  [Unknown]:  Aaron
+  [Unknown]:  islibra
 您的组织单位名称是什么?
-  [Unknown]:  PAAS
+  [Unknown]:  CLOUD
 您的组织名称是什么?
-  [Unknown]:  IT
+  [Unknown]:  XXX
 您所在的城市或区域名称是什么?
   [Unknown]:  Shenzhen
 您所在的省/市/自治区名称是什么?
   [Unknown]:  Guangdong
 该单位的双字母国家/地区代码是什么?
   [Unknown]:  CN
-CN=Aaron, OU=PAAS, O=IT, L=Shenzhen, ST=Guangdong, C=CN是否正确?
-  [否]:  y
+CN=islibra, OU=CLOUD, O=XXX, L=Shenzhen, ST=Guangdong, C=CN是否正确?
+  [否]:  yes
 
-输入 <client> 的密钥口令
-        (如果和密钥库口令相同, 按回车):
+# 生成证书请求文件
+keytool -certreq -file server.csr -keystore server.keystore.jks -alias server
+# 将 CSR 发送给 CA，由 CA 颁发使用 CA 私钥签名的证书。
+# 导入 CA 证书
+keytool -import -file ca.cer -keystore server.keystore.jks -alias caroot
+# 导入 CA 颁发的证书
+keytool -import -file server.cer -keystore server.keystore.jks -alias server
 
-#生成证书请求文件client.csr（PEM格式）
-$ keytool -keystore clientkeystore -certreq -alias client -keyalg rsa -file client.csr
-#将CSR发送给CA，由CA颁发使用CA私钥签名证书。
-#导入CA颁发的证书，client.cer中包含客户端证书和CARoot.cer
-$ keytool -import -keystore clientkeystore -file client.cer -alias client
-#或单独导入CA证书
-$ keytool -import -keystore clientkeystore -file CARoot.cer -alias theCARoot
+
+
 
 ########
 
-#生成密钥对和自签名证书
-$ keytool -genkey -keyalg RSA -alias CAPS -keystore keystore_filename
+
 #导出自签名证书
 $ keytool -export -alias CAPS -keystore keystore_filename -rfc -file self_signed_cert_filename
 #导入信任的CA证书
@@ -84,12 +81,13 @@ $ keytool -import -trustcacerts -alias CAPS -file ca-certificate-filename -keyst
 
 > **Tips:** 某些CA会校验first and last name是否为正确的domain。
 
-## 创建truststore.jks
+### II. 创建 truststore.jks
 
-```bash
-#在当前目录生成myTrustStore，将信任的CA证书通过别名firstCA导入到truststore
-$ keytool -import -file C:\cascerts\firstCA.cert -alias firstCA -keystore myTrustStore
+```sh
+# 将信任的 CA 证书导入到 truststore
+keytool -import -file ca.cer -keystore client.truststore.jks -alias caroot
 ```
+
 
 # OpenSSL，http://www.openssl.org
 

@@ -120,23 +120,6 @@ import (
 调用时使用`rand.xxx()`
 
 
-## I. 基本类型
-
-- bool
-- byte // alias for uint8
-- int(推荐)  int8  int16  int32  int64
-- uint uint8 uint16 uint32 uint64 uintptr
-- rune // alias for int32
-       // represents a Unicode code point
-- float32 float64
-- complex64 complex128
-- string
-
-> int, uint, uintptr 在 32 位系统上为 32 位, 在 64 位系统上为 64 位
-
-!!! quote "[A Tour of Go](https://tour.golang.org/basics/11)"
-
-
 ## I. 变量
 
 ```go
@@ -163,7 +146,7 @@ fmt.Printf("Type: %T Value: %v\n", maxInt, maxInt)
 fmt.Printf("Type: %T Value: %v\n", z, z)
 ```
 
-## 数组
+## I. 数组和切片
 
 ```go
 // 数组
@@ -193,6 +176,7 @@ fmt.Println("length:", len(sl), sl)  // length: 5 [0 0 0 0 0]
 sl2 := make([]int, 0, 3)  // 类型，长度，容量
 fmt.Println("length:", len(sl2), "capacity:", cap(sl2), sl2)  // length: 0 capacity: 3 []
 ```
+
 
 ## 结构体
 
@@ -275,7 +259,7 @@ for i, v := range primes {  //返回值第一个为下标，第二个为元素�
 }
 ```
 
-## 库函数
+## I. 库函数
 
 ### encoding/json
 
@@ -310,7 +294,9 @@ func main() {
 }
 ```
 
-### os/user
+### II. os
+
+#### III. user
 
 ```go tab="函数原型"
 type User struct {
@@ -331,6 +317,15 @@ func main() {
     fmt.Println(user.Current())
 }
 ```
+
+#### III. 获取操作系统环境变量
+
+```go
+import "os"
+
+var JAVA_HOME = os.Getenv("JAVA_HOME")
+```
+
 
 ### path/filepath
 
