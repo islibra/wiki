@@ -39,9 +39,9 @@ $ export PATH=$PATH:$GOPATH/bin
 ```
 
 
-## demo
+## I. Hello World
 
-在workspace下建立目录：`src/hello`，新建`hello.go`。
+在 workspace 下建立目录：`src/hello`，新建`hello.go`。
 
 ```go
 package main
@@ -260,6 +260,138 @@ for i, v := range primes {  //返回值第一个为下标，第二个为元素�
 ```
 
 ## I. 库函数
+
+### II. 生成 X.509 证书
+
+```go
+package main
+
+import (
+	"crypto/rand"
+	"crypto/rsa"
+	"crypto/x509"
+	"crypto/x509/pkix"
+	"encoding/pem"
+	"fmt"
+	"math/big"
+	rd "math/rand"
+	"net"
+	"os"
+	"time"
+)
+
+func init() {
+	rd.Seed(time.Now().Unix())
+}
+
+func main() {
+	// Name代表一个X.509识别名。只包含识别名的公共属性，额外的属性被忽略。
+	subject := pkix.Name{
+		Country:            []string{"CN"},
+		Province:           []string{"GuangDong"},
+		Locality:           []string{"ShenZhen"},
+		Organization:       []string{"XXX"},
+		OrganizationalUnit: []string{"CLOUD"},
+		CommonName:         "OSC",
+	}
+
+	nowTime := time.Now()
+	notBeforeDate := time.Date(nowTime.Year(), nowTime.Month(), nowTime.Day(), 0, 0, 0,
+		0, nowTime.Location())
+	notAfterDate := notBeforeDate.AddDate(10, 0, 0)
+
+	template := x509.Certificate{
+		Version:      3,
+		SerialNumber: big.NewInt(rd.Int63()),
+		Subject:      subject,
+		NotBefore:    notBeforeDate,
+		NotAfter:     notAfterDate,
+		// KeyUsage 与 ExtKeyUsage 用来表明该证书是用来做服务器认证的
+		KeyUsage: x509.KeyUsageDigitalSignature | x509.KeyUsageKeyEncipherment | x509.KeyUsageCertSign,
+		// 密钥扩展用途的序列
+		ExtKeyUsage: []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
+		IPAddresses: []net.IP{net.ParseIP("127.0.0.1")},
+		DNSNames:    nil,
+	}
+
+	// 生成 RSA 密钥对
+	caPrivateKey, _ := rsa.GenerateKey(rand.Reader, 4096)
+
+	// 基于模板创建一个新的证书
+	cerBytes, _ := x509.CreateCertificate(rand.Reader, &template, &template,
+		&caPrivateKey.PublicKey, caPrivateKey)
+	fmt.Println(cerBytes)
+
+	// 将证书导出为文件
+	certFile, _ := os.Create("ca.cer")
+	if err := pem.Encode(certFile, &pem.Block{Type: "CERTIFICATE",
+		Bytes: cerBytes}); err != nil {
+		return
+	}
+	if err := certFile.Close(); err != nil {
+		return
+	}
+
+	// 将私钥导出为文件(私钥未加密)
+	keyFile, _ := os.Create("ca.key")
+	if err := pem.Encode(keyFile, &pem.Block{Type: "RSA PRIVATE KEY",
+		Bytes: x509.MarshalPKCS1PrivateKey(caPrivateKey)}); err != nil {
+		return
+	}
+	if err := keyFile.Close(); err != nil {
+		return
+	}
+}
+```
+
+!!! quote "[实现TLS服务 创建数字证书](https://www.jianshu.com/p/ee196e77a664)"
+
+#### III. 密钥用途
+
+- KeyUsageDigitalSignature KeyUsage = 1 << iota: 数字签名
+- KeyUsageContentCommitment
+- KeyUsageKeyEncipherment: 用于 TLS 对对称密钥进行加密
+- KeyUsageDataEncipherment
+- KeyUsageKeyAgreement
+- KeyUsageCertSign: 用于 CA 对签发的证书进行数字签名
+- KeyUsageCRLSign
+- KeyUsageEncipherOnly
+- KeyUsageDecipherOnly
+
+#### III. 扩展密钥用途
+
+- ExtKeyUsageAny ExtKeyUsage = iota
+- ExtKeyUsageServerAuth: 服务端认证
+- ExtKeyUsageClientAuth: 客户端认证
+- ExtKeyUsageCodeSigning
+- ExtKeyUsageEmailProtection
+- ExtKeyUsageIPSECEndSystem
+- ExtKeyUsageIPSECTunnel
+- ExtKeyUsageIPSECUser
+- ExtKeyUsageTimeStamping
+- ExtKeyUsageOCSPSigning
+- ExtKeyUsageMicrosoftServerGatedCrypto
+- ExtKeyUsageNetscapeServerGatedCrypto
+- ExtKeyUsageMicrosoftCommercialCodeSigning
+- ExtKeyUsageMicrosoftKernelCodeSigning
+
+### II. 调用 keytool 命令行生成 truststore
+
+```go
+caCertFilename := "ca.cer"
+
+truststoreFilename := "server.truststore.jks"
+
+plainStorePass := "123456"
+
+// keytool -import -file ca.cer -keystore client.truststore.jks -alias caroot
+args := "-import -file " + caCertFilename + " -keystore " + truststoreFilename + " -alias caroot -noprompt -storepass " + plainStorePass
+cmd := exec.Command("keytool", strings.Split(args, " ")...)
+if err := cmd.Run(); err != nil {
+    fmt.Println("generate truststore error", caCertFilename, err)
+}
+```
+
 
 ### encoding/json
 

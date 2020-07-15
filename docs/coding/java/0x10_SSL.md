@@ -36,12 +36,12 @@ truststore，在SSL协议中认证服务器使用，只用来存储trusted CA ro
 
 ### II. 创建 keystore.jks
 
-```sh hl_lines="25"
+```sh hl_lines="28"
 # 生成密钥对和自签名证书并存入 keystore
-# -keystore: 生成 keystore
 # -genkeypair: 生成密钥对
+# -keystore: 生成 keystore
 # -alias: 在 keystore 中的别名
-keytool -keystore server.keystore.jks -genkeypair -keyalg RSA -keysize 4096 -validity 3650 -sigalg SHA256withRSA -alias server -ext SAN=DNS:{FQDN}
+keytool -genkeypair -keyalg RSA -keysize 4096 -validity 3650 -sigalg SHA256withRSA -keystore server.keystore.jks -alias server -ext SAN=DNS:{FQDN}
 输入密钥库口令:
 再次输入新口令:
 您的名字与姓氏是什么?
@@ -58,6 +58,9 @@ keytool -keystore server.keystore.jks -genkeypair -keyalg RSA -keysize 4096 -val
   [Unknown]:  CN
 CN=islibra, OU=CLOUD, O=XXX, L=Shenzhen, ST=Guangdong, C=CN是否正确?
   [否]:  yes
+
+# 也可以直接使用
+keytool -genkeypair -keyalg RSA -keysize 4096 -validity 3650 -sigalg SHA256withRSA -keystore server.keystore.jks -alias server -dname "CN=OSC, OU=CLOUD, O=XXX, L=ShenZhen, ST=GuangDong, C=CN" -storepass 123456
 
 # 生成证书请求文件
 keytool -certreq -file server.csr -keystore server.keystore.jks -alias server

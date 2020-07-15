@@ -210,13 +210,13 @@
 1. 使用 **keytool** 为 broker 生成私钥和证书, 并存入 jks
 
     ```sh hl_lines="8"
-    # -keystore server.keystore.jks: keystore 文件名称
     # -genkeypair: 生成密钥对
     # -validity: 证书有效期(天)
     # -sigalg: 签名算法
+    # -keystore server.keystore.jks: keystore 文件名称
     # -alias: 保存在 keystore 中的别名
     # -ext SAN=DNS:{FQDN}: 添加 Host Name 校验字段
-    keytool -keystore server.keystore.jks -genkeypair -keyalg RSA -keysize 4096 -validity 3650 -sigalg SHA256withRSA -alias server -ext SAN=DNS:{FQDN}
+    keytool -genkeypair -keyalg RSA -keysize 4096 -validity 3650 -sigalg SHA256withRSA -keystore server.keystore.jks -alias server -ext SAN=DNS:{FQDN}
     Enter keystore password:
     Re-enter new password:
     What is your first and last name?
@@ -233,6 +233,9 @@
       [Unknown]:  CN
     Is CN=OSC, OU=CLOUD, O=XXX, L=ShenZhen, ST=GuangDong, C=CN correct?
       [no]:  yes
+
+    # 也可以直接使用
+    keytool -genkeypair -keyalg RSA -keysize 4096 -validity 3650 -sigalg SHA256withRSA -keystore server.keystore.jks -alias server -dname "CN=OSC, OU=CLOUD, O=XXX, L=ShenZhen, ST=GuangDong, C=CN" -storepass 123456
     ```
 
 1. 验证生成的证书
