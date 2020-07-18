@@ -70,6 +70,9 @@ keytool -import -file ca.cer -keystore server.keystore.jks -alias caroot
 # 导入 CA 颁发的证书
 keytool -import -file server.cer -keystore server.keystore.jks -alias server
 
+# 删除 keystore 中的指定证书
+keytool -delete -keystore keystore.jks -alias xxx
+
 
 
 
@@ -81,6 +84,8 @@ $ keytool -export -alias CAPS -keystore keystore_filename -rfc -file self_signed
 #导入信任的CA证书
 $ keytool -import -trustcacerts -alias CAPS -file ca-certificate-filename -keystore keystore_filename
 ```
+
+!!! quote "[常用的Java Keytool Keystore命令](https://www.chinassl.net/ssltools/keytool-commands.html)"
 
 > **Tips:** 某些CA会校验first and last name是否为正确的domain。
 

@@ -146,6 +146,12 @@
 
 ## I. 集群配置
 
+1. 复制 server.properties
+1. 修改 broker.id=0
+1. 修改 listeners=PLAINTEXT://:9092
+1. 修改 log.dirs=/tmp/kafka-logs
+1. 修改 zookeeper.connect=localhost:2181
+
 !!! quote "[【消息队列 MQ 专栏】消息队列之 Kafka](https://mp.weixin.qq.com/s/eyXr9Df6GcfvdYHpy_qyZg)"
 
 
@@ -331,6 +337,42 @@ ssl.endpoint.identification.algorithm=
 $ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --consumer.config config/consumer.properties
 $ bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic test --producer.config config/producer.properties
 ```
+
+
+#### III. FAQ
+
+- General SSLEngine problem
+
+    ??? faq "展开详细"
+        ```sh
+        [2020-07-15 07:36:43,599] ERROR [KafkaServer id=9] Fatal error during KafkaServer startup. Prepare to shutdown (kafka.server.KafkaServer)
+        org.apache.kafka.common.KafkaException: org.apache.kafka.common.config.ConfigException: Invalid value javax.net.ssl.SSLHandshakeException: General SSLEngine problem for configuration A client SSLEngine created with the provided settings can't connect to a server SSLEngine created with those settings.
+                at org.apache.kafka.common.network.SslChannelBuilder.configure(SslChannelBuilder.java:74)
+                at org.apache.kafka.common.network.ChannelBuilders.create(ChannelBuilders.java:157)
+                at org.apache.kafka.common.network.ChannelBuilders.serverChannelBuilder(ChannelBuilders.java:97)
+                at kafka.network.Processor.<init>(SocketServer.scala:724)
+                at kafka.network.SocketServer.newProcessor(SocketServer.scala:367)
+                at kafka.network.SocketServer.$anonfun$addDataPlaneProcessors$1(SocketServer.scala:252)
+                at kafka.network.SocketServer.addDataPlaneProcessors(SocketServer.scala:251)
+                at kafka.network.SocketServer.$anonfun$createDataPlaneAcceptorsAndProcessors$1(SocketServer.scala:214)
+                at kafka.network.SocketServer.$anonfun$createDataPlaneAcceptorsAndProcessors$1$adapted(SocketServer.scala:211)
+                at scala.collection.mutable.ResizableArray.foreach(ResizableArray.scala:62)
+                at scala.collection.mutable.ResizableArray.foreach$(ResizableArray.scala:55)
+                at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:49)
+                at kafka.network.SocketServer.createDataPlaneAcceptorsAndProcessors(SocketServer.scala:211)
+                at kafka.network.SocketServer.startup(SocketServer.scala:122)
+                at kafka.server.KafkaServer.startup(KafkaServer.scala:266)
+                at kafka.server.KafkaServerStartable.startup(KafkaServerStartable.scala:44)
+                at kafka.Kafka$.main(Kafka.scala:82)
+                at kafka.Kafka.main(Kafka.scala)
+        Caused by: org.apache.kafka.common.config.ConfigException: Invalid value javax.net.ssl.SSLHandshakeException: General SSLEngine problem for configuration A client SSLEngine created with the provided settings can't connect to a server SSLEngine created with those settings.
+                at org.apache.kafka.common.security.ssl.SslFactory.configure(SslFactory.java:100)
+                at org.apache.kafka.common.network.SslChannelBuilder.configure(SslChannelBuilder.java:72)
+                ... 17 more
+        ```
+
+    1. 由 openssl 生成的私钥未导入 keystore
+    1. 生成 CA 证书的时候, 未指定 IsCA: true
 
 
 ### II. ZooKeeper 认证

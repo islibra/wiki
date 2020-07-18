@@ -3,6 +3,10 @@
 !!! quote "[explainshell](https://explainshell.com/)"
 
 - 显示命令历史记录：`HISTSIZE=1000`
+- 往回删除一个单词: `ctrl + w`
+- 删除光标以前的字符: `ctrl + u`
+- 删除光标以后的字符: `ctrl + k`
+- 清屏: `ctrl + l` 或 `clear`
 - 设置别名：`alias ll='ls -al'`，添加到`/etc/profile`并执行`source /etc/profile`永久生效。
 - 显示文件列表并按时间正序排列：`ll -tr`
 - 读取符号链接指向的文件：`readlink xxxlinkfile`

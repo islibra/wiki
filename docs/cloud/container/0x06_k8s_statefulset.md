@@ -358,7 +358,7 @@ server.3=zk-2.zk-hs.default.svc.cluster.local:2888:3888
 ```
 
 !!! quote "[运行 ZooKeeper， 一个 CP 分布式系统 - Kubernetes官方](https://kubernetes.io/zh/docs/tutorials/stateful-application/zookeeper/)"
-    中文版未更新及时, 查看英文版: [Running ZooKeeper, A Distributed System Coordinator]((https://kubernetes.io/zh/docs/tutorials/stateful-application/zookeeper/))
+    中文版未更新及时, 查看英文版: [Running ZooKeeper, A Distributed System Coordinator]((https://kubernetes.io/docs/tutorials/stateful-application/zookeeper/))
 
 
 ## I. 部署 Kafka
@@ -464,3 +464,5 @@ spec:
         - name: KAFKA_OPTS
           value: "-Dlogging.level=INFO"
 ```
+
+!!! quote "[示例代码](https://github.com/kubernetes-retired/contrib/tree/master/statefulsets)"
