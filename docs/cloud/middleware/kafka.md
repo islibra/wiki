@@ -375,6 +375,36 @@ $ bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic test -
     1. 生成 CA 证书的时候, 未指定 IsCA: true
 
 
+### II. 代码梳理
+
+- kafka/
+    - core/src/main/scala/kafka/
+        - Kafka.scala.main()
+        - server/
+            - kafkaServerStartable.startup()
+            - KafkaServer.scala.startup()
+
+        - network
+            - SocketServer.startup()
+                - createDataPlaneAcceptorsAndProcessors()
+                    - addDataPlaneProcessors()
+                        - newProcessor()
+
+    - clients/src/main/java/org.apache.kafka/common/
+        - network/ChannelBuilders.java.serverChannelBuilder()
+            - create()
+                - SslChannelBuilder.configure()
+
+        - security/ssl/
+            - SslFactory.java.configure()
+            - SslEngineBuilder.java, 在构造方法中创建 keystore, truststore, sslContext
+                - createKeystore()
+                - createTruststore()
+                - createSSLContext()
+                    - SecurityStore.load()
+                        - java.security.KeyStore.load(), 加载 keystore
+
+
 ### II. ZooKeeper 认证
 
 从 ZooKeeper 3.5.x/Kafka 2.5 版本开始支持 SASL/mTLS 认证
@@ -497,6 +527,8 @@ public class KafkaPublisher {
     consumer.timeout.ms | 超时时间
 
 ### II. Yammer Metrics
+
+Kafka 使用 Yammer Metrics 在服务端进行指标上报。
 
 #### III. 收集
 

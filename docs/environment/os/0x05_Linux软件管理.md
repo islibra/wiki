@@ -66,6 +66,24 @@ dpkg-reconfigure package  #重新配置已安装的包
 ```
 
 
+## I. 安装 JDK
+
+1. 下载 Linux 版的 JDK
+1. 解压 JDK 安装包: `tar -xzvf jdk-7u17-linux-x64.tar.gz`
+1. 将解压后的 jdk-7u17-linux-x64 目录下的所有文件移动到 `/usr/local/java`
+1. 设置环境变量，`sudo vim /etc/profile`，写入如下内容：
+
+    ```
+    export JAVA_HOME=/usr/local/java
+    export JRE_HOME=/usr/local/java/jre　
+    export CLASSPATH=.:$JAVA_HOME/lib:$JRE_HOME/lib:$CLASSPATH
+    export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
+    ```
+
+1. 执行`source /etc/profile`，使环境变量生效
+1. 输入`java -version`命令查看java是否安装成功
+
+
 ## 压缩解压文件
 
 ### 1. tar
@@ -231,19 +249,3 @@ $ cp rar_static /usr/bin/rar
 
 - 查询软件有哪些版本可用：`sudo apt-cache madison <<packagename>>`, `sudo apt-cache policy <<packagename>>`
 - 安装指定版本：`sudo apt-get install xxx=version`
-
-
-# 安装JDK的步骤
-
-1. 下载linux版的jdk
-1. 解压jdk安装包，`tar -xzvf jdk-7u17-linux-x64.tar.gz`
-1. 将解压后的 jdk-7u17-linux-x64 目录下的所有文件移动到`/usr/local/java`
-1. 设置环境变量，`sudo vim /etc/profile`，写入如下内容：
-```
-export JAVA_HOME=/usr/local/java
-export JRE_HOME=/usr/local/java/jre　
-export CLASSPATH=.:$JAVA_HOME/lib:$JRE_HOME/lib:$CLASSPATH
-export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
-```
-1. 执行`source /etc/profile`，使环境变量生效
-1. 输入`java -version`命令查看java是否安装成功

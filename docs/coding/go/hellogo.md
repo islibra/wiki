@@ -1,21 +1,29 @@
 # hellogo
 
-官方网站：<https://golang.org/>
+- 官方网站：<https://golang.org/>
+- 中文版：<https://go-zh.org/>
 
-中文版：<https://go-zh.org/>
+## I. 安装部署
 
 1. 二进制安装包下载地址：<https://golang.org/dl/>
 1. 提取安装包到指定目录：`tar -C /usr/local/ -zxf go1.12.5.linux-amd64.tar.gz`
 
-!!! info "Linux添加环境变量"
-    1. 执行`vim /etc/profile`
-    1. 添加`export PATH=$PATH:/usr/local/go/bin`
-    1. 执行`source /etc/profile`
-    1. 查看go版本`go version`
+### II. Linux 设置环境变量
 
-!!! info "Windows设置环境变量"
-    1. 添加`GOPATH`，指向自定义workspace，在workspace下建立目录src，并创建main.go和package。使用`go get`也会将库默认下载到该目录下。
-    1. 使用GoLand导入工程 {==一般是包含src的目录==} 后，File - Settings - Go - GOPATH - Project GOPATH，添加工程目录 {==包含src的目录==}，在GoLand中才能找到依赖。
+```sh
+vim /etc/profile
+export GOROOT=/usr/local/go
+export GOPATH=/path/to/workspace
+export PATH=/usr/local/go/bin:$PATH
+source /etc/profile
+go version
+```
+
+### II. Windows 设置环境变量
+
+1. 添加`GOPATH`，指向自定义workspace，在workspace下建立目录src，并创建main.go和package。使用`go get`也会将库默认下载到该目录下。
+1. 使用GoLand导入工程 {==一般是包含src的目录==} 后，File - Settings - Go - GOPATH - Project GOPATH，添加工程目录 {==包含src的目录==}，在GoLand中才能找到依赖。
+
 
 ## 工作空间
 
@@ -30,14 +38,6 @@
 
     - pkg  # 包对象
     - bin  # 可执行命令
-
-### GOPATH
-
-```sh
-$ export GOPATH=/path/to/workspace
-$ export PATH=$PATH:$GOPATH/bin
-```
-
 
 ## I. Hello World
 
@@ -119,32 +119,6 @@ import (
 
 调用时使用`rand.xxx()`
 
-
-## I. 变量
-
-```go
-// 声明变量
-var a, b int
-// 变量初始化
-var c, d int = 1, 2
-// 简洁赋值语句，代替var和类型声明，只能用在函数内部
-e := 3
-// 0 0 1 2 3
-fmt.Println(a, b, c, d, e)
-
-// 声明块
-var (
-    tobe bool = false
-    maxInt uint64 = 1<<64 -1
-    z complex128 = cmplx.Sqrt(-5 + 12i)
-)
-// Type: bool Value: false
-fmt.Printf("Type: %T Value: %v\n", tobe, tobe)
-// Type: uint64 Value: 18446744073709551615
-fmt.Printf("Type: %T Value: %v\n", maxInt, maxInt)
-// Type: complex128 Value: (2+3i)
-fmt.Printf("Type: %T Value: %v\n", z, z)
-```
 
 ## I. 数组和切片
 

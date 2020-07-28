@@ -146,6 +146,7 @@ monitor_in_web  test.1
 - 添加 **新增/修改文件** 到暂存区: `git add .`
 - 添加 **修改/删除文件** 到暂存区: `git add -u`
 - 添加 **所有文件** 到暂存区: `git add -A`
+- 合并 commit: `git rebase`
 
 - 撤销并丢弃本地修改：`git checkout .`
 - 撤销 add: `$ git reset HEAD [filename]`
