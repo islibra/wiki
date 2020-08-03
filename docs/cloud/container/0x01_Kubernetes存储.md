@@ -301,3 +301,11 @@ volumes:
 
 
 !!! quote "参考链接: [Volumes](https://kubernetes.io/zh/docs/concepts/storage/)"
+
+## I. FAQ
+
+1. 删除一直处于 Terminating 状态的 PV
+
+    ```sh
+    kubectl patch pv pvc-17651316-b0e0-45a7-9c72-0eadb0dbc15b -p '{"metadata":{"finalizers":null}}'
+    ```
