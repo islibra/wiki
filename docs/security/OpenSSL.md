@@ -24,10 +24,11 @@ x509
 #### III. 使用 RSA 算法生成私钥
 
 ```sh
-# -aes256, 使用 AES256CBC 加密输出的 PEM 格式的私钥。
 # -out, 生成的私钥文件名。
-# numbits, 私钥位数。
-openssl genrsa -aes256 -out ca.key 4096
+# -aes256, 使用 AES256CBC 加密输出的 PEM 格式的私钥。
+# -passout, 加密私钥的口令。
+# numbits, RSA 私钥位数。
+openssl genrsa -out ca.key -aes256 -passout pass:xxx 4096
 ```
 
 ### II. req
@@ -36,13 +37,13 @@ openssl genrsa -aes256 -out ca.key 4096
 
 ```sh
 # -key 使用的私钥
-openssl req -new -x509 -days 3650 -key ca.key -out ca.cer
+openssl req -new -x509 -out ca.cer -days 3650 -key ca.key -passin pass:xxx -subj "/C=CN/ST=GuangDong/L=ShenZhen/O=xxx/OU=xxx/CN=xxx"
 ```
 
 #### III. 使用私钥创建证书请求
 
 ```sh
-openssl req -new -key server.key -out server.csr -keyform PEM
+openssl req -new -out client.csr -key client.key -keyform PEM -passin pass:xxx -subj "/C=CN/ST=Guangdong/L=Shenzhen/O=xxx/OU=xxx/CN=xxx"
 ```
 
 
@@ -73,7 +74,7 @@ openssl req -new -key server.key -out server.csr -keyform PEM
 # -out arg 输出证书文件。
 # -outform arg 输出文件格式，默认PEM，可选DER, NET。
 # -CAcreateserial 生成证书序列号。
-openssl x509 -req -extfile /etc/pki/tls/openssl.cnf -extensions v3_req -days 3650 -sha256 -CAkey ca.key -CA ca.cer -in server.csr -out server.cer -CAcreateserial
+openssl x509 -req -extfile /etc/pki/tls/openssl.cnf -extensions v3_req -days 3650 -sha256 -CAkey ca.key -passin pass:xxx -CA ca.cer -in server.csr -out server.cer -CAcreateserial
 ```
 
 #### III. 查看证书内容
@@ -85,11 +86,20 @@ openssl x509 -in ca.cer -text -noout
 !!! quote "[openssl 生成X509 V3的根证书及签名证书](https://blog.csdn.net/xiangguiwang/java/article/details/80333728)"
 
 
-- pkcs12，导入证书和私钥生成密钥库，如：`openssl pkcs12 -export -out etcd_client.p12 -in client.pem -inkey client.key`。提示输入私钥口令和p12口令。  
-    - -export, 生成PKCS12文件。
-    - -out outfile, 输出文件名。
-    - -in infile, 输入证书。
-    - -inkey file, 输入证书私钥。
+### II. pkcs12
+
+#### III. 生成密钥库并将私钥和证书导入
+
+```sh
+# -export, 生成 PKCS12 文件。
+# -out outfile, 输出文件名。
+# -passout pass:xxx, 密钥库口令
+# -in infile, 待导入的证书。
+# -inkey file, 待导入的证书私钥。
+# -passin pass:xxx, 待导入的证书私钥口令
+# -certfile file, 待导入的 CA 证书
+openssl pkcs12 -export -out client.p12 -passout pass:xxx -in client.cer -inkey client.key -passin pass:xxx -certfile ca.cer
+```
 
 
 - ecparam，生成ec密钥参数，如`openssl ecparam -genkey -name prime256v1 -out ca.pem`。

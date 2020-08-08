@@ -186,7 +186,7 @@
 
     ```sh hl_lines="2"
     # 使用 AES256CBC 加密生成 RSA4096 私钥
-    openssl genrsa -aes256 -out ca.key 4096
+    openssl genrsa -out ca.key -aes256 -passout pass:xxx 4096
 
     # 使用私钥直接创建 CA 证书
     openssl req -new -x509 -days 3650 -key ca.key -out ca.cer

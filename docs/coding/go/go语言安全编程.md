@@ -218,7 +218,7 @@ rows, err := db.Query(sqlStr, x)
 ```
 
 
-## OS命令注入
+## I. OS命令注入
 
 ```go tab="错误的做法" hl_lines="4"
 import "os/exec"
@@ -247,6 +247,22 @@ if err != nil || os.IsNotExist(err) {
 
 cmd := exec.Command("rm", "-f", param)  //功能单一
 delErr := cmd.Run()
+```
+
+### II. 捕获所执行命令的错误信息
+
+```sh
+var args []string
+args = append(args,
+    "xxx",
+    "xxx",
+)
+cmd := exec.Command("command", args...)
+errBuffer := bytes.NewBuffer(nil)
+cmd.Stderr = errBuffer
+i f err := cmd.Run(); err != nil {
+    fmt.Println(err, string (errBuffer.Bytes()))
+}
 ```
 
 

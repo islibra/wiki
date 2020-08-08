@@ -106,6 +106,29 @@ export GONOSUMDB=*
 !!! quote "[使用 Go Modules 管理依赖](https://www.jianshu.com/p/dca7c631587f)"
 
 
+## I. 日志
+
+```go
+package main
+
+import (
+	"log"
+	"os"
+)
+
+func main() {
+	logfile, err := os.Create("main.log")
+	if err != nil {
+		log.Fatalln("fail to create main.log.")
+	}
+
+	logger := log.New(logfile, "", log.LstdFlags|log.Lshortfile)
+	logger.Println("Hello log.")
+	logger.Fatal("End.")
+}
+```
+
+
 ## 包
 
 创建包路径如：`math/rand`，`rand`包内所有`.go`文件都以`package rand`开头。
@@ -363,6 +386,35 @@ args := "-import -file " + caCertFilename + " -keystore " + truststoreFilename +
 cmd := exec.Command("keytool", strings.Split(args, " ")...)
 if err := cmd.Run(); err != nil {
     fmt.Println("generate truststore error", caCertFilename, err)
+}
+```
+
+### II. 读取文件
+
+```go
+propPath := "/xxx.properties"
+if _, err := os.Stat(propPath); os.IsNotExist(err) {
+    logErr.Println("properties is not exist.")
+    return
+}
+propFile, err := os.OpenFile(propPath, os.O_RDONLY, 0400)
+if err != nil {
+    logErr.Println("properties is not readable.")
+    return
+}
+defer propFile.Close()
+
+rd := bufio.NewReader(propFile)
+for {
+    lineBytes, _, err := rd.ReadLine()
+    if err != nil || io.EOF == err {
+        break
+    }
+    line := string(lineBytes)
+    // 去掉空行和注释
+    if len(line) != 0 && !strings.HasPrefix(line, "#") {
+        logger.Println(line)
+    }
 }
 ```
 
