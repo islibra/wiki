@@ -63,6 +63,20 @@ func main() {
 	如果在同一个包中定义多个文件，需要执行`go run hello1.go hello2.go`，否则会报undefined。
 
 
+## I. 包
+
+创建包路径如：`math/rand`，`rand`包内所有`.go`文件都以`package rand`开头。
+
+导入时使用  
+```go
+import (
+	"math/rand"
+)
+```
+
+调用时使用`rand.xxx()`
+
+
 ## I. Go Modules
 
 > go version >= 1.11
@@ -127,20 +141,6 @@ func main() {
 	logger.Fatal("End.")
 }
 ```
-
-
-## 包
-
-创建包路径如：`math/rand`，`rand`包内所有`.go`文件都以`package rand`开头。
-
-导入时使用  
-```go
-import (
-	"math/rand"
-)
-```
-
-调用时使用`rand.xxx()`
 
 
 ## I. 数组和切片
@@ -389,9 +389,50 @@ if err := cmd.Run(); err != nil {
 }
 ```
 
-### II. 读取文件
+### II. 读写文件
+
+#### III. os.Create(未验证)
 
 ```go
+f, err := os.Create("/tmp/dat2")
+check(err)
+defer f.Close()
+d2 := []byte{115, 111, 109, 101, 10}
+n2, err := f.Write(d2)
+check(err)
+fmt.Printf("wrote %d bytes\n", n2)
+n3, err := f.WriteString("writes\n")
+fmt.Printf("wrote %d bytes\n", n3)
+f.Sync()
+```
+
+#### III. io/ioutil
+
+```go tab="函数原型"
+// 一次性读取整个文件
+func ReadFile(filename string) ([]byte, error)
+```
+
+```go tab="示例代码" hl_lines="8"
+import (
+    "fmt"
+    "io/ioutil"
+)
+
+func main() {
+	dstFilePath := "E:\\doc\\atom\\docs\\index.md"
+    content, err := ioutil.ReadFile(dstFilePath)
+    if err != nil {
+        fmt.Println("error")
+    }
+    fmt.Println(string(content))
+}
+```
+
+#### III. bufio
+
+```go
+// 读取文件
 propPath := "/xxx.properties"
 if _, err := os.Stat(propPath); os.IsNotExist(err) {
     logErr.Println("properties is not exist.")
@@ -416,6 +457,23 @@ for {
         logger.Println(line)
     }
 }
+
+// 写入文件
+propFile, err := os.OpenFile(propPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0600)
+if err != nil {
+    logErr.Println(propPath, "can not be create.")
+    return
+}
+defer propFile.Close()
+
+wt := bufio.NewWriter(propFile)
+for k, v := range properties {
+    _, err := wt.WriteString(k + "=" + v + "\n")
+    if err != nil {
+        return
+    }
+}
+wt.Flush()
 ```
 
 
@@ -428,29 +486,6 @@ func Unmarshal(data []byte, v interface{}) error
 
 !!! quote
 	示例代码参见：[序列化敏感数据造成信息泄露](../go%E8%AF%AD%E8%A8%80%E5%AE%89%E5%85%A8%E7%BC%96%E7%A8%8B/#_12)
-
-### io/ioutil
-
-```go tab="函数原型"
-// 一次性读取整个文件
-func ReadFile(filename string) ([]byte, error)
-```
-
-```go tab="示例代码" hl_lines="8"
-import (
-    "fmt"
-    "io/ioutil"
-)
-
-func main() {
-	dstFilePath := "E:\\doc\\atom\\docs\\index.md"
-    content, err := ioutil.ReadFile(dstFilePath)
-    if err != nil {
-        fmt.Println("error")
-    }
-    fmt.Println(string(content))
-}
-```
 
 ### II. os
 
