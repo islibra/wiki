@@ -239,23 +239,6 @@ v.Scale(10)  //修改指针接收者的值，注意这里还是用点号
 fmt.Println(v.Abs())  //调用结构体方法
 ```
 
-## 循环
-
-```go
-for i := 0; i < 5; i++ {
-	fmt.Println(i)
-}
-```
-
-## range
-
-```go
-//range
-for i, v := range primes {  //返回值第一个为下标，第二个为元素副本，可使用_忽略
-    fmt.Printf("the %d ele is %d\n", i, v)
-}
-```
-
 ## I. 库函数
 
 ### II. 生成 X.509 证书
@@ -474,6 +457,79 @@ for k, v := range properties {
     }
 }
 wt.Flush()
+```
+
+
+### II. 获取本机 IP
+
+```go
+package util
+
+import (
+    "errors"
+    "fmt"
+    "net"
+)
+
+// 获取本机 IP
+func GetExternalIP() (net.IP, error) {
+    // 获取所有网络接口
+    ifaces, err := net.Interfaces()
+    if err != nil {
+        fmt.Println(err)
+    }
+
+    for _, iface := range ifaces {
+        // interface down
+        if iface.Flags&net.FlagUp == 0 {
+            continue
+        }
+        // loopback interface
+        if iface.Flags&net.FlagLoopback != 0 {
+            continue
+        }
+
+        // 针对网络接口
+        addrs, err := iface.Addrs()
+        if err != nil {
+            fmt.Println(err)
+        }
+        for _, addr := range addrs {
+            ip := getIpFromAddr(addr)
+            if ip == nil {
+                continue
+            }
+            return ip, nil
+        }
+    }
+    return nil, errors.New("interface nod found")
+}
+
+func getIpFromAddr(addr net.Addr) net.IP {
+    var ip net.IP
+    // 针对不同的网络地址类型获取 IP
+    switch v := addr.(type) {
+    case *net.IPNet:
+        ip = v.IP
+    case *net.IPAddr:
+        ip = v.IP
+    }
+    if ip == nil || ip.IsLoopback() {
+        return nil
+    }
+    // 获取 IPv4 地址
+    ip = ip.To4()
+    if ip == nil {
+        return nil
+    }
+    return ip
+}
+
+ip, err := util.GetExternalIP()
+if err != nil {
+    fmt.Println(err)
+}
+fmt.Println(ip.String())
 ```
 
 

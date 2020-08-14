@@ -1,10 +1,60 @@
-# [kafka](http://kafka.apache.org/)
+# kafka
+
+!!! quote "官方网站: <http://kafka.apache.org/>"
 
 对标产品：
 
-- kafka
+- rocketmq
 - rabbitmq
 - activemq
+
+
+## I. 主打特色
+
+### II. 核心能力
+
+- 高吞吐: 低至 2ms 时延
+- 可扩展: {==1k brokers，百千 partition，万亿(trillion)消息单日，petabytes 级数据==}
+- 持久化存储
+- 高可用: 支持跨 region, 跨 avilability zone
+
+### II. 周边生态
+
+- STREAM: 通过 join aggregation filter transformation 等方式进行流处理
+- CONNECT: 对接 Postgres JMS Elasticsearch AWS S3 等多种事件源
+- 多语言客户端库: Java Scala Go Python C/C++ REST API
+- 开源工具
+
+### II. 可信易用
+
+- 对于关键任务, 保证消息顺序，0 丢失, 单次处理
+- 数千组织, 超 500 万下载
+- 社区 top 5
+- 丰富的线上资源: 文档，在线教程
+
+## I. 关键能力(streams of events)
+
+1. publish(write), subscribe to(read), import/export
+1. store
+1. process, occur or retrospectively
+
+## I. 概念
+
+- **server**(broker/Connect) 和 **client**(app/microservice) 使用 **TCP** 协议通信
+    - broker, kafka集群，保存消息
+
+- **event**
+    - optional metadata header
+    - Event key: "Alice"
+    - Event value: "Made a payment of $200 to Bob"
+    - Event timestamp: "Jun. 25, 2020 at 2:06 p.m."
+
+- **producer** publish 消息到 topic(broker)
+- **consumer** 订阅 topic，从 broker 主动 pull 消息进行消费
+- **topic**: 消息的分类, {==用户可按照 topic 自定义消息保留时间，kafka 的性能与保留的数据量大小无关。==}
+- **partition** 使得对 topic 读写可以并行。同一个 event key 的消息被写入同一个 partition，分区内有序。
+- **replica** 保证高可用
+
 
 ## I. Quickstart
 
@@ -594,15 +644,6 @@ Kafka 使用 Yammer Metrics 在服务端进行指标上报。
     - [Kafka设计解析（五）Kafka性能测试方法及Benchmark报告](http://www.jasongj.com/2015/12/31/KafkaColumn5_kafka_benchmark/)
     - [kafka性能基准测试](https://www.cnblogs.com/xiaodf/p/6023531.html)
 
-
-## 概念
-
-- topic消息的分类
-- producer主动push消息到topic(broker)
-- broker, kafka集群，保存消息
-- consumer订阅topic，从broker主动pull消息进行消费
-
-!!! tip "消息持久化到本地磁盘。"
 
 ## zookeeper在kafka中的应用
 

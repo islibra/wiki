@@ -12,6 +12,8 @@
 
 1. 查询 Ubuntu 版本: `lsb_release -cs`
 1. 下载[安装包](https://download.docker.com/linux/ubuntu/dists/$(lsb_release -cs)/pool/stable/amd64/)
+1. 卸载旧版本: `sudo apt-get remove docker docker-engine docker.io containerd runc`
+1. 删除目录: `/var/lib/docker/`
 1. 安装
 
     ```sh

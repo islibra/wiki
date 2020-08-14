@@ -31,6 +31,14 @@ x509
 openssl genrsa -out ca.key -aes256 -passout pass:xxx 4096
 ```
 
+### II. rsa
+
+#### III. 解密私钥
+
+```sh
+openssl rsa -out plaintext_ca.key -in ca.key -passin pass:xxx
+```
+
 ### II. req
 
 #### III. 使用私钥直接创建 CA 证书

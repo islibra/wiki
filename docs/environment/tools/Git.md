@@ -142,14 +142,17 @@ monitor_in_web  test.1
 
 ## I. 操作命令
 
-- 添加 **单个文件** 到暂存区: `git add {file}`
-- 添加 **新增/修改文件** 到暂存区: `git add .`
-- 添加 **修改/删除文件** 到暂存区: `git add -u`
-- 添加 **所有文件** 到暂存区: `git add -A`
-- 合并 commit: `git rebase`
+- 添加
+    - 添加 **单个文件** 到暂存区: `git add {file}`
+    - 添加 **新增/修改文件** 到暂存区: `git add .`
+    - 添加 **修改/删除文件** 到暂存区: `git add -u`
+    - 添加 **所有文件** 到暂存区: `git add -A`
 
-- 撤销并丢弃本地修改：`git checkout .`
-- 撤销 add: `$ git reset HEAD [filename]`
-- 撤销 commit: `$ git reset --soft HEAD~1`, 1 代表 commit 次数
+- 查看提交记录: `git log`
+- 合并 commit: `git rebase -i {上一个 commit ID}`
+- 撤销
+    - 撤销并丢弃本地修改：`git checkout .`
+    - 撤销 add: `$ git reset HEAD [filename]`
+    - 撤销 commit: `$ git reset --soft HEAD~1`, 1 代表 commit 次数
 
 !!! quote "[Git 基础 - 撤消操作](https://git-scm.com/book/zh/v2/Git-%E5%9F%BA%E7%A1%80-%E6%92%A4%E6%B6%88%E6%93%8D%E4%BD%9C)"
