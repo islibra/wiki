@@ -1,9 +1,6 @@
----
-title: Lambda表达式
-date: 2018-09-08 11:31:47
-categories: java
-tags:
----
+# 0x12_Lambda表达式
+
+!!! tip "Lamda 表达式可以替换为匿名类"
 
 Lambda表达式表示函数接口的实例，可以作为参数传递进方法中。
 
