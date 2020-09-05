@@ -205,6 +205,75 @@
 !!! quote "[【消息队列 MQ 专栏】消息队列之 Kafka](https://mp.weixin.qq.com/s/eyXr9Df6GcfvdYHpy_qyZg)"
 
 
+## I. zookeeper 在 kafka 中的应用
+
+- producer和consumer都配置为zkclient
+
+1. 记录 broker 连接信息: `[zk: 127.0.0.1:2181(CONNECTED) 9] get /brokers/ids/0`
+
+    ```json
+    {
+      "listener_security_protocol_map": {
+        "PLAINTEXT": "PLAINTEXT"
+      },
+      "endpoints": [
+        "PLAINTEXT://DESKTOP-22OLCTA.china.huawei.com:9092"
+      ],
+      "jmx_port": -1,
+      "host": "DESKTOP-22OLCTA.china.huawei.com",
+      "timestamp": "1599207237743",
+      "port": 9092,
+      "version": 4
+    }
+    ```
+
+1. 记录 topic 信息
+    - /brokers
+        - /topics
+            - /hellokafka
+
+                ```json
+                {
+                  "version": 2,
+                  "partitions": {
+                    "0": [
+                      0
+                    ]
+                  },
+                  "adding_replicas": {},
+                  "removing_replicas": {}
+                }
+                ```
+
+                - /partitions
+                    - /0
+                        - /state
+
+                            ```json
+                            {
+                              "controller_epoch": 1,
+                              "leader": 0,
+                              "version": 1,
+                              "leader_epoch": 0,
+                              "isr": [
+                                0
+                              ]
+                            }
+                            ```
+
+1. 记录 topic 配置信息
+    - /config
+        - /topics
+            - /hellokafka
+
+                ```json
+                {
+                  "version": 1,
+                  "config": {}
+                }
+                ```
+
+
 ## I. 架构
 
 - 一个 **topic** 划分为多个 **partition**, 单个 partition 内保证消息有序
@@ -644,11 +713,6 @@ Kafka 使用 Yammer Metrics 在服务端进行指标上报。
     - [Kafka设计解析（五）Kafka性能测试方法及Benchmark报告](http://www.jasongj.com/2015/12/31/KafkaColumn5_kafka_benchmark/)
     - [kafka性能基准测试](https://www.cnblogs.com/xiaodf/p/6023531.html)
 
-
-## zookeeper在kafka中的应用
-
-- zk记录各结点IP端口
-- producer和consumer都配置为zkclient
 
 ## 业务流程
 

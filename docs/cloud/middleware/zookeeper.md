@@ -6,6 +6,128 @@
 
 分布式协调服务，在分布式系统中共享配置，协调锁资源，提供命名服务。
 
+下载安装包: <http://archive.apache.org/dist/zookeeper/zookeeper-3.5.7/apache-zookeeper-3.5.7-bin.tar.gz>
+
+## I. QuickStart
+
+### II. Standalone 模式
+
+#### III. 配置文件 conf/zoo.cfg
+
+```
+# 心跳, 超时时间为 2 倍, 单位: 毫秒
+tickTime=2000
+
+# 存储内存中数据库的快照和数据库更新的事务日志, 修改为 已存在的 空 目录
+dataDir=/var/lib/zookeeper
+
+# 客户端连接端口
+clientPort=2181
+```
+
+#### III. 启动
+
+```sh
+bin/zkServer.sh start
+
+/var/lib/zookeeper/
+├── version-2
+│   └── snapshot.0
+└── zookeeper_server.pid
+
+1 directory, 2 files
+```
+
+#### III. 连接
+
+```sh
+bin/zkCli.sh -server 127.0.0.1:2181
+[zk: 127.0.0.1:2181(CONNECTED) 0]
+
+# 列表
+[zk: 127.0.0.1:2181(CONNECTED) 2] ls /
+[zookeeper]
+# 或使用 ls -s
+# watch: ls -w
+# 递归显示所有子节点
+ls -R /path
+
+# 创建
+# 持久节点
+[zk: 127.0.0.1:2181(CONNECTED) 3] create /zk_test my_data
+Created /zk_test
+[zk: 127.0.0.1:2181(CONNECTED) 4] ls /
+[zk_test, zookeeper]
+# 临时节点
+create -e /ephemeral_node mydata
+# 持久顺序节点
+create -s /persistent_sequential_node mydata
+# 临时顺序节点
+create -s -e /ephemeral_sequential_node mydata
+
+# 查询
+[zk: 127.0.0.1:2181(CONNECTED) 5] get /zk_test
+my_data
+[zk: 127.0.0.1:2181(CONNECTED) 7] stat /zk_test
+cZxid = 0x2
+ctime = Fri Sep 04 15:41:31 CST 2020
+mZxid = 0x2
+mtime = Fri Sep 04 15:41:31 CST 2020
+pZxid = 0x2
+cversion = 0
+dataVersion = 0
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 7
+numChildren = 0
+# 或使用 get -s
+# watch: get -w
+
+# 修改
+[zk: 127.0.0.1:2181(CONNECTED) 8] set /zk_test junk
+WATCHER::
+WatchedEvent state:SyncConnected type:NodeDataChanged path:/zk_test
+
+# 删除
+[zk: 127.0.0.1:2181(CONNECTED) 10] delete /zk_test
+[zk: 127.0.0.1:2181(CONNECTED) 11] ls /
+[zookeeper]
+```
+
+!!! quote "官方指导: <https://zookeeper.apache.org/doc/current/zookeeperStarted.html>"
+
+
+### II. 集群模式
+
+1. 在 zoo.cfg 中添加
+
+    ``` hl_lines="11 13 17 18 19"
+    # 心跳, 超时时间为 2 倍, 单位: 毫秒
+    tickTime=2000
+
+    # 存储内存中数据库的快照和数据库更新的事务日志, 修改为 已存在的 空 目录
+    dataDir=/var/lib/zookeeper
+
+    # 客户端连接端口
+    clientPort=2181
+
+    # 初始同步阶段心跳次数: 5 x 2000 = 10 seconds
+    initLimit=5
+    # 发送请求接收响应心跳次数
+    syncLimit=2
+
+    # 2888: Follower 与 Leader 进行通信和数据同步
+    # 3888: Leader 选举
+    server.1=IP1:2888:3888
+    server.2=IP2:2888:3888
+    server.3=IP3:2888:3888
+    ```
+
+1. 在每台机器的 dataDir 目录下创建 **myid** 文件，文件内容即为该机器对应的 Server ID 数字
+
+!!! quote "[如何构建一个高可用ZooKeeper集群？](https://mp.weixin.qq.com/s?subscene=3&__biz=MzU0MTcxMDYxNA==&mid=2247484927&idx=1&sn=7608cf30b2124fd621250c095c36c7f8&chksm=fb248586cc530c908ad8b34ca51037c5f2c0767338b6860ed9ae5314b84be96f29a24ba68ba1&scene=7&ascene=65&devicetype=android-28&version=27000f51&nettype=WIFI&abtest_cookie=AAACAA%3D%3D&lang=zh_CN&exportkey=AX3IWNSpjgoGFSs%2B%2Be29uLM%3D&pass_ticket=1K02ShOaEGYDYdy3bxfJ9NUTimqiZKZaZFZbFrdn5ITp4UxAjC64%2F7w%2B2RX009bF&wx_header=1)"
+
+
 ## 数据存储方式
 
 以目录方式存储数据，数据结点叫做znode。
@@ -60,36 +182,6 @@ ZAB(ZooKeeper Atomic Broadcast)协议保证一致性，类似Paxos和Raft，单�
     - 结点本地最新事务编号
         - epoch
         - 计数
-
-
-## I. 集群搭建
-
-1. 在 zoo.cfg 中添加
-
-    ``` hl_lines="16 17 18"
-    # 客户端连接
-    clientPort=2181
-
-    dataDir=/var/lib/zookeeper
-    dataLogDir=/var/lib/log
-
-    # tick 周期(毫秒)
-    tickTime=2000
-    # 初始同步阶段 tick 次数
-    initLimit=5
-    # 发送请求接收响应 tick 次数
-    syncLimit=2
-
-    # 2888: Follower 与 Leader 进行通信和数据同步
-    # 3888: Leader 选举
-    server.1=IP1:2888:3888
-    server.2=IP2:2888:3888
-    server.3=IP3:2888:3888
-    ```
-
-1. 在每台机器的 dataDir 目录下创建 **myid** 文件，文件内容即为该机器对应的 Server ID 数字
-
-!!! quote "[如何构建一个高可用ZooKeeper集群？](https://mp.weixin.qq.com/s?subscene=3&__biz=MzU0MTcxMDYxNA==&mid=2247484927&idx=1&sn=7608cf30b2124fd621250c095c36c7f8&chksm=fb248586cc530c908ad8b34ca51037c5f2c0767338b6860ed9ae5314b84be96f29a24ba68ba1&scene=7&ascene=65&devicetype=android-28&version=27000f51&nettype=WIFI&abtest_cookie=AAACAA%3D%3D&lang=zh_CN&exportkey=AX3IWNSpjgoGFSs%2B%2Be29uLM%3D&pass_ticket=1K02ShOaEGYDYdy3bxfJ9NUTimqiZKZaZFZbFrdn5ITp4UxAjC64%2F7w%2B2RX009bF&wx_header=1)"
 
 
 ## 应用
