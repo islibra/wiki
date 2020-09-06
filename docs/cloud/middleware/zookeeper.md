@@ -20,6 +20,8 @@ tickTime=2000
 
 # 存储内存中数据库的快照和数据库更新的事务日志, 修改为 已存在的 空 目录
 dataDir=/var/lib/zookeeper
+# 为数据库事务日志使用专有的目录
+dataLogDir=/var/log/zookeeper
 
 # 客户端连接端口
 clientPort=2181
@@ -94,6 +96,8 @@ WatchedEvent state:SyncConnected type:NodeDataChanged path:/zk_test
 [zookeeper]
 ```
 
+!!! warning "触发 watch 时, watch 将被删除。3.6.0 中可以设置永久递归监视。"
+
 !!! quote "官方指导: <https://zookeeper.apache.org/doc/current/zookeeperStarted.html>"
 
 
@@ -128,22 +132,49 @@ WatchedEvent state:SyncConnected type:NodeDataChanged path:/zk_test
 !!! quote "[如何构建一个高可用ZooKeeper集群？](https://mp.weixin.qq.com/s?subscene=3&__biz=MzU0MTcxMDYxNA==&mid=2247484927&idx=1&sn=7608cf30b2124fd621250c095c36c7f8&chksm=fb248586cc530c908ad8b34ca51037c5f2c0767338b6860ed9ae5314b84be96f29a24ba68ba1&scene=7&ascene=65&devicetype=android-28&version=27000f51&nettype=WIFI&abtest_cookie=AAACAA%3D%3D&lang=zh_CN&exportkey=AX3IWNSpjgoGFSs%2B%2Be29uLM%3D&pass_ticket=1K02ShOaEGYDYdy3bxfJ9NUTimqiZKZaZFZbFrdn5ITp4UxAjC64%2F7w%2B2RX009bF&wx_header=1)"
 
 
-## 数据存储方式
+## I. 架构
 
-以目录方式存储数据，数据结点叫做znode。
+![](assets/markdown-img-paste-20200906162737986.png)
 
-数据保存在内存中。
+{==主从==} 结构，支持 {==数千==} 台服务器
+
+- 写：转发到主结点，同步到从结点
+- 读：任意从结点
+
+客户端以 TCP 方式连接到其中一台服务器, 发送请求, 获取响应, 监视数据, 发送心跳, 如果服务器中断, 则连接到其他服务器。
+
+!!! warning
+    - 适用于 {==读多写少==} 的场景(约10:1)
+    - 只用来存储少量状态和配置信息，不适合大规模业务数据，每个结点数据在 byte 到 kilobyte 范围，{==最大 1M==}。
+
+## I. 数据存储方式
+
+![](assets/markdown-img-paste-20200906164546668.png)
+
+以目录方式存储数据，类似文件系统，数据结点叫做 {==znode==}，但每个节点都可以 **存储数据**。
+
+数据保存在 {==内存==} 中。更新日志将先序列化到磁盘, 再应用到内存。
+
+数据存储 {==有序==}, 原子, 一致, 可靠, 及时。
 
 !!! example "Znode"
     - data
     - child
-    - ACL
-    - stat元数据
+    - ACL: 每个 znode 通过访问控制列表设置权限
+    - stat
+        - cZxid = 0x2: 创建 ID, 结点任何状态变化都会导致 ZooKeeper 事务 ID 的增加
+        - ctime = Sun Sep 06 17:31:08 CST 2020: 创建时间
+        - mZxid = 0x8: 最后一次修改 ID
+        - mtime = Sun Sep 06 21:09:21 CST 2020: 最后一次修改时间
+        - pZxid = 0x2: 子结点最后一次修改 ID
+        - cversion = 0: 子结点更改
+        - dataVersion = 4: 数据更改
+        - aclVersion = 0: ACL 更改
+        - ephemeralOwner = 0x0: 临时结点 owner 的 session ID, 非临时结点为 0
+        - dataLength = 1: 数据大小
+        - numChildren = 0: 子结点数量
 
-!!! warning
-    适用于读多写少的场景，只用来存储少量状态和配置信息，不适合大规模业务数据。每个结点数据最大1M。
-
-## API
+## I. API
 
 - create
 - delete
@@ -151,18 +182,25 @@ WatchedEvent state:SyncConnected type:NodeDataChanged path:/zk_test
 - getData
 - setData
 - getChildren
+- sync
 
 !!! tip "提示"
     在读操作上可以设置watch，在znode上注册触发器，当数据改变时触发事件，异步通知。
 
-客户端与zookeeper集群服务器建立TCP连接。
+## I. 性能基线
+
+![](assets/markdown-img-paste-20200906180504224.png)
+
+- dual 2Ghz Xeon, 2 SATA 15K RPM(一个用于操作系统和内存数据库快照, 一个专用于数据库事务日志)
+- 读写比例 10:1 时性能最优, 每秒达到 14 万请求数(数据大小 1K)
+- 与服务器数量相关不大
+
+## I. 可靠性
+
+- follower 可以快速恢复
+- leader 重新选举小于 200ms
 
 ## 集群架构
-
-主从结构
-
-- 写：主结点，同步到从结点
-- 读：任意从结点
 
 ZAB(ZooKeeper Atomic Broadcast)协议保证一致性，类似Paxos和Raft，单调一致性，依靠事务ID和版本号保证读写有序
 
@@ -201,6 +239,11 @@ ZAB(ZooKeeper Atomic Broadcast)协议保证一致性，类似Paxos和Raft，单�
 - 持久结点顺序结点persistant_sequential，根据创建时间给结点编号
 - 临时结点ephemeral，创建结点的客户端断开后结点自动删除
 - 临时顺序结点
+
+3.6.0 版本以后添加了
+
+- 容器结点
+- TTL 结点
 
 #### 分布式锁
 
