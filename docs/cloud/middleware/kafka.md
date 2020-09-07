@@ -66,13 +66,49 @@
     > 监听IP, clientPortAddress=x.x.x.x
 
 1. 启动kafka: `$ bin/kafka-server-start.sh config/server.properties`, 端口号9092
+
+### II. 配置
+
+#### III. 日志保留策略
+
+- 日志保留时间: log.retention.hours=168, 默认 7 天
+- 日志保留大小: log.retention.bytes=1073741824
+- 单个日志文件大小: log.segment.bytes=1073741824
+- 保留策略检查周期: log.retention.check.interval.ms=300000
+- 清理策略: log.cleanup.policy=delete|compact
+
+### II. Topic
+
 1. 创建topic: `$ bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic hellokafka`
 1. 查询topic:
 
     ```bash
-    $ bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+    $ bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
     hellokafka
     ```
+
+1. 配置 topic 保留策略 1 天
+
+    ```sh
+    bin/kafka-configs.sh --bootstrap-server localhost:9092 --alter --entity-name hellokafka --entity-type topics --add-config retention.ms=86400000,cleanup.policy=delete|compact
+    ```
+
+1. 查看 topic 配置
+
+    ```sh
+    bin/kafka-configs.sh --bootstrap-server localhost:9092 --describe --entity-name hellokafka --entity-type topics
+    Dynamic configs for topic hellokafka are:
+      cleanup.policy=delete sensitive=false synonyms={DYNAMIC_TOPIC_CONFIG:cleanup.policy=delete, DEFAULT_CONFIG:log.cleanup.policy=delete}
+      retention.ms=86400000 sensitive=false synonyms={DYNAMIC_TOPIC_CONFIG:retention.ms=86400000}
+    ```
+
+1. 创建 topic 时指定策略
+
+    ```sh
+    bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic deltp --config cleanup.policy=delete
+    ```
+
+### II. 消息
 
 1. 发送消息:
 
@@ -269,7 +305,10 @@
                 ```json
                 {
                   "version": 1,
-                  "config": {}
+                  "config": {
+                    "cleanup.policy": "delete",
+                    "retention.ms": "86400000"
+                  }
                 }
                 ```
 
