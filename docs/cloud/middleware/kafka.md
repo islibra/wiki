@@ -79,21 +79,35 @@
 
 ### II. Topic
 
-1. 创建topic: `$ bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic hellokafka`
-1. 查询topic:
-
-    ```bash
-    $ bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
-    hellokafka
-    ```
-
-1. 配置 topic 保留策略 1 天
+1. 创建 topic 时指定分区和副本数
 
     ```sh
-    bin/kafka-configs.sh --bootstrap-server localhost:9092 --alter --entity-name hellokafka --entity-type topics --add-config retention.ms=86400000,cleanup.policy=delete|compact
+    bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --replication-factor 1 --partitions 1 --topic hellokafka
+    ```
+
+    !!! tip "副本数不能多于 broker 数"
+
+1. 创建 topic 时指定阈值策略
+
+    ```sh
+    bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic deltp --config cleanup.policy=delete,retention.ms=259200000
+    ```
+
+1. 查询 topic 列表
+
+    ```bash
+    bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
     ```
 
 1. 查看 topic 配置
+
+    ```sh
+    bin/kafka-topics.sh --bootstrap-server localhost:9092 --topic klient --describe
+    Topic: klient   PartitionCount: 3       ReplicationFactor: 1    Configs: cleanup.policy=delete,segment.bytes=1073741824,retention.ms=259200000
+            Topic: klient   Partition: 0    Leader: 0       Replicas: 0     Isr: 0
+            Topic: klient   Partition: 1    Leader: 0       Replicas: 0     Isr: 0
+            Topic: klient   Partition: 2    Leader: 0       Replicas: 0     Isr: 0
+    ```
 
     ```sh
     bin/kafka-configs.sh --bootstrap-server localhost:9092 --describe --entity-name hellokafka --entity-type topics
@@ -102,10 +116,20 @@
       retention.ms=86400000 sensitive=false synonyms={DYNAMIC_TOPIC_CONFIG:retention.ms=86400000}
     ```
 
-1. 创建 topic 时指定策略
+1. 修改 topic 分区数
 
     ```sh
-    bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic deltp --config cleanup.policy=delete
+    bin/kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic klient --partitions 6
+    ```
+
+    !!! tip "分区数只能增加不能减小"
+
+    !!! tip "副本数只能通过 json 方式增加, 参见 <https://kafka.apache.org/21/documentation.html#basic_ops_increase_replication_factor>"
+
+1. 修改 topic 保留策略 1 天
+
+    ```sh
+    bin/kafka-configs.sh --bootstrap-server localhost:9092 --alter --entity-name hellokafka --entity-type topics --add-config retention.ms=86400000,cleanup.policy=delete|compact
     ```
 
 ### II. 消息
