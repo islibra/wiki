@@ -269,7 +269,6 @@ import java.util.List;
 
 /**
  * 调用HttpClient发送HTTPS请求
- * @author l00250989
  */
 public class HttpsRequestUtil {
 
