@@ -155,19 +155,6 @@ $ mvn clean package -DskipTests
 
 ```bash
 $ java -jar demo-0.0.1-SNAPSHOT.jar
-
- :: Spring Boot ::        (v2.1.7.RELEASE)
-
-2019-08-29 14:16:47.982  INFO 4236 --- [           main] com.example.demo.DemoApplication         : Starting DemoApplication v0.0.1-SNAPSHOT on szxy8l002509891 with PID 4236 (F:\java\demo\target\demo-0.0.1-SNAPSHOT.jar started by l00250989 in F:\java\demo\target)
-2019-08-29 14:16:47.982  INFO 4236 --- [           main] com.example.demo.DemoApplication         : No active profile set, falling back to default profiles: default
-2019-08-29 14:16:50.998  INFO 4236 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
-2019-08-29 14:16:51.091  INFO 4236 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2019-08-29 14:16:51.091  INFO 4236 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.22]
-2019-08-29 14:16:51.451  INFO 4236 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2019-08-29 14:16:51.451  INFO 4236 --- [           main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 3313 ms
-2019-08-29 14:16:51.966  INFO 4236 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2019-08-29 14:16:52.419  INFO 4236 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
-2019-08-29 14:16:52.435  INFO 4236 --- [           main] com.example.demo.DemoApplication         : Started DemoApplication in 5.609 seconds (JVM running for 8.107)
 ```
 
 访问<http://127.0.0.1:8080/hello>返回`Hello World`
